@@ -1,0 +1,13 @@
+{
+  "Login": "Login",
+  "PleaseSignIn": "Please sign in to continue.",
+  "PutEmailHere": "Email",
+  "PutPasswordHere": "Password",
+  "ConfirmPasswordHere": "Confirm password",
+  "Forgot": "Forgot",
+  "DontHaveAnAccount": "Don't have an account? Sign up",
+  "SignUp": "Sign up",
+  "CreateAccount": "Create Account",
+  "AlreadyHaveAnAccount": "Already have an account",
+  "SignIn": "Sign in"
+}

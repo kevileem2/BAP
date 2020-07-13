@@ -9,7 +9,7 @@ const metrics = {
   halfLargeMargin: 12,
   largeMargin: 24,
   doubleLargeMargin: 48,
-  roundness: 4,
+  roundness: 0,
   screenWidth: width < height ? width : height,
   screenHeight: width < height ? height : width,
   statusBarHeight: Platform.OS === 'ios' ? 20 : StatusBar.currentHeight || 24,

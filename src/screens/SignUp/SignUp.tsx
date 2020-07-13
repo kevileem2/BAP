@@ -22,6 +22,7 @@ interface Props {
 export default ({ navigation }: Props) => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+  const [confirmPassword, setConfirmPassword] = useState<string>('')
 
   const { width } = Dimensions.get('window')
 
@@ -33,9 +34,12 @@ export default ({ navigation }: Props) => {
   const handlePasswordChange = (text: string) => {
     setPassword(text)
   }
+  const handleConfirmPasswordChange = (text: string) => {
+    setConfirmPassword(text)
+  }
 
-  const handleSignUpPress = () => {
-    navigation.navigate('SignUp')
+  const handleGoBackPress = () => {
+    navigation.navigate('Login')
   }
 
   return (
@@ -51,6 +55,21 @@ export default ({ navigation }: Props) => {
           zIndex: 1,
         }}
       />
+      <TouchableWithoutFeedback onPress={handleGoBackPress}>
+        <View
+          style={{
+            position: 'absolute',
+            left: Metrics.doubleLargeMargin,
+            top: Metrics.doubleLargeMargin,
+            zIndex: 999,
+          }}>
+          <Icon
+            style={{ color: Colors.secondaryText }}
+            name="arrow-left"
+            size={32}
+          />
+        </View>
+      </TouchableWithoutFeedback>
       <View
         style={{
           flex: 1,
@@ -70,15 +89,7 @@ export default ({ navigation }: Props) => {
               fontWeight: '700',
               marginBottom: Metrics.smallMargin,
             }}>
-            {formatMessage('Login')}
-          </Text>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: '400',
-              color: Colors.secondaryText,
-            }}>
-            {formatMessage('PleaseSignIn')}
+            {formatMessage('CreateAccount')}
           </Text>
           <InputContainer>
             <View
@@ -128,26 +139,36 @@ export default ({ navigation }: Props) => {
                 secureTextEntry={true}
                 style={{
                   height: 24,
-                  width: '50%',
+                  width: '85%',
                   marginLeft: Metrics.smallMargin,
                 }}
               />
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignContent: 'flex-end',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: '500',
-                    color: Colors.primary,
-                    alignSelf: 'flex-end',
-                  }}>
-                  {formatMessage('Forgot').toUpperCase()}
-                </Text>
+            </View>
+          </InputContainer>
+          <InputContainer>
+            <View
+              style={{
+                flexDirection: 'row',
+              }}>
+              <View>
+                <Icon name="lock-open-outline" size={24} />
               </View>
+              <TextInput
+                placeholder={formatMessage('ConfirmPasswordHere')}
+                placeholderTextColor={Colors.secondaryText}
+                value={password}
+                autoCapitalize="none"
+                selectionColor={Colors.primary}
+                onChangeText={handleConfirmPasswordChange}
+                returnKeyType="go"
+                textContentType="password"
+                secureTextEntry={true}
+                style={{
+                  height: 24,
+                  width: '85%',
+                  marginLeft: Metrics.smallMargin,
+                }}
+              />
             </View>
           </InputContainer>
         </KeyboardAvoidingView>
@@ -167,7 +188,7 @@ export default ({ navigation }: Props) => {
                   color: Colors.primaryTextLight,
                   fontWeight: '500',
                 }}>
-                LOGIN
+                SIGN UP
               </Text>
               <Icon
                 name="chevron-right"
@@ -188,10 +209,10 @@ export default ({ navigation }: Props) => {
             alignSelf: 'center',
             justifyContent: 'flex-end',
           }}>
-          <Text>{formatMessage('DontHaveAnAccount')} </Text>
-          <TouchableWithoutFeedback onPress={handleSignUpPress}>
+          <Text>{formatMessage('AlreadyHaveAnAccount')} </Text>
+          <TouchableWithoutFeedback onPress={handleGoBackPress}>
             <Text style={{ color: Colors.primary }}>
-              {formatMessage('SignUp')}
+              {formatMessage('SignIn')}
             </Text>
           </TouchableWithoutFeedback>
         </View>
