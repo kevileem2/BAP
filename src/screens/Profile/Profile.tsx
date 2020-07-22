@@ -13,19 +13,24 @@ export default () => {
   }
 
   const handleLeftFlingGesture = () => {
+    navigation.navigate('Settings')
+  }
+
+  const handleRightFlingGesture = () => {
     navigation.navigate('Clients')
   }
 
   return (
     <SignedInLayout
-      headerTitle="Dashboard"
+      headerTitle="Profile"
       showSynchronizeIcon
       isSynchronizing={isSynchronizing}
       handleSynchronizePress={handleSynchronizePress}
       onLeftFlingGesture={handleLeftFlingGesture}
-      activeTabIndex={0}>
+      onRightFlingGesture={handleRightFlingGesture}
+      activeTabIndex={2}>
       <View style={{ flex: 1 }}>
-        <Text>Dashboard</Text>
+        <Text>Profile</Text>
       </View>
     </SignedInLayout>
   )

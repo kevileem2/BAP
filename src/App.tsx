@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { View, Keyboard, Dimensions, YellowBox } from 'react-native'
 import { Provider as PaperProvider } from 'react-native-paper'
-import AsyncStorage from '@react-native-community/async-storage'
 import Realm, { Results } from 'realm'
 import { storage, isIphoneX } from './utils'
 import { PaperTheme } from './themes'
@@ -13,21 +12,19 @@ YellowBox.ignoreWarnings(['Warning: componentWill'])
 
 export const RealmContext = React.createContext<Realm | undefined>(undefined)
 
+const NavigatorWrapper = React.createContext<boolean>(false)
+
 export default () => {
   const [realm, setRealm] = useState<Realm | undefined>(undefined)
   const [message, setMessage] = useState<string | null>(null)
   const [keyboardIsOpen, changeKeyboardOpenState] = useState<boolean>(false)
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
   const snackbarTimeoutId = useRef<number | null>(null)
 
   useEffect(() => {
     let userSession: Results<UserSession>
-    const getAsyncLoggedInKey = async () => {
-      const isLoggedInAsyncKey = await AsyncStorage.getItem('isLoggedIn')
-      setIsLoggedIn(isLoggedInAsyncKey === 'true' ? true : false)
-      // setIsLoggedIn(true)
-    }
-    getAsyncLoggedInKey()
+    // const clearToken = async () => {
+    //   await AsyncStorage.setItem('userToken', '')
+    // }
 
     const handleKeyboardOpen = () => {
       changeKeyboardOpenState(true)
@@ -106,7 +103,9 @@ export default () => {
     <PaperProvider theme={PaperTheme}>
       <RealmContext.Provider value={realm}>
         <View style={{ flex: 1 }}>
-          <Navigator isLoggedIn={isLoggedIn} />
+          <NavigatorWrapper.Provider value={false}>
+            <Navigator />
+          </NavigatorWrapper.Provider>
           <StyledSnackbar
             visible={Boolean(message)}
             onDismiss={handleSnackbarDismiss}

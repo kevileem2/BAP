@@ -6,7 +6,7 @@ module.exports = {
       {
         alias: {
           utils: './src/utils',
-          storage: './src/shared/storage',
+          storage: './src/utils/storage',
           src: './src',
         },
       },

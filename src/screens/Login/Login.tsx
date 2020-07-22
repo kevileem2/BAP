@@ -9,17 +9,26 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from 'react-native'
+import { NavigationScreenProp } from 'react-navigation'
+import Realm, { Results } from 'realm'
+import { UserSession } from 'utils/storage'
+import storage from '../../utils/storage'
 import { formatMessage } from '../../shared/formatMessage'
 import { Metrics, Colors } from '../../themes'
 import image from '../../assets/images/Login-screen-decoration.png'
 import { Icon, InputContainer, Button } from './components'
-import { NavigationScreenProp } from 'react-navigation'
+import AsyncStorage from '@react-native-community/async-storage'
+// import { AuthContext } from '../../Navigator'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
+  userSession: Results<UserSession>
+  realm: Realm
 }
 
-export default ({ navigation }: Props) => {
+export default ({ navigation, realm }: Props) => {
+  // const { signIn } = React.useContext(AuthContext)
+
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
 
@@ -36,6 +45,17 @@ export default ({ navigation }: Props) => {
 
   const handleSignUpPress = () => {
     navigation.navigate('SignUp')
+  }
+
+  const handleLoginPress = async () => {
+    await AsyncStorage.setItem('isLoggedIn', 'true')
+    await storage.writeTransaction((realmInstance: Realm) => {
+      realmInstance.create(
+        'UserSession',
+        { type: 'singleInstance', email, loading: false },
+        Realm.UpdateMode.All
+      )
+    }, realm)
   }
 
   return (
@@ -151,7 +171,7 @@ export default ({ navigation }: Props) => {
             </View>
           </InputContainer>
         </KeyboardAvoidingView>
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={handleLoginPress}>
           <View
             style={{
               flexDirection: 'row',
