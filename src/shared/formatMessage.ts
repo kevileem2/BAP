@@ -18,3 +18,9 @@ export const formatMessage = (message: string) => {
     `missing [${language}]: ${message} translation`
   )
 }
+
+export const localeString = () =>
+  (Platform.OS === 'ios'
+    ? NativeModules.SettingsManager.settings.AppleLocale ||
+      NativeModules.SettingsManager.settings.AppleLanguages[0]
+    : NativeModules.I18nManager.localeIdentifier) || 'en-US'

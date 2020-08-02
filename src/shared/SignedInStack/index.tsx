@@ -14,8 +14,9 @@ import Footer from '../Footer'
 const LayoutContainerView = Platform.OS === 'ios' ? KeyboardAvoidingView : View
 
 interface Props {
-  headerIcon?: 'menu' | 'arrow-back'
+  headerIcon?: 'arrow-left'
   headerTitle: string
+  hideFooter?: boolean
   supressNavigation?: boolean
   showSearch?: boolean
   showSettings?: boolean
@@ -24,6 +25,10 @@ interface Props {
   showNotifications?: boolean
   showDashboard?: boolean
   showEmail?: boolean
+  showInformation?: boolean
+  showAddIcon?: boolean
+  showEdit?: boolean
+  showDelete?: boolean
   notificationCount?: number
   activeItem?: number
   activeTabIndex?: number
@@ -34,7 +39,11 @@ interface Props {
   headerIconAction?: () => void
   handleSearchPress?: () => void
   handleSettingsPress?: () => void
+  handleInformationPress?: () => void
   handleSynchronizePress?: () => void
+  handleAddPress?: () => void
+  handleEditPress?: () => void
+  handleDeletePress?: () => void
   onLeftFlingGesture?: () => void
   onRightFlingGesture?: () => void
 }
@@ -42,18 +51,27 @@ interface Props {
 const SignedInLayout: React.FC<Props> = ({
   headerIcon,
   headerTitle,
+  hideFooter,
   children,
   supressNavigation,
   showSearch,
   showSettings,
   showSynchronizeIcon,
+  showAddIcon,
+  showInformation,
+  showEdit,
+  showDelete,
   activeTabIndex,
   isSynchronizing,
   headerNextIconAction,
   headerIconAction,
   handleSearchPress,
   handleSettingsPress,
+  handleInformationPress,
   handleSynchronizePress,
+  handleAddPress,
+  handleEditPress,
+  handleDeletePress,
   onLeftFlingGesture,
   onRightFlingGesture,
 }) => {
@@ -76,67 +94,98 @@ const SignedInLayout: React.FC<Props> = ({
   }
 
   return (
-    <FlingGestureHandler
-      direction={Directions.RIGHT}
-      onHandlerStateChange={handleRightFlingStateChange}>
+    <>
       <FlingGestureHandler
-        direction={Directions.LEFT}
-        onHandlerStateChange={handleLeftFlingStateChange}>
-        <LayoutContainerView
-          behavior="height"
-          contentContainerStyle={{ flex: 1 }}
-          style={{ flex: 1 }}>
-          <StatusBar backgroundColor={Colors.primary} />
-          <ScreenHeader
-            title={headerTitle}
-            onNavigationIconPress={headerIconAction}
-            navigationIconName={headerIcon}>
-            <ActionsContainer>
-              {showSearch && (
-                <IconButton
-                  icon="search"
-                  color={Colors.background}
-                  onPress={handleSearchPress}
-                />
-              )}
-              {showSettings && (
-                <IconButton
-                  icon="cog"
-                  color={Colors.background}
-                  onPress={handleSettingsPress}
-                />
-              )}
-              {showSynchronizeIcon &&
-                (isSynchronizing ? (
-                  <IconContainer>
-                    <RotatingIcon
-                      name="sync"
-                      size={25}
-                      color={Colors.primaryTextLight}
-                    />
-                  </IconContainer>
-                ) : (
+        direction={Directions.RIGHT}
+        onHandlerStateChange={handleRightFlingStateChange}>
+        <FlingGestureHandler
+          direction={Directions.LEFT}
+          onHandlerStateChange={handleLeftFlingStateChange}>
+          <LayoutContainerView behavior="height" style={{ flex: 1 }}>
+            <StatusBar backgroundColor={Colors.primary} />
+            <ScreenHeader
+              title={headerTitle}
+              onNavigationIconPress={headerIconAction}
+              navigationIconName={headerIcon}>
+              <ActionsContainer>
+                {showSearch && (
                   <IconButton
-                    icon="sync"
+                    icon="search"
+                    color={Colors.background}
+                    onPress={handleSearchPress}
+                  />
+                )}
+                {showSettings && (
+                  <IconButton
+                    icon="cog"
+                    color={Colors.background}
+                    onPress={handleSettingsPress}
+                  />
+                )}
+                {showAddIcon && (
+                  <IconButton
+                    icon="plus"
                     size={25}
                     color={Colors.primaryTextLight}
-                    onPress={handleSynchronizePress}
+                    onPress={handleAddPress}
                   />
-                ))}
-              {headerNextIconAction && (
-                <IconButton
-                  icon="arrow-forward"
-                  color={Colors.primaryTextLight}
-                  onPress={headerNextIconAction}
-                />
-              )}
-            </ActionsContainer>
-          </ScreenHeader>
-          {children}
-          <Footer activeTabIndex={activeTabIndex} />
-        </LayoutContainerView>
+                )}
+                {showSynchronizeIcon &&
+                  (isSynchronizing ? (
+                    <IconContainer>
+                      <RotatingIcon
+                        name="sync"
+                        size={25}
+                        color={Colors.primaryTextLight}
+                      />
+                    </IconContainer>
+                  ) : (
+                    <IconButton
+                      icon="sync"
+                      size={25}
+                      color={Colors.primaryTextLight}
+                      onPress={handleSynchronizePress}
+                    />
+                  ))}
+                {showInformation && (
+                  <IconButton
+                    icon="information"
+                    size={25}
+                    color={Colors.primaryTextLight}
+                    onPress={handleInformationPress}
+                  />
+                )}
+                {showEdit && (
+                  <IconButton
+                    icon="account-edit"
+                    size={25}
+                    color={Colors.primaryTextLight}
+                    onPress={handleEditPress}
+                  />
+                )}
+                {showDelete && (
+                  <IconButton
+                    icon="trash-can"
+                    size={25}
+                    color={Colors.primaryTextLight}
+                    onPress={handleDeletePress}
+                  />
+                )}
+                {headerNextIconAction && (
+                  <IconButton
+                    icon="arrow-forward"
+                    color={Colors.primaryTextLight}
+                    onPress={headerNextIconAction}
+                  />
+                )}
+              </ActionsContainer>
+            </ScreenHeader>
+            {children}
+          </LayoutContainerView>
+        </FlingGestureHandler>
       </FlingGestureHandler>
-    </FlingGestureHandler>
+      {!hideFooter && <Footer activeTabIndex={activeTabIndex} />}
+    </>
   )
 }
 

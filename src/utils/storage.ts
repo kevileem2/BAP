@@ -6,21 +6,66 @@ export class Clients {
     primaryKey: 'guid',
     properties: {
       id: 'int?',
+      parentRecordGuid: 'string?',
       guid: 'string',
       changeType: 'int?',
       name: 'string?',
       lastName: 'string?',
       age: 'int?',
       description: 'string?',
+      room: 'int?',
     },
   }
   public guid: string
   public id: number | null
+  public parentRecordGuid: string | null
   public changeType: number | null
   public name: string | null
   public lastName: string | null
   public age: number | null
   public description: string | null
+  public room: number | null
+}
+
+export class Notes {
+  public static schema: Realm.ObjectSchema = {
+    name: 'Notes',
+    primaryKey: 'guid',
+    properties: {
+      id: 'int?',
+      guid: 'string',
+      changeType: 'int?',
+      message: 'string?',
+      parentGuid: 'string?',
+      createdAt: 'date?',
+      updatedAt: 'date?',
+    },
+  }
+  public guid: string
+  public id: number | null
+  public changeType: number | null
+  public message: string | null
+  public parentGuid: string | null
+  public createdAt: Date | null
+  public updatedAt: Date | null
+}
+
+export class User {
+  public static schema: Realm.ObjectSchema = {
+    name: 'User',
+    primaryKey: 'guid',
+    properties: {
+      guid: 'string',
+      email: 'string?',
+      firstName: 'string?',
+      lastName: 'string?',
+    },
+  }
+
+  public guid: string
+  public email: string | null
+  public firstName: string | null
+  public lastName: string | null
 }
 
 export class UserSession {
@@ -46,7 +91,7 @@ export class UserSession {
 }
 
 const config = {
-  schema: [Clients, UserSession],
+  schema: [Clients, UserSession, Notes, User],
   schemaVersion: 0,
   migration: (oldRealm: Realm, newRealm: Realm) => {},
 }

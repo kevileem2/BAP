@@ -2,8 +2,15 @@ const common = {
   primary: '#ffb347',
   buttonColorLight: '#ffb64f',
   buttonColorDark: '#ff9e14',
-  error: '#DF0024',
+  errorLight: '#ff5e52',
+  errorDark: '#FF2212',
+  succesLight: '#00e5ae',
+  succesDark: '#009874',
+  disabledLight: '#999',
+  disabledDark: '#777',
   border: '#e0e0e0',
+  accentButtonColorLight: '#79aeea',
+  accentButtonColorDark: '#487db9',
   lightGray: 'rgba(0,0,0,0.2)',
   hintText: 'rgba(0,0,0,0.40)',
   primaryText: 'rgba(0,0,0,0.87)',
@@ -13,8 +20,6 @@ const common = {
   background: '#ffffff',
   backgroundGray: '#e7eff2',
   backgroundDisabled: 'rgb(126,126,126)',
-  warning: '#ff6100',
-  warningLight: '#fff45e',
 }
 
 export default common

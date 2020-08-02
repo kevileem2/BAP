@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import AsyncStorage from '@react-native-community/async-storage'
 import { Login } from './screens/Login'
 import { SignUp } from './screens/SignUp'
 import { Dashboard } from './screens/Dashboard'
 import { Clients } from './screens/Clients'
 import { Profile } from './screens/Profile'
 import { Settings } from './screens/Settings'
-import AsyncStorage from '@react-native-community/async-storage'
+import { Speech } from './screens/Speech'
+import { TextInput } from './screens/TextInput'
+import { AddClient } from './screens/AddClient'
+import { ClientDetail } from './screens/ClientDetail'
 
 const SignedOutStack = createStackNavigator()
 
@@ -34,6 +38,10 @@ const SignedInStackNavigator = () => (
     <SignedInStack.Screen name="Clients" component={Clients} />
     <SignedInStack.Screen name="Profile" component={Profile} />
     <SignedInStack.Screen name="Settings" component={Settings} />
+    <SignedInStack.Screen name="Speech" component={Speech} />
+    <SignedInStack.Screen name="TextInput" component={TextInput} />
+    <SignedInStack.Screen name="AddClient" component={AddClient} />
+    <SignedInStack.Screen name="ClientDetail" component={ClientDetail} />
   </SignedInStack.Navigator>
 )
 
