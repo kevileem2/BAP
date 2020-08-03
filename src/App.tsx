@@ -22,9 +22,6 @@ export default () => {
 
   useEffect(() => {
     let userSession: Results<UserSession>
-    // const clearToken = async () => {
-    //   await AsyncStorage.setItem('userToken', '')
-    // }
 
     const handleKeyboardOpen = () => {
       changeKeyboardOpenState(true)

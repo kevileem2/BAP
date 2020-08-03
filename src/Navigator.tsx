@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  useMemo,
+} from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -12,57 +18,73 @@ import { Speech } from './screens/Speech'
 import { TextInput } from './screens/TextInput'
 import { AddClient } from './screens/AddClient'
 import { ClientDetail } from './screens/ClientDetail'
+import Loading from './screens/Loading'
+import { RealmContext } from './App'
 
-const SignedOutStack = createStackNavigator()
-
-const SignedInStack = createStackNavigator()
-
-const SignedOutStackNavigator = () => (
-  <SignedOutStack.Navigator
-    screenOptions={{ headerShown: false }}
-    initialRouteName={'Login'}>
-    <SignedOutStack.Screen name="Login" component={Login} />
-    <SignedOutStack.Screen name="SignUp" component={SignUp} />
-  </SignedOutStack.Navigator>
-)
-
-interface SignedInStackNavigatorProps {
-  handleLogin: () => void
+interface AuthContextInterface {
+  signOut?: () => void
+  signIn?: () => void
 }
 
-const SignedInStackNavigator = () => (
-  <SignedInStack.Navigator
-    screenOptions={{ headerShown: false }}
-    initialRouteName={'Dashboard'}>
-    <SignedInStack.Screen name="Dashboard" component={Dashboard} />
-    <SignedInStack.Screen name="Clients" component={Clients} />
-    <SignedInStack.Screen name="Profile" component={Profile} />
-    <SignedInStack.Screen name="Settings" component={Settings} />
-    <SignedInStack.Screen name="Speech" component={Speech} />
-    <SignedInStack.Screen name="TextInput" component={TextInput} />
-    <SignedInStack.Screen name="AddClient" component={AddClient} />
-    <SignedInStack.Screen name="ClientDetail" component={ClientDetail} />
-  </SignedInStack.Navigator>
-)
+const Stack = createStackNavigator()
+
+export const AuthContext = createContext<AuthContextInterface>({})
 
 export default () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  const realm = useContext(RealmContext)
 
   useEffect(() => {
-    const getTokenFromAsyncStorage = async () => {
-      const loggedInKey = await AsyncStorage.getItem('isLoggedIn')
-      if (loggedInKey) {
-        setIsLoggedIn(true)
-      }
+    const getAsyncKey = async () => {
+      const isLoggedInKey = await AsyncStorage.getItem('isLoggedIn')
+      isLoggedInKey ? setIsLoggedIn(true) : setIsLoggedIn(false)
     }
-    getTokenFromAsyncStorage()
+    getAsyncKey().then(() => {
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 500)
+    })
   }, [])
 
-  const handleLogin = () => {}
-
+  const authContext = useMemo(
+    () => ({
+      signOut: () => {
+        realm?.removeAllListeners()
+        setIsLoggedIn(false)
+      },
+      signIn: () => {
+        setIsLoggedIn(true)
+      },
+    }),
+    []
+  )
   return (
-    <NavigationContainer>
-      {isLoggedIn ? SignedInStackNavigator() : SignedOutStackNavigator()}
-    </NavigationContainer>
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {isLoading ? (
+            <Stack.Screen name="Loading" component={Loading} />
+          ) : !isLoggedIn ? (
+            <>
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="SignUp" component={SignUp} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="Dashboard" component={Dashboard} />
+              <Stack.Screen name="Clients" component={Clients} />
+              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen name="Settings" component={Settings} />
+              <Stack.Screen name="Speech" component={Speech} />
+              <Stack.Screen name="TextInput" component={TextInput} />
+              <Stack.Screen name="AddClient" component={AddClient} />
+              <Stack.Screen name="ClientDetail" component={ClientDetail} />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthContext.Provider>
   )
 }

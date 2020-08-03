@@ -46,5 +46,6 @@
   "clientIsMandatory": "Kies een cliënt waaraan u deze notitie wilt toevoegen",
   "messageIsMandatory": "Geef een geldige notitie",
   "recentNotes": "Recente notities",
-  "profile": "Profiel"
+  "profile": "Profiel",
+  "fetchingData": "Data ophalen..."
 }

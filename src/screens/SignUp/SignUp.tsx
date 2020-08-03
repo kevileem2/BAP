@@ -14,6 +14,7 @@ import { Metrics, Colors } from '../../themes'
 import image from '../../assets/images/Login-screen-decoration.png'
 import { Icon, InputContainer, Button } from './components'
 import { NavigationScreenProp } from 'react-navigation'
+import { AuthContext } from '../../Navigator'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -23,6 +24,7 @@ export default ({ navigation }: Props) => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const { signIn } = React.useContext(AuthContext)
 
   const { width } = Dimensions.get('window')
 
@@ -41,6 +43,8 @@ export default ({ navigation }: Props) => {
   const handleGoBackPress = () => {
     navigation.navigate('Login')
   }
+
+  const handleSignUpPress = () => {}
 
   return (
     <>
@@ -172,7 +176,7 @@ export default ({ navigation }: Props) => {
             </View>
           </InputContainer>
         </KeyboardAvoidingView>
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={handleSignUpPress}>
           <View
             style={{
               flexDirection: 'row',

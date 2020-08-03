@@ -46,5 +46,6 @@
   "clientIsMandatory": "choisissez un client auquel vous voulez ajouter la note",
   "messageIsMandatory": "veuillez fournir une note valable",
   "recentNotes": "notes récentes",
-  "profile": "Profil"
+  "profile": "Profil",
+  "fetchingData": "Collecter des données..."
 }

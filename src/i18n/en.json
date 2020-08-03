@@ -46,5 +46,6 @@
   "clientIsMandatory": "Pick a client to whom you want to add this note to",
   "messageIsMandatory": "Please provide a valid note",
   "recentNotes": "Recent notes",
-  "profile": "Profile"
+  "profile": "Profile",
+  "fetchingData": "Fetching data..."
 }

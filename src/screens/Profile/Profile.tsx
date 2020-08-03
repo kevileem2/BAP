@@ -4,10 +4,13 @@ import { useNavigation } from '@react-navigation/native'
 import SignedInLayout from '../../shared/SignedInStack'
 import { formatMessage } from '../../shared'
 import AsyncStorage from '@react-native-community/async-storage'
+import { AuthContext } from '../../Navigator'
 
 export default () => {
   const navigation = useNavigation()
   const [isSynchronizing, setIsSynchronize] = useState<boolean>(false)
+
+  const { signOut } = React.useContext(AuthContext)
 
   const handleSynchronizePress = () => {
     setIsSynchronize(true)
@@ -24,6 +27,7 @@ export default () => {
 
   const handleLogoutPress = async () => {
     await AsyncStorage.removeItem('isLoggedIn')
+    signOut && signOut()
   }
 
   return (

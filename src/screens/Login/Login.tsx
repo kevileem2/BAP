@@ -18,7 +18,7 @@ import { Metrics, Colors } from '../../themes'
 import image from '../../assets/images/Login-screen-decoration.png'
 import { Icon, InputContainer, Button } from './components'
 import AsyncStorage from '@react-native-community/async-storage'
-// import { AuthContext } from '../../Navigator'
+import { AuthContext } from '../../Navigator'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -27,7 +27,7 @@ interface Props {
 }
 
 export default ({ navigation, realm }: Props) => {
-  // const { signIn } = React.useContext(AuthContext)
+  const { signIn } = React.useContext(AuthContext)
 
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -48,7 +48,7 @@ export default ({ navigation, realm }: Props) => {
   }
 
   const handleLoginPress = async () => {
-    await AsyncStorage.setItem('isLoggedIn', 'true')
+    // await AsyncStorage.setItem('isLoggedIn', 'true')
     await storage.writeTransaction((realmInstance: Realm) => {
       realmInstance.create(
         'UserSession',
@@ -56,11 +56,12 @@ export default ({ navigation, realm }: Props) => {
         Realm.UpdateMode.All
       )
     }, realm)
+    signIn && signIn()
   }
 
   return (
     <>
-      <StatusBar hidden={true} />
+      <StatusBar />
       <Image
         source={image}
         style={{

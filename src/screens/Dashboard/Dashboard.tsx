@@ -17,32 +17,33 @@ export default () => {
 
   const realm = useContext(RealmContext)
 
-  const {
-    objects: { userSession },
-  } = useRealm<{
-    userSession: Results<UserSession>
-  }>([{ object: 'UserSession', name: 'userSession' }])
   const [isSynchronizing, setIsSynchronize] = useState<boolean>(false)
   const [userName, setUserName] = useState<string>('')
   const [noteList, setNoteList] = useState<Notes[]>([])
 
   useEffect(() => {
-    realm?.addListener('change', () => {
-      const notes = realm?.objects<Notes>('Notes').filtered('changeType != 0')
-      if (notes?.length) {
-        const endIndexNotes = notes?.length < 3 ? notes.length : 3
-        setNoteList(notes.sorted('updatedAt', true).slice(0, endIndexNotes))
-      } else {
-        setNoteList([])
+    if (realm) {
+      try {
+        realm.addListener('change', () => {
+          const notes = realm
+            ?.objects<Notes>('Notes')
+            .filtered('changeType != 0')
+          if (notes?.length) {
+            const endIndexNotes = notes?.length < 3 ? notes.length : 3
+            setNoteList(notes.sorted('updatedAt', true).slice(0, endIndexNotes))
+          } else {
+            setNoteList([])
+          }
+          const userSession = realm?.objects<UserSession>('UserSession')
+          if (userSession?.[0].fullName) {
+            setUserName(userSession[0].fullName)
+          }
+        })
+      } catch (e) {
+        console.log(e)
       }
-    })
-  }, [])
-
-  useEffect(() => {
-    if (userSession?.[0].fullName) {
-      setUserName(userSession[0].fullName)
     }
-  }, [userSession])
+  }, [])
 
   const handleSynchronizePress = () => {
     setIsSynchronize(true)
