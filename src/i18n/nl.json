@@ -45,5 +45,6 @@
   "punctuationExample": "bv: Voor een punt op het einde van de zin, zeg je 'punt'",
   "clientIsMandatory": "Kies een cliënt waaraan u deze notitie wilt toevoegen",
   "messageIsMandatory": "Geef een geldige notitie",
-  "recentNotes": "Recente notities"
+  "recentNotes": "Recente notities",
+  "profile": "Profiel"
 }

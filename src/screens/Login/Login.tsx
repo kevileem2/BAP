@@ -106,7 +106,11 @@ export default ({ navigation, realm }: Props) => {
                 flexDirection: 'row',
               }}>
               <View>
-                <Icon name="email-outline" size={24} />
+                <Icon
+                  style={{ color: Colors.primaryText }}
+                  name="email-outline"
+                  size={24}
+                />
               </View>
               <TextInput
                 placeholder={formatMessage('PutEmailHere')}
@@ -134,7 +138,11 @@ export default ({ navigation, realm }: Props) => {
                 flexDirection: 'row',
               }}>
               <View>
-                <Icon name="lock-outline" size={24} />
+                <Icon
+                  style={{ color: Colors.primaryText }}
+                  name="lock-outline"
+                  size={24}
+                />
               </View>
               <TextInput
                 placeholder={formatMessage('PutPasswordHere')}
@@ -148,11 +156,11 @@ export default ({ navigation, realm }: Props) => {
                 secureTextEntry={true}
                 style={{
                   height: 24,
-                  width: '50%',
+                  width: '85%',
                   marginLeft: Metrics.smallMargin,
                 }}
               />
-              <View
+              {/* <View
                 style={{
                   flex: 1,
                   justifyContent: 'center',
@@ -167,7 +175,7 @@ export default ({ navigation, realm }: Props) => {
                   }}>
                   {formatMessage('Forgot').toUpperCase()}
                 </Text>
-              </View>
+              </View> */}
             </View>
           </InputContainer>
         </KeyboardAvoidingView>

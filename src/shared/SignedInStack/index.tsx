@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { KeyboardAvoidingView, Platform, View, StatusBar } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import {
@@ -18,32 +18,26 @@ interface Props {
   headerTitle: string
   hideFooter?: boolean
   supressNavigation?: boolean
-  showSearch?: boolean
-  showSettings?: boolean
   showSynchronizeIcon?: boolean
-  showFilters?: boolean
   showNotifications?: boolean
   showDashboard?: boolean
-  showEmail?: boolean
   showInformation?: boolean
   showAddIcon?: boolean
   showEdit?: boolean
   showDelete?: boolean
+  showLogout?: boolean
   notificationCount?: number
-  activeItem?: number
-  activeTabIndex?: number
+  activeTabIndex: number
   isSynchronizing?: boolean
   nextAction?: () => void
   backAction?: () => void
-  headerNextIconAction?: () => void
   headerIconAction?: () => void
-  handleSearchPress?: () => void
-  handleSettingsPress?: () => void
   handleInformationPress?: () => void
   handleSynchronizePress?: () => void
   handleAddPress?: () => void
   handleEditPress?: () => void
   handleDeletePress?: () => void
+  handleLogoutPress?: () => void
   onLeftFlingGesture?: () => void
   onRightFlingGesture?: () => void
 }
@@ -54,24 +48,21 @@ const SignedInLayout: React.FC<Props> = ({
   hideFooter,
   children,
   supressNavigation,
-  showSearch,
-  showSettings,
   showSynchronizeIcon,
   showAddIcon,
   showInformation,
   showEdit,
   showDelete,
+  showLogout,
   activeTabIndex,
   isSynchronizing,
-  headerNextIconAction,
   headerIconAction,
-  handleSearchPress,
-  handleSettingsPress,
   handleInformationPress,
   handleSynchronizePress,
   handleAddPress,
   handleEditPress,
   handleDeletePress,
+  handleLogoutPress,
   onLeftFlingGesture,
   onRightFlingGesture,
 }) => {
@@ -108,20 +99,6 @@ const SignedInLayout: React.FC<Props> = ({
               onNavigationIconPress={headerIconAction}
               navigationIconName={headerIcon}>
               <ActionsContainer>
-                {showSearch && (
-                  <IconButton
-                    icon="search"
-                    color={Colors.background}
-                    onPress={handleSearchPress}
-                  />
-                )}
-                {showSettings && (
-                  <IconButton
-                    icon="cog"
-                    color={Colors.background}
-                    onPress={handleSettingsPress}
-                  />
-                )}
                 {showAddIcon && (
                   <IconButton
                     icon="plus"
@@ -171,11 +148,12 @@ const SignedInLayout: React.FC<Props> = ({
                     onPress={handleDeletePress}
                   />
                 )}
-                {headerNextIconAction && (
+                {showLogout && (
                   <IconButton
-                    icon="arrow-forward"
+                    icon="logout"
+                    size={25}
                     color={Colors.primaryTextLight}
-                    onPress={headerNextIconAction}
+                    onPress={handleLogoutPress}
                   />
                 )}
               </ActionsContainer>
