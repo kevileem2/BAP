@@ -28,8 +28,7 @@ export default () => {
 
   useEffect(() => {
     realm?.addListener('change', () => {
-      const notes = realm?.objects<Notes>('Notes')
-      console.log(Array.from(notes))
+      const notes = realm?.objects<Notes>('Notes').filtered('changeType != 0')
       if (notes?.length) {
         const endIndexNotes = notes?.length < 3 ? notes.length : 3
         setNoteList(notes.sorted('updatedAt', true).slice(0, endIndexNotes))
@@ -44,14 +43,6 @@ export default () => {
       setUserName(userSession[0].fullName)
     }
   }, [userSession])
-
-  useEffect(() => {
-    const notes = realm?.objects<Notes>('Notes')
-    if (notes?.length) {
-      const endIndexNotes = notes?.length < 3 ? notes.length : 3
-      setNoteList(notes.sorted('updatedAt', true).slice(0, endIndexNotes))
-    }
-  }, [realm, navigation])
 
   const handleSynchronizePress = () => {
     setIsSynchronize(true)
@@ -80,7 +71,7 @@ export default () => {
         parentGuid: item?.parentGuid,
         changeType: item?.changeType,
       }
-      return <ListCard {...props} />
+      return <ListCard key={index} {...props} />
     }
     return null
   }
