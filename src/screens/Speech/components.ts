@@ -9,7 +9,6 @@ export const StyledButton = styled(LinearGradient)`
   align-items: center;
   padding: ${Metrics.smallMargin}px;
   margin-top: ${Metrics.largeMargin}px;
-  margin-right: ${Metrics.smallMargin}px;
   border-radius: 50px;
 `
 

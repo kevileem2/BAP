@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from 'react'
-import { View } from 'react-native'
+import React, { useState, useEffect, useMemo, useContext } from 'react'
+import { View, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import SignedInLayout from '../../shared/SignedInStack'
 import { StyledButton, Title, SubTitle, Icon } from './components'
-import { Colors } from '../../themes'
+import { Colors, Metrics } from '../../themes'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Results } from 'realm'
-import { UserSession } from '../../utils/storage'
+import { UserSession, Notes } from '../../utils/storage'
 import useRealm from 'utils/useRealm'
 import { formatMessage } from '../../shared/formatMessage'
+import ListCard from './ListCard'
+import { RealmContext } from '../../App'
 
-interface Props {}
-
-export default ({}: Props) => {
+export default () => {
   const navigation = useNavigation()
+
+  const realm = useContext(RealmContext)
+
   const {
     objects: { userSession },
   } = useRealm<{
@@ -21,12 +24,34 @@ export default ({}: Props) => {
   }>([{ object: 'UserSession', name: 'userSession' }])
   const [isSynchronizing, setIsSynchronize] = useState<boolean>(false)
   const [userName, setUserName] = useState<string>('')
+  const [noteList, setNoteList] = useState<Notes[]>([])
+
+  useEffect(() => {
+    realm?.addListener('change', () => {
+      const notes = realm?.objects<Notes>('Notes')
+      console.log(Array.from(notes))
+      if (notes?.length) {
+        const endIndexNotes = notes?.length < 3 ? notes.length : 3
+        setNoteList(notes.sorted('updatedAt', true).slice(0, endIndexNotes))
+      } else {
+        setNoteList([])
+      }
+    })
+  }, [])
 
   useEffect(() => {
     if (userSession?.[0].fullName) {
       setUserName(userSession[0].fullName)
     }
   }, [userSession])
+
+  useEffect(() => {
+    const notes = realm?.objects<Notes>('Notes')
+    if (notes?.length) {
+      const endIndexNotes = notes?.length < 3 ? notes.length : 3
+      setNoteList(notes.sorted('updatedAt', true).slice(0, endIndexNotes))
+    }
+  }, [realm, navigation])
 
   const handleSynchronizePress = () => {
     setIsSynchronize(true)
@@ -45,6 +70,26 @@ export default ({}: Props) => {
     navigation.navigate('TextInput')
   }
 
+  const renderNoteList = (item: Notes, index: number) => {
+    if (item) {
+      const props = {
+        guid: item?.guid,
+        message: item?.message,
+        updatedAt: item?.updatedAt,
+        index,
+        parentGuid: item?.parentGuid,
+        changeType: item?.changeType,
+      }
+      return <ListCard {...props} />
+    }
+    return null
+  }
+
+  const mapNotes = useMemo(() => noteList && noteList.map(renderNoteList), [
+    noteList,
+    realm,
+  ])
+
   return (
     <SignedInLayout
       headerTitle="Dashboard"
@@ -53,7 +98,11 @@ export default ({}: Props) => {
       handleSynchronizePress={handleSynchronizePress}
       onLeftFlingGesture={handleLeftFlingGesture}
       activeTabIndex={0}>
-      <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          margin: Metrics.largeMargin,
+        }}>
         {userName ? (
           <Title>
             {formatMessage('Welcome')}, {userName}!
@@ -98,6 +147,28 @@ export default ({}: Props) => {
             </StyledButton>
           </TouchableOpacity>
         </View>
+        {Boolean(noteList.length) && (
+          <>
+            <View
+              style={{
+                borderBottomColor: Colors.buttonColorDark,
+                borderBottomWidth: 2,
+                alignSelf: 'flex-start',
+                paddingBottom: Metrics.tinyMargin,
+                marginTop: Metrics.largeMargin,
+                marginBottom: Metrics.largeMargin,
+              }}>
+              <Text
+                style={{
+                  fontWeight: '500',
+                  fontSize: 18,
+                }}>
+                {formatMessage('recentNotes')}
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>{mapNotes}</View>
+          </>
+        )}
       </View>
     </SignedInLayout>
   )

@@ -101,7 +101,7 @@ const SignedInLayout: React.FC<Props> = ({
         <FlingGestureHandler
           direction={Directions.LEFT}
           onHandlerStateChange={handleLeftFlingStateChange}>
-          <LayoutContainerView behavior="height" style={{ flex: 1 }}>
+          <LayoutContainerView behavior="padding" style={{ flex: 1 }}>
             <StatusBar backgroundColor={Colors.primary} />
             <ScreenHeader
               title={headerTitle}

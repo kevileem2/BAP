@@ -105,7 +105,12 @@ const ListNote = ({
             </Text>
           )}
         </NoteInfoContainer>
-        <View style={{ flex: 0.3, flexDirection: 'row' }}>
+        <View
+          style={{
+            flex: 0.4,
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          }}>
           <IconContainer onPress={handleEditPress}>
             <EditIcon size={22} name="pencil" />
           </IconContainer>
@@ -118,7 +123,8 @@ const ListNote = ({
         <Divider
           style={{
             alignSelf: 'center',
-            width: '95%',
+            width: '90%',
+            paddingRight: Metrics.baseMargin,
             marginBottom: Metrics.smallMargin,
             backgroundColor: Colors.primaryText,
           }}

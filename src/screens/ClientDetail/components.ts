@@ -53,13 +53,14 @@ export const IconHeader = styled(MaterialIcons)`
 `
 
 export const NoteRow = styled(View)`
-  width: 100%;
+  width: 95%;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   margin-top: ${Metrics.baseMargin}px;
   margin-bottom: ${Metrics.baseMargin}px;
   padding-right: ${Metrics.baseMargin}px;
+  margin-right: ${Metrics.baseMargin}px;
 `
 
 export const NoteInfoContainer = styled(View)`
@@ -67,7 +68,6 @@ export const NoteInfoContainer = styled(View)`
 `
 
 export const IconContainer = styled(TouchableOpacity)`
-  flex: 1;
   justify-content: center;
   align-items: center;
   align-self: flex-end;

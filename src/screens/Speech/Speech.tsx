@@ -65,6 +65,18 @@ export default ({}: Props) => {
     clients: Results<Clients>
   }>([{ object: 'Clients', name: 'clients', query: 'changeType != 0' }])
 
+  useEffect(() => {
+    if (!selectedItem && !value) {
+      const getClientGuid = clients?.sorted('name')?.[0]?.guid
+      const getClientName = clients?.find(
+        (client) => client.guid === getClientGuid
+      )
+      getClientGuid && setSelectedItem(getClientGuid)
+      getClientName &&
+        setValue(`${getClientName.name} ${getClientName.lastName}`)
+    }
+  }, [clients])
+
   const handleHeaderIconAction = () => {
     navigation.goBack()
   }
@@ -247,10 +259,10 @@ export default ({}: Props) => {
     />
   )
 
-  const filterData = (data) => {
-    return search.length
-      ? data.filter((item) => {
-          return (
+  const filterData = (data) =>
+    search.length
+      ? data.filter(
+          (item) =>
             item?.name.toLowerCase().includes(search.toLowerCase()) ||
             item?.lastName.toLowerCase().includes(search.toLowerCase()) ||
             `${item?.name} ${item?.lastName}`
@@ -259,10 +271,8 @@ export default ({}: Props) => {
             `${item?.lastName} ${item?.name}`
               .toLowerCase()
               .includes(search.toLowerCase())
-          )
-        })
+        )
       : data
-  }
 
   const options = useMemo(
     () => clients && filterData(clients).map(renderPickerItem),

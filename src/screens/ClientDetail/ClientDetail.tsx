@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react'
-import { View, Text, ScrollView } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import SignedInLayout from '../../shared/SignedInStack'
 import { Clients, Notes } from '../../utils/storage'
@@ -15,7 +15,8 @@ import {
 import { Results } from 'realm'
 import { ContainerBody } from './components'
 import ListNote from './ListNote'
-import useRealm from 'utils/useRealm'
+import useRealm from '../../utils/useRealm'
+import { StyledButton, Icon } from '../Dashboard/components'
 
 export default ({ route }) => {
   const navigation = useNavigation()
@@ -31,6 +32,17 @@ export default ({ route }) => {
   } = useRealm([])
 
   useEffect(() => {
+    realm?.addListener('change', () => {
+      setClient(
+        realm.objects<Clients>('Clients').filtered(`guid == "${userGuid}"`)?.[0]
+      )
+      setNotes(
+        realm.objects<Notes>('Notes').filtered(`parentGuid == "${userGuid}"`)
+      )
+    })
+  }, [])
+
+  useEffect(() => {
     if (realm) {
       setClient(
         realm.objects<Clients>('Clients').filtered(`guid == "${userGuid}"`)?.[0]
@@ -39,7 +51,7 @@ export default ({ route }) => {
         realm.objects<Notes>('Notes').filtered(`parentGuid == "${userGuid}"`)
       )
     }
-  }, [realm])
+  }, [realm, navigation])
 
   const handleHeaderIconAction = () => {
     navigation.navigate('Clients')
@@ -103,23 +115,35 @@ export default ({ route }) => {
     } catch (e) {
       console.log(e)
     }
-    navigation.goBack()
+    navigation.navigate('Clients')
+  }
+
+  const handleAddNotePress = () => {
+    navigation.navigate('TextInput', {
+      parentGuid: client?.guid,
+    })
   }
 
   // renders each contact with props
   const renderNotes = (item: Notes, index: number) => {
-    const props = {
-      guid: item.guid,
-      message: item.message,
-      updatedAt: item.updatedAt,
-      index,
-      changeType: item.changeType,
-      parentGuid: item.parentGuid,
+    if (item) {
+      const props = {
+        guid: item.guid,
+        message: item.message,
+        updatedAt: item.updatedAt,
+        index,
+        changeType: item.changeType,
+        parentGuid: item.parentGuid,
+      }
+      return <ListNote key={`contact-list-card-${index}`} {...props} />
     }
-    return <ListNote key={`contact-list-card-${index}`} {...props} />
+    return null
   }
 
-  const mapNotes = useMemo(() => notes?.map(renderNotes), [notes, realm])
+  const mapNotes = useMemo(
+    () => notes && notes.sorted('updatedAt', true)?.map(renderNotes),
+    [notes, realm]
+  )
 
   return (
     <SignedInLayout
@@ -220,6 +244,17 @@ export default ({ route }) => {
               </IconHeaderContainer>
             </IconHeaderContainerWrapper>
             <ContainerBody>{mapNotes}</ContainerBody>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <TouchableOpacity onPress={handleAddNotePress}>
+                <StyledButton
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0, y: 1 }}
+                  colors={[Colors.buttonColorLight, Colors.buttonColorDark]}
+                  style={{ marginBottom: 0 }}>
+                  <Icon name="plus" size={18} color={Colors.primaryTextLight} />
+                </StyledButton>
+              </TouchableOpacity>
+            </View>
           </Container>
         </ScrollView>
       </View>

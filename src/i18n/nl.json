@@ -23,7 +23,7 @@
   "client": "Cliënt",
   "noClientsYet": "U heeft nog geen cliënten",
   "addClients": "Voeg er nu toe!",
-  "addClient": "Voeg klant toe",
+  "addClient": "Voeg cliënt toe",
   "addNote": "Voeg notitie toe",
   "name": "naam",
   "firstName": "voornaam",
@@ -44,6 +44,6 @@
   "speakPunctuation": "Voor leestekens spreek je deze ook mee uit",
   "punctuationExample": "bv: Voor een punt op het einde van de zin, zeg je 'punt'",
   "clientIsMandatory": "Kies een cliënt waaraan u deze notitie wilt toevoegen",
-  "messageIsMandatory": "Geef een geldige notitie"
-
+  "messageIsMandatory": "Geef een geldige notitie",
+  "recentNotes": "Recente notities"
 }

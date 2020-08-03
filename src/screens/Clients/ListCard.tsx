@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import useRealm from 'utils/useRealm'
 import { Results } from 'realm'
 import { Colors, Metrics } from '../../themes'
-import { formatMessage, message, AvatarInitials } from '../../shared'
+import { formatMessage, AvatarInitials } from '../../shared'
 import {
   ModalCard,
   ModalText,
@@ -15,11 +15,10 @@ import {
   ContactRow,
   Name,
   ContactInfoContainer,
-  Info,
   IconContainer,
   Icon,
 } from './components'
-import storage, { Clients, Notes } from '../../utils/storage'
+import { Clients, Notes } from '../../utils/storage'
 
 interface Props {
   id?: number

@@ -44,5 +44,6 @@
   "speakPunctuation": "If you want punctuation, you can by speaking them",
   "punctuationExample": "ex: If you want a dot at the end, speak 'Dot'",
   "clientIsMandatory": "Pick a client to whom you want to add this note to",
-  "messageIsMandatory": "Please provide a valid note"
+  "messageIsMandatory": "Please provide a valid note",
+  "recentNotes": "Recent notes"
 }

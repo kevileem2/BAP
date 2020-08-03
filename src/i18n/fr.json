@@ -44,5 +44,6 @@
   "speakPunctuation": "Si vous voulez ponctuation dans ce texte, vous pouvez en parlant",
   "punctuationExample": "ex: Si vous voulez un point, dis point",
   "clientIsMandatory": "choisissez un client auquel vous voulez ajouter la note",
-  "messageIsMandatory": "veuillez fournir une note valable"
+  "messageIsMandatory": "veuillez fournir une note valable",
+  "recentNotes": "notes récentes"
 }

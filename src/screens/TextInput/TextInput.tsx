@@ -1,5 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { View, Text, Platform, TouchableOpacity, TextInput } from 'react-native'
+import {
+  View,
+  Text,
+  Platform,
+  TouchableOpacity,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native'
 import { Results } from 'realm'
 import { format } from 'date-fns'
 import { Guid } from 'guid-typescript'
@@ -45,14 +53,22 @@ export default ({ route }) => {
   }>([{ object: 'Clients', name: 'clients', query: 'changeType != 0' }])
 
   useEffect(() => {
-    if (guid && message && parentGuid && clients) {
+    if (parentGuid && clients) {
       const existingClients = clients?.find(
         (client) => client.guid === parentGuid
       )
       setSelectedItem(parentGuid)
-      setText(message)
+      message && setText(message)
       existingClients &&
         setValue(`${existingClients.name} ${existingClients.lastName}`)
+    } else if (!selectedItem && !value) {
+      const getClientGuid = clients?.sorted('name')?.[0]?.guid
+      const getClientName = clients?.find(
+        (client) => client.guid === getClientGuid
+      )
+      getClientGuid && setSelectedItem(getClientGuid)
+      getClientName &&
+        setValue(`${getClientName.name} ${getClientName.lastName}`)
     }
   }, [clients])
 
@@ -74,7 +90,7 @@ export default ({ route }) => {
               message: text,
               updatedAt: now,
             },
-            Realm.UpdateMode.All
+            true
           )
         })
       } else {
@@ -90,7 +106,7 @@ export default ({ route }) => {
               createdAt: now,
               updatedAt: now,
             },
-            Realm.UpdateMode.All
+            true
           )
         })
       }
@@ -193,20 +209,25 @@ export default ({ route }) => {
             </Dropdown>
           </TouchableOpacity>
           {Boolean(error?.client) && <ErrorText>* {error.client}</ErrorText>}
-          <OutputContainer>
-            <TextInput
-              value={text}
-              autoCapitalize="none"
-              selectionColor={Colors.primary}
-              onChangeText={handleOnChangeText}
-              returnKeyType="go"
-              multiline
-              style={{
-                width: '100%',
-                marginLeft: Metrics.smallMargin,
-              }}
-            />
-          </OutputContainer>
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <OutputContainer>
+              <TextInput
+                value={text}
+                autoCapitalize="none"
+                selectionColor={Colors.primary}
+                onChangeText={handleOnChangeText}
+                returnKeyType="default"
+                blurOnSubmit
+                multiline
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  marginLeft: Metrics.smallMargin,
+                  marginRight: Metrics.smallMargin,
+                }}
+              />
+            </OutputContainer>
+          </TouchableWithoutFeedback>
           {Boolean(error?.message) && <ErrorText>* {error.message}</ErrorText>}
           <View
             style={{

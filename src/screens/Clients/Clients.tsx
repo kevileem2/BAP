@@ -31,10 +31,6 @@ export default () => {
   useEffect(() => {
     navigation.addListener('focus', handleRefetch(true))
     navigation.addListener('blur', handleRefetch(false))
-    return () => {
-      navigation.removeListener('focus', handleRefetch(true))
-      navigation.removeListener('focus', handleRefetch(false))
-    }
   }, [])
 
   const handleRefetch = (refetch: boolean) => () => {
@@ -101,7 +97,7 @@ export default () => {
   const mapContactsData = useMemo(
     () =>
       clients &&
-      clients.map((item) => ({
+      clients.sorted('name').map((item) => ({
         guid: item.guid,
         id: item.id,
         changeType: item.changeType,
