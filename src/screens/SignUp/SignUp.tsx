@@ -100,7 +100,7 @@ export default ({ navigation }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View>
+              <View style={{justifyContent: "center"}}>
                 <Icon name="email-outline" size={24} />
               </View>
               <TextInput
@@ -114,7 +114,6 @@ export default ({ navigation }: Props) => {
                 returnKeyType="next"
                 textContentType="emailAddress"
                 style={{
-                  height: 24,
                   width: '85%',
                   marginLeft: Metrics.smallMargin,
                   fontSize: email ? 18 : 14,
@@ -128,7 +127,7 @@ export default ({ navigation }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View>
+              <View style={{justifyContent: "center"}}>
                 <Icon name="lock-outline" size={24} />
               </View>
               <TextInput
@@ -142,7 +141,6 @@ export default ({ navigation }: Props) => {
                 textContentType="password"
                 secureTextEntry={true}
                 style={{
-                  height: 24,
                   width: '85%',
                   marginLeft: Metrics.smallMargin,
                 }}
@@ -154,7 +152,7 @@ export default ({ navigation }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View>
+              <View style={{justifyContent: "center"}}>
                 <Icon name="lock-open-outline" size={24} />
               </View>
               <TextInput
@@ -168,7 +166,6 @@ export default ({ navigation }: Props) => {
                 textContentType="password"
                 secureTextEntry={true}
                 style={{
-                  height: 24,
                   width: '85%',
                   marginLeft: Metrics.smallMargin,
                 }}

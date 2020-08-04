@@ -19,6 +19,7 @@ import { Colors } from '../../themes'
 
 export default () => {
   const navigation = useNavigation()
+  const [loading, setLoading] = useState<boolean>(true)
   const [isSynchronizing, setIsSynchronize] = useState<boolean>(false)
   const [shouldRefetch, setShouldRefetch] = useState<boolean>(false)
 
@@ -29,9 +30,11 @@ export default () => {
   }>([{ object: 'Clients', name: 'clients', query: 'changeType != 0' }])
 
   useEffect(() => {
+    setLoading(false)
     navigation.addListener('focus', handleRefetch(true))
     navigation.addListener('blur', handleRefetch(false))
   }, [])
+
 
   const handleRefetch = (refetch: boolean) => () => {
     setShouldRefetch(refetch)
@@ -87,9 +90,8 @@ export default () => {
 
   // use callback for rendering the contacts
   const renderItemCall = useCallback(
-    ({ item, index }) => {
-      return renderContacts({ item, index })
-    },
+    ({ item, index }) => renderContacts({ item, index })
+    ,
     [clients]
   )
 
@@ -123,7 +125,8 @@ export default () => {
       onRightFlingGesture={handleRightFlingGesture}
       activeTabIndex={1}>
       <View style={{ flex: 1 }}>
-        {Boolean(clients?.length) ? (
+        {!loading && (
+        Boolean(clients?.length) ? (
           <>
             <SearchBarStyled
               placeholder={formatMessage('search')}
@@ -161,6 +164,7 @@ export default () => {
               </TouchableOpacity>
             </View>
           </>
+        )
         )}
       </View>
     </SignedInLayout>

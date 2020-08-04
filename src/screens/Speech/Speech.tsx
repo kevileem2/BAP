@@ -94,15 +94,19 @@ export default ({}: Props) => {
   }, [])
 
   const onSpeechStart = (e) => {
+    console.log('comes in here -> speech start')
     setStarted(true)
   }
 
   const onSpeechEnd = (e) => {
+    console.log("speech end")
     setStarted(false)
     setEnd(true)
   }
 
-  const onSpeechError = async () => {
+  const onSpeechError = async (e) => {
+    console.log(e)
+    Voice.destroy()
     await message({
       message: 'Something failed with Speech',
     })
@@ -113,7 +117,7 @@ export default ({}: Props) => {
   }
 
   const onSpeechPartialResults = (e) => {
-    setPartialResults(e.value)
+    setPartialResults(e.value[0])
   }
 
   const onSpeechVolumeChanged = (e) => {
@@ -129,7 +133,7 @@ export default ({}: Props) => {
     setResults('')
     setPartialResults([])
     setEnd(false)
-
+    
     try {
       await Voice.start(localeString())
     } catch (e) {
@@ -140,6 +144,7 @@ export default ({}: Props) => {
 
   const stopRecognizing = async () => {
     //Stops listening for speech
+    console.log('stop')
     try {
       await Voice.stop()
     } catch (e) {
@@ -160,6 +165,7 @@ export default ({}: Props) => {
 
   const destroyRecognizer = async () => {
     //Destroys the current SpeechRecognizer instance
+    console.log('comes in here destroy')
     try {
       await Voice.destroy()
     } catch (e) {
@@ -317,7 +323,7 @@ export default ({}: Props) => {
               />
             ) : (
               <ScrollView>
-                <Text key={`result`}>{results}</Text>
+                <Text key={`result`}>{results || partialResults}</Text>
               </ScrollView>
             )}
           </OutputContainer>
@@ -437,10 +443,13 @@ export default ({}: Props) => {
                 <View
                   style={{ alignSelf: 'center', justifyContent: 'flex-end' }}>
                   <TouchableOpacity
-                    onPress={
+                    onPress={() => {
+
+                      console.log(results.length)
                       Boolean(results.length)
                         ? stopRecognizing
                         : destroyRecognizer
+                    }
                     }>
                     <StyledButton
                       start={{ x: 0, y: 0 }}

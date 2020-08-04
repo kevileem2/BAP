@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   ScrollView,
+  Platform
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { Guid } from 'guid-typescript'
@@ -156,10 +157,6 @@ export default ({ route }) => {
               </IconHeaderContainer>
             </IconHeaderContainerWrapper>
             <InputContainer>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
                 <TextInput
                   placeholder={formatMessage('firstName')}
                   placeholderTextColor={Colors.secondaryText}
@@ -170,14 +167,12 @@ export default ({ route }) => {
                   returnKeyType="next"
                   textContentType="givenName"
                   style={{
-                    height: 24,
                     width: '100%',
                     marginLeft: Metrics.smallMargin,
                     fontSize: 14,
                     fontWeight: '300',
                   }}
                 />
-              </View>
             </InputContainer>
             {errors.firstName && (
               <Text
@@ -189,10 +184,6 @@ export default ({ route }) => {
               </Text>
             )}
             <InputContainer>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
                 <TextInput
                   placeholder={formatMessage('lastName')}
                   placeholderTextColor={Colors.secondaryText}
@@ -203,14 +194,12 @@ export default ({ route }) => {
                   returnKeyType="next"
                   textContentType="familyName"
                   style={{
-                    height: 24,
                     width: '100%',
                     marginLeft: Metrics.smallMargin,
                     fontSize: 14,
                     fontWeight: '300',
                   }}
                 />
-              </View>
             </InputContainer>
             {errors.lastName && (
               <Text
@@ -222,10 +211,6 @@ export default ({ route }) => {
               </Text>
             )}
             <InputContainer>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
                 <TextInput
                   placeholder={formatMessage('age')}
                   placeholderTextColor={Colors.secondaryText}
@@ -235,20 +220,14 @@ export default ({ route }) => {
                   returnKeyType="next"
                   keyboardType="numeric"
                   style={{
-                    height: 24,
                     width: '100%',
                     marginLeft: Metrics.smallMargin,
                     fontSize: 14,
                     fontWeight: '300',
                   }}
                 />
-              </View>
             </InputContainer>
             <InputContainer>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
                 <TextInput
                   placeholder={formatMessage('room')}
                   placeholderTextColor={Colors.secondaryText}
@@ -258,20 +237,14 @@ export default ({ route }) => {
                   returnKeyType="next"
                   keyboardType="numeric"
                   style={{
-                    height: 24,
                     width: '100%',
                     marginLeft: Metrics.smallMargin,
                     fontSize: 14,
                     fontWeight: '300',
                   }}
                 />
-              </View>
             </InputContainer>
             <InputContainer>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
                 <TextInput
                   placeholder={formatMessage('description')}
                   placeholderTextColor={Colors.secondaryText}
@@ -281,14 +254,12 @@ export default ({ route }) => {
                   onChangeText={handleDescription}
                   returnKeyType="go"
                   style={{
-                    height: 24,
                     width: '100%',
                     marginLeft: Metrics.smallMargin,
                     fontSize: 14,
                     fontWeight: '300',
                   }}
                 />
-              </View>
             </InputContainer>
           </Container>
           <TouchableOpacity onPress={handleAddClientPress}>

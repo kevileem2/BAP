@@ -11,8 +11,8 @@ import {
 } from 'react-native'
 import { NavigationScreenProp } from 'react-navigation'
 import Realm, { Results } from 'realm'
-import { UserSession } from 'utils/storage'
-import storage from '../../utils/storage'
+import {Guid} from 'guid-typescript'
+import storage, { UserSession } from '../../utils/storage'
 import { formatMessage } from '../../shared/formatMessage'
 import { Metrics, Colors } from '../../themes'
 import image from '../../assets/images/Login-screen-decoration.png'
@@ -48,11 +48,16 @@ export default ({ navigation, realm }: Props) => {
   }
 
   const handleLoginPress = async () => {
-    // await AsyncStorage.setItem('isLoggedIn', 'true')
+    await AsyncStorage.setItem('isLoggedIn', 'true')
     await storage.writeTransaction((realmInstance: Realm) => {
       realmInstance.create(
         'UserSession',
         { type: 'singleInstance', email, loading: false },
+        Realm.UpdateMode.All
+      )
+      realmInstance.create(
+        'User',
+        { guid:  String(Guid.create()).toUpperCase(), email, firstName: 'Kevin', lastName: 'Leemans'},
         Realm.UpdateMode.All
       )
     }, realm)
@@ -106,7 +111,7 @@ export default ({ navigation, realm }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View>
+              <View style={{justifyContent: "center"}}>
                 <Icon
                   style={{ color: Colors.primaryText }}
                   name="email-outline"
@@ -124,7 +129,6 @@ export default ({ navigation, realm }: Props) => {
                 returnKeyType="next"
                 textContentType="emailAddress"
                 style={{
-                  height: 24,
                   width: '85%',
                   marginLeft: Metrics.smallMargin,
                   fontSize: email ? 18 : 14,
@@ -138,7 +142,7 @@ export default ({ navigation, realm }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View>
+              <View style={{justifyContent: "center"}}>
                 <Icon
                   style={{ color: Colors.primaryText }}
                   name="lock-outline"
@@ -156,7 +160,6 @@ export default ({ navigation, realm }: Props) => {
                 textContentType="password"
                 secureTextEntry={true}
                 style={{
-                  height: 24,
                   width: '85%',
                   marginLeft: Metrics.smallMargin,
                 }}

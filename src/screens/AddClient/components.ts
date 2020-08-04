@@ -32,18 +32,11 @@ interface InputContainerProps {
   isFirst?: boolean
 }
 
-export const InputContainer = styled(Card)`
+export const InputContainer = styled(View)`
   flex-direction: column;
-  margin-top: ${({ isFirst }: InputContainerProps) =>
-    isFirst ? Metrics.doubleLargeMargin : Metrics.largeMargin}px;
-  padding: ${Metrics.tinyMargin}px;
-  padding-bottom: ${Metrics.smallMargin}px;
-  border-bottom-width: ${({ isFirst }: InputContainerProps) =>
-    isFirst ? 0 : 2}px;
+  border-bottom-width: 2px;
   border-bottom-color: ${Colors.primary};
-  elevation: ${({ isFirst }: InputContainerProps) => (isFirst ? 2 : 0)};
-  box-shadow: ${({ isFirst }: InputContainerProps) =>
-    isFirst ? '0px 4px 10px rgba(0, 0, 0, 0.15)' : '0px 0px 0px'};
+  elevation: 0;
 `
 export const Button = styled(LinearGradient)`
   flex-direction: row;
