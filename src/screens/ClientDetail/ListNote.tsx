@@ -93,8 +93,10 @@ const ListNote = ({
     <>
       <NoteRow>
         <NoteInfoContainer>
-          <Text style={{ color: '#000' }}>{message}</Text>
-          {updatedAt && (
+          {Boolean(message?.length) && (
+            <Text style={{ color: '#000' }}>{message}</Text>
+          )}
+          {Boolean(updatedAt) && (
             <Text style={{ color: Colors.secondaryText }}>
               {`${format(updatedAt, 'dd/MM/yyyy')} - ${format(
                 new Date(

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   View,
   Text,
@@ -9,14 +9,17 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import { formatMessage } from '../../shared/formatMessage'
 import { Metrics, Colors } from '../../themes'
-import {Buffer} from 'buffer'
+import { Buffer } from 'buffer'
 import image from '../../assets/images/Login-screen-decoration.png'
 import { Icon, InputContainer, Button } from './components'
 import { NavigationScreenProp } from 'react-navigation'
 import { AuthContext } from '../../Navigator'
-import Axios from 'axios'
+import storage from '../../utils/storage'
+import { Guid } from 'guid-typescript'
+import { RealmContext } from '../../App'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -27,6 +30,9 @@ export default ({ navigation }: Props) => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
+
+  const realm = useContext(RealmContext)
 
   const { signIn } = React.useContext(AuthContext)
 
@@ -44,8 +50,6 @@ export default ({ navigation }: Props) => {
     setName(text)
   }
 
-  
-
   const handleConfirmPasswordChange = (text: string) => {
     setConfirmPassword(text)
   }
@@ -54,35 +58,104 @@ export default ({ navigation }: Props) => {
     navigation.navigate('Login')
   }
 
-  const handleSignUpPress = () => {
-    console.log('comes in here')
-    const btoa = new Buffer(`${name}:${password}`).toString("base64")
-    console.log(btoa)
-    // fetch('http://kevin.is.giestig/api/auth', {
-    //   method: 'POST',
-    //   headers: {
-    //     'x-api-key': "kJwL2a9tSFQiuQ8Sy75iC",
-    //     'Authorization': `Basic ${btoa}`
-    //   },
-    // }).then((res) => {
-    //   console.log(res)
-    // }).catch((e) => {
-    //   console.log(e)
-    // })
-    Axios.request({
-      method: 'POST',
-      url: 'auth',
-      baseURL: 'http://kevin.is.giestig/api/',
-      headers: {
-        'Content-Type': "application/json",
-        'x-api-key': "kJwL2a9tSFQiuQ8Sy75iC",
-        'Authorization': `Basic ${btoa}`
-      },
-    }).then((res) => {
-      console.log(res)
-    }).catch((e) => {
-      console.log(e)
-    })
+  const handleSignUpPress = async () => {
+    if (email && name && password) {
+      if (password === confirmPassword) {
+        setError(null)
+        const btoa = new Buffer(`${name}:${password}`).toString('base64')
+        try {
+          await fetch('https://kevin.is.giestig.be/api/add-user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': 'Cvqsam8axl8LTqzr0aT3L',
+            },
+            body: JSON.stringify({
+              username: name,
+              email,
+              password,
+            }),
+          })
+          let firstRefreshToken = ''
+          let refreshToken = ''
+          let accessToken = ''
+          let userId = ''
+          const firstResponse = await fetch(
+            'https://kevin.is.giestig.be/api/auth',
+            {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-API-KEY': 'Cvqsam8axl8LTqzr0aT3L',
+                Authorization: `Basic ${btoa}`,
+              },
+            }
+          )
+          const apifirstRefreshjson = await firstResponse.json()
+          firstRefreshToken = apifirstRefreshjson.refresh_token
+          const accessResponse = await fetch(
+            'https://kevin.is.giestig.be/api/auth/access',
+            {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-API-KEY': 'Cvqsam8axl8LTqzr0aT3L',
+                Authorization: `Bearer ${firstRefreshToken}`,
+              },
+            }
+          )
+          const accessResponseJson = await accessResponse.json()
+          refreshToken = accessResponseJson.refresh_token
+          accessToken = accessResponseJson.access_token
+          const authenticationResponse = await fetch(
+            'https://kevin.is.giestig.be/api/auth',
+            {
+              method: 'GET',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-API-KEY': 'Cvqsam8axl8LTqzr0aT3L',
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          )
+          const authenticationResponseJson = await authenticationResponse.json()
+          if (authenticationResponseJson.loggedIn) {
+            userId = authenticationResponseJson.id
+            await storage.writeTransaction((realmInstance: Realm) => {
+              realmInstance.create(
+                'UserSession',
+                {
+                  type: 'singleInstance',
+                  email,
+                  loading: false,
+                  fullName: authenticationResponseJson.name,
+                },
+                Realm.UpdateMode.All
+              )
+              realmInstance.create(
+                'User',
+                { guid: String(Guid.create()).toUpperCase(), email },
+                Realm.UpdateMode.All
+              )
+            }, realm)
+            signIn && signIn()
+          }
+          await AsyncStorage.setItem('refresh_token', refreshToken)
+          await AsyncStorage.setItem('access_token', accessToken)
+          await AsyncStorage.setItem('userId', userId.toString())
+          await AsyncStorage.setItem('isLoggedIn', 'true')
+        } catch (e) {
+          console.log(e)
+        }
+      } else {
+        setError(formatMessage('passwordsDontMatch'))
+      }
+    } else {
+      setError(formatMessage('checkEverythingFilledIn'))
+    }
   }
 
   return (
@@ -139,11 +212,11 @@ export default ({ navigation }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View style={{justifyContent: "center"}}>
+              <View style={{ justifyContent: 'center' }}>
                 <Icon name="account-outline" size={24} />
               </View>
               <TextInput
-                placeholder={formatMessage('PutNameHere')}
+                placeholder={formatMessage('PutUserNameHere')}
                 placeholderTextColor={Colors.secondaryText}
                 value={name}
                 autoCapitalize="words"
@@ -165,7 +238,7 @@ export default ({ navigation }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View style={{justifyContent: "center"}}>
+              <View style={{ justifyContent: 'center' }}>
                 <Icon name="email-outline" size={24} />
               </View>
               <TextInput
@@ -192,7 +265,7 @@ export default ({ navigation }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View style={{justifyContent: "center"}}>
+              <View style={{ justifyContent: 'center' }}>
                 <Icon name="lock-outline" size={24} />
               </View>
               <TextInput
@@ -217,7 +290,7 @@ export default ({ navigation }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View style={{justifyContent: "center"}}>
+              <View style={{ justifyContent: 'center' }}>
                 <Icon name="lock-open-outline" size={24} />
               </View>
               <TextInput
@@ -237,6 +310,15 @@ export default ({ navigation }: Props) => {
               />
             </View>
           </InputContainer>
+          {Boolean(error?.length) && (
+            <Text
+              style={{
+                color: Colors.errorDark,
+                marginTop: Metrics.baseMargin,
+              }}>
+              * {error}
+            </Text>
+          )}
         </KeyboardAvoidingView>
         <TouchableWithoutFeedback onPress={handleSignUpPress}>
           <View

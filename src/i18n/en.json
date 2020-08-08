@@ -4,6 +4,7 @@
   "PutNameHere": "Name",
   "PutEmailHere": "Email",
   "PutPasswordHere": "Password",
+  "PutUserNameHere": "Username",
   "ConfirmPasswordHere": "Confirm password",
   "Forgot": "Forgot",
   "DontHaveAnAccount": "Don't have an account? Sign up",
@@ -48,5 +49,8 @@
   "messageIsMandatory": "Please provide a valid note",
   "recentNotes": "Recent notes",
   "profile": "Profile",
-  "fetchingData": "Fetching data..."
+  "fetchingData": "Fetching data...",
+  "passwordsDontMatch": "Passwords don't match",
+  "checkEverythingFilledIn": "Please fill in every field",
+  "LogginFailed": "Login failed"
 }

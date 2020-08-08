@@ -141,7 +141,12 @@ export default ({ route }) => {
   }
 
   const mapNotes = useMemo(
-    () => notes && notes.sorted('updatedAt', true)?.map(renderNotes),
+    () =>
+      notes &&
+      notes
+        .filtered('changeType != 0')
+        .sorted('updatedAt', true)
+        ?.map(renderNotes),
     [notes, realm]
   )
 
@@ -190,7 +195,7 @@ export default ({ route }) => {
                 }: `}</Text>
                 <Text>{`${client?.name} ${client?.lastName}`}</Text>
               </View>
-              {client?.age && (
+              {Boolean(client?.age) && (
                 <View
                   style={{
                     width: '100%',
@@ -201,10 +206,10 @@ export default ({ route }) => {
                     formatMessage('age').charAt(0).toUpperCase() +
                     formatMessage('age').slice(1)
                   }: `}</Text>
-                  <Text>{`${client.age}`}</Text>
+                  <Text>{`${client?.age}`}</Text>
                 </View>
               )}
-              {client?.room && (
+              {Boolean(client?.room) && (
                 <View
                   style={{
                     width: '100%',
@@ -215,10 +220,10 @@ export default ({ route }) => {
                     formatMessage('room').charAt(0).toUpperCase() +
                     formatMessage('room').slice(1)
                   }: `}</Text>
-                  <Text>{`${client.room}`}</Text>
+                  <Text>{`${client?.room}`}</Text>
                 </View>
               )}
-              {client?.description && (
+              {Boolean(client?.description) && (
                 <View
                   style={{
                     width: '100%',
@@ -229,7 +234,7 @@ export default ({ route }) => {
                     formatMessage('description').charAt(0).toUpperCase() +
                     formatMessage('description').slice(1)
                   }: `}</Text>
-                  <Text>{`${client.description}`}</Text>
+                  <Text>{`${client?.description}`}</Text>
                 </View>
               )}
             </ContainerBody>
@@ -243,7 +248,7 @@ export default ({ route }) => {
                 <IconHeader name="pencil" size={32} />
               </IconHeaderContainer>
             </IconHeaderContainerWrapper>
-            <ContainerBody>{mapNotes}</ContainerBody>
+            <ContainerBody>{mapNotes && mapNotes}</ContainerBody>
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <TouchableOpacity onPress={handleAddNotePress}>
                 <StyledButton

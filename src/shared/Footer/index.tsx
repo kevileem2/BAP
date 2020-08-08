@@ -75,7 +75,7 @@ export default ({ activeTabIndex }: FooterProps) => {
           />
         </TouchableWithoutFeedback>
       </Section>
-      <Section>
+      {/* <Section>
         <TouchableWithoutFeedback onPress={handleSettingsPress}>
           <Icon
             name={getIconName(pageKeys.SETTINGS)}
@@ -83,7 +83,7 @@ export default ({ activeTabIndex }: FooterProps) => {
             color={Colors.primaryTextLight}
           />
         </TouchableWithoutFeedback>
-      </Section>
+      </Section> */}
     </FooterContainer>
   )
 }

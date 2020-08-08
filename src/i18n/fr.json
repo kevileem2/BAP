@@ -4,6 +4,7 @@
   "PutNameHere": "Nom",
   "PutEmailHere": "Email",
   "PutPasswordHere": "Mot de passe",
+  "PutUserNameHere": "Nom d'utilisateur",
   "ConfirmPasswordHere": "Confirmez le mot de passe",
   "Forgot": "Oublier",
   "DontHaveAnAccount": "Vous n'avez pas de compte?",
@@ -48,5 +49,8 @@
   "messageIsMandatory": "veuillez fournir une note valable",
   "recentNotes": "notes récentes",
   "profile": "Profil",
-  "fetchingData": "Collecter des données..."
+  "fetchingData": "Collecter des données...",
+  "passwordsDontMatch": "Les mots de passe ne correspondent pas",
+  "checkEverythingFilledIn": "veuillez remplir tous les champs",
+  "LogginFailed": "échec de la connexion"
 }

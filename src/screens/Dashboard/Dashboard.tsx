@@ -11,6 +11,12 @@ import useRealm from 'utils/useRealm'
 import { formatMessage } from '../../shared/formatMessage'
 import ListCard from './ListCard'
 import { RealmContext } from '../../App'
+import AsyncStorage from '@react-native-community/async-storage'
+import {
+  getUpdatePackage,
+  clearRealmStorage,
+  applyPackageToStorage,
+} from '../../utils/dataUtils'
 
 export default () => {
   const navigation = useNavigation()
@@ -34,20 +40,52 @@ export default () => {
           } else {
             setNoteList([])
           }
-          const userSession = realm?.objects<UserSession>('UserSession')
-          if (userSession?.[0].fullName) {
-            setUserName(userSession[0].fullName)
-          }
         })
+        const userSession = realm?.objects<UserSession>('UserSession')
+        if (userSession?.[0].fullName) {
+          setUserName(userSession[0].fullName)
+        }
       } catch (e) {
         console.log(e)
       }
     }
-  }, [])
+  }, [realm])
 
-  const handleSynchronizePress = () => {
+  const handleSynchronizePress = async () => {
     setIsSynchronize(true)
-    setTimeout(() => setIsSynchronize(false), 1000)
+    try {
+      const accessToken = await AsyncStorage.getItem('access_token')
+      const userId = await AsyncStorage.getItem('userId')
+      const updatePackage = await getUpdatePackage()
+      await fetch(`https://kevin.is.giestig.be/api/package/update-package`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-API-KEY': 'Cvqsam8axl8LTqzr0aT3L',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(updatePackage),
+      })
+      realm && clearRealmStorage(realm)
+      const response = await fetch(
+        `https://kevin.is.giestig.be/api/package/get-package?id=${userId}`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-API-KEY': 'Cvqsam8axl8LTqzr0aT3L',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      const responseJson = await response.json()
+      applyPackageToStorage(responseJson)
+    } catch (e) {
+      console.log(e)
+    }
+    setIsSynchronize(false)
   }
 
   const handleLeftFlingGesture = () => {

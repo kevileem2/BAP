@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   View,
   Text,
@@ -11,8 +11,8 @@ import {
 } from 'react-native'
 import { NavigationScreenProp } from 'react-navigation'
 import Realm, { Results } from 'realm'
-import {Guid} from 'guid-typescript'
-import {Buffer} from 'buffer'
+import { Guid } from 'guid-typescript'
+import { Buffer } from 'buffer'
 import storage, { UserSession } from '../../utils/storage'
 import { formatMessage } from '../../shared/formatMessage'
 import { Metrics, Colors } from '../../themes'
@@ -20,19 +20,21 @@ import image from '../../assets/images/Login-screen-decoration.png'
 import { Icon, InputContainer, Button } from './components'
 import AsyncStorage from '@react-native-community/async-storage'
 import { AuthContext } from '../../Navigator'
-import Axios from 'axios'
+import { RealmContext } from '../../App'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
   userSession: Results<UserSession>
-  realm: Realm
 }
 
-export default ({ navigation, realm }: Props) => {
+export default ({ navigation }: Props) => {
   const { signIn } = React.useContext(AuthContext)
+
+  const realm = useContext(RealmContext)
 
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
 
   const { width } = Dimensions.get('window')
 
@@ -50,42 +52,88 @@ export default ({ navigation, realm }: Props) => {
   }
 
   const handleLoginPress = async () => {
-    const btoa = new Buffer(`${email}:${password}`).toString("base64")
+    const btoa = new Buffer(`${email}:${password}`).toString('base64')
     try {
-      fetch('https://kevin.is.giestig.be/api/auth', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'X-API-KEY': 'AgJMvHWTdYR55BGfC0n7I',
-          'Authorization': `Basic ${btoa}`
-        },
-      }).then((res)=> {
-        console.log(res.ok)
-        return res.json()
-      }).then((res) => {
-        console.log('comes in here: ', res)
-      }).catch((e) => {
-  
-        console.log(e)
-      })
+      if (email && password) {
+        setError(null)
+        let firstRefreshToken = ''
+        let refreshToken = ''
+        let accessToken = ''
+        let userId = ''
+        const firstResponse = await fetch(
+          'https://kevin.is.giestig.be/api/auth',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'X-API-KEY': 'Cvqsam8axl8LTqzr0aT3L',
+              Authorization: `Basic ${btoa}`,
+            },
+          }
+        )
+        const apifirstRefreshjson = await firstResponse.json()
+        firstRefreshToken = apifirstRefreshjson.refresh_token
+        const accessResponse = await fetch(
+          'https://kevin.is.giestig.be/api/auth/access',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'X-API-KEY': 'Cvqsam8axl8LTqzr0aT3L',
+              Authorization: `Bearer ${firstRefreshToken}`,
+            },
+          }
+        )
+        const accessResponseJson = await accessResponse.json()
+        refreshToken = accessResponseJson.refresh_token
+        accessToken = accessResponseJson.access_token
+        const authenticationResponse = await fetch(
+          'https://kevin.is.giestig.be/api/auth',
+          {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'X-API-KEY': 'Cvqsam8axl8LTqzr0aT3L',
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+        const authenticationResponseJson = await authenticationResponse.json()
+        if (authenticationResponseJson.loggedIn) {
+          userId = authenticationResponseJson.id
+          await storage.writeTransaction((realmInstance: Realm) => {
+            realmInstance.create(
+              'UserSession',
+              {
+                type: 'singleInstance',
+                email,
+                loading: false,
+                fullName: authenticationResponseJson.name,
+              },
+              Realm.UpdateMode.All
+            )
+            realmInstance.create(
+              'User',
+              { guid: String(Guid.create()).toUpperCase(), email },
+              Realm.UpdateMode.All
+            )
+          }, realm)
+          signIn && signIn()
+        }
+        await AsyncStorage.setItem('refresh_token', refreshToken)
+        await AsyncStorage.setItem('access_token', accessToken)
+        await AsyncStorage.setItem('userId', userId.toString())
+        await AsyncStorage.setItem('isLoggedIn', 'true')
+      } else {
+        setError(formatMessage('checkEverythingFilledIn'))
+      }
     } catch (e) {
+      setError(formatMessage('LogginFailed'))
       console.log(e)
     }
-    // await AsyncStorage.setItem('isLoggedIn', 'true')
-    // await storage.writeTransaction((realmInstance: Realm) => {
-    //   realmInstance.create(
-    //     'UserSession',
-    //     { type: 'singleInstance', email, loading: false },
-    //     Realm.UpdateMode.All
-    //   )
-    //   realmInstance.create(
-    //     'User',
-    //     { guid:  String(Guid.create()).toUpperCase(), email, firstName: 'Kevin', lastName: 'Leemans'},
-    //     Realm.UpdateMode.All
-    //   )
-    // }, realm)
-    // signIn && signIn()
   }
 
   return (
@@ -135,23 +183,21 @@ export default ({ navigation, realm }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View style={{justifyContent: "center"}}>
+              <View style={{ justifyContent: 'center' }}>
                 <Icon
                   style={{ color: Colors.primaryText }}
-                  name="email-outline"
+                  name="account-outline"
                   size={24}
                 />
               </View>
               <TextInput
-                placeholder={formatMessage('PutEmailHere')}
+                placeholder={formatMessage('PutUserNameHere')}
                 placeholderTextColor={Colors.secondaryText}
                 value={email}
                 autoCapitalize="none"
                 selectionColor={Colors.primary}
                 onChangeText={handleEmailChange}
-                keyboardType="email-address"
                 returnKeyType="next"
-                textContentType="emailAddress"
                 style={{
                   width: '85%',
                   marginLeft: Metrics.smallMargin,
@@ -166,7 +212,7 @@ export default ({ navigation, realm }: Props) => {
               style={{
                 flexDirection: 'row',
               }}>
-              <View style={{justifyContent: "center"}}>
+              <View style={{ justifyContent: 'center' }}>
                 <Icon
                   style={{ color: Colors.primaryText }}
                   name="lock-outline"
@@ -206,6 +252,15 @@ export default ({ navigation, realm }: Props) => {
               </View> */}
             </View>
           </InputContainer>
+          {Boolean(error?.length) && (
+            <Text
+              style={{
+                color: Colors.errorDark,
+                marginTop: Metrics.baseMargin,
+              }}>
+              * {error}
+            </Text>
+          )}
         </KeyboardAvoidingView>
         <TouchableWithoutFeedback onPress={handleLoginPress}>
           <View

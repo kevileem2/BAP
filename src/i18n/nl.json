@@ -3,6 +3,7 @@
   "PleaseSignIn": "Meld je aan om verder te gaan.",
   "PutNameHere": "Naam",
   "PutEmailHere": "Email",
+  "PutUserNameHere": "Gebruikersnaam",
   "PutPasswordHere": "Wachtwoord",
   "ConfirmPasswordHere": "Bevestig wachtwoord",
   "Forgot": "Vergeten",
@@ -48,5 +49,8 @@
   "messageIsMandatory": "Geef een geldige notitie",
   "recentNotes": "Recente notities",
   "profile": "Profiel",
-  "fetchingData": "Data ophalen..."
+  "fetchingData": "Data ophalen...",
+  "passwordsDontMatch": "De wachtwoorden komen niet overeen",
+  "checkEverythingFilledIn": "Gelieve alle velden in te vullen",
+  "LogginFailed": "Aanmelden is mislukt"
 }
