@@ -1,6 +1,7 @@
 {
   "Login": "Login",
   "PleaseSignIn": "Please sign in to continue.",
+  "PutNameHere": "Name",
   "PutEmailHere": "Email",
   "PutPasswordHere": "Password",
   "ConfirmPasswordHere": "Confirm password",

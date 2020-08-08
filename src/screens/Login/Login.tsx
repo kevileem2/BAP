@@ -12,6 +12,7 @@ import {
 import { NavigationScreenProp } from 'react-navigation'
 import Realm, { Results } from 'realm'
 import {Guid} from 'guid-typescript'
+import {Buffer} from 'buffer'
 import storage, { UserSession } from '../../utils/storage'
 import { formatMessage } from '../../shared/formatMessage'
 import { Metrics, Colors } from '../../themes'
@@ -19,6 +20,7 @@ import image from '../../assets/images/Login-screen-decoration.png'
 import { Icon, InputContainer, Button } from './components'
 import AsyncStorage from '@react-native-community/async-storage'
 import { AuthContext } from '../../Navigator'
+import Axios from 'axios'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -48,20 +50,42 @@ export default ({ navigation, realm }: Props) => {
   }
 
   const handleLoginPress = async () => {
-    await AsyncStorage.setItem('isLoggedIn', 'true')
-    await storage.writeTransaction((realmInstance: Realm) => {
-      realmInstance.create(
-        'UserSession',
-        { type: 'singleInstance', email, loading: false },
-        Realm.UpdateMode.All
-      )
-      realmInstance.create(
-        'User',
-        { guid:  String(Guid.create()).toUpperCase(), email, firstName: 'Kevin', lastName: 'Leemans'},
-        Realm.UpdateMode.All
-      )
-    }, realm)
-    signIn && signIn()
+    const btoa = new Buffer(`${email}:${password}`).toString("base64")
+    try {
+      fetch('https://kevin.is.giestig.be/api/auth', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-API-KEY': 'AgJMvHWTdYR55BGfC0n7I',
+          'Authorization': `Basic ${btoa}`
+        },
+      }).then((res)=> {
+        console.log(res.ok)
+        return res.json()
+      }).then((res) => {
+        console.log('comes in here: ', res)
+      }).catch((e) => {
+  
+        console.log(e)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+    // await AsyncStorage.setItem('isLoggedIn', 'true')
+    // await storage.writeTransaction((realmInstance: Realm) => {
+    //   realmInstance.create(
+    //     'UserSession',
+    //     { type: 'singleInstance', email, loading: false },
+    //     Realm.UpdateMode.All
+    //   )
+    //   realmInstance.create(
+    //     'User',
+    //     { guid:  String(Guid.create()).toUpperCase(), email, firstName: 'Kevin', lastName: 'Leemans'},
+    //     Realm.UpdateMode.All
+    //   )
+    // }, realm)
+    // signIn && signIn()
   }
 
   return (

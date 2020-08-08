@@ -11,19 +11,23 @@ import {
 } from 'react-native'
 import { formatMessage } from '../../shared/formatMessage'
 import { Metrics, Colors } from '../../themes'
+import {Buffer} from 'buffer'
 import image from '../../assets/images/Login-screen-decoration.png'
 import { Icon, InputContainer, Button } from './components'
 import { NavigationScreenProp } from 'react-navigation'
 import { AuthContext } from '../../Navigator'
+import Axios from 'axios'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
 }
 
 export default ({ navigation }: Props) => {
+  const [name, setName] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [confirmPassword, setConfirmPassword] = useState<string>('')
+
   const { signIn } = React.useContext(AuthContext)
 
   const { width } = Dimensions.get('window')
@@ -36,6 +40,12 @@ export default ({ navigation }: Props) => {
   const handlePasswordChange = (text: string) => {
     setPassword(text)
   }
+  const handleNameChange = (text: string) => {
+    setName(text)
+  }
+
+  
+
   const handleConfirmPasswordChange = (text: string) => {
     setConfirmPassword(text)
   }
@@ -44,7 +54,36 @@ export default ({ navigation }: Props) => {
     navigation.navigate('Login')
   }
 
-  const handleSignUpPress = () => {}
+  const handleSignUpPress = () => {
+    console.log('comes in here')
+    const btoa = new Buffer(`${name}:${password}`).toString("base64")
+    console.log(btoa)
+    // fetch('http://kevin.is.giestig/api/auth', {
+    //   method: 'POST',
+    //   headers: {
+    //     'x-api-key': "kJwL2a9tSFQiuQ8Sy75iC",
+    //     'Authorization': `Basic ${btoa}`
+    //   },
+    // }).then((res) => {
+    //   console.log(res)
+    // }).catch((e) => {
+    //   console.log(e)
+    // })
+    Axios.request({
+      method: 'POST',
+      url: 'auth',
+      baseURL: 'http://kevin.is.giestig/api/',
+      headers: {
+        'Content-Type': "application/json",
+        'x-api-key': "kJwL2a9tSFQiuQ8Sy75iC",
+        'Authorization': `Basic ${btoa}`
+      },
+    }).then((res) => {
+      console.log(res)
+    }).catch((e) => {
+      console.log(e)
+    })
+  }
 
   return (
     <>
@@ -95,6 +134,32 @@ export default ({ navigation }: Props) => {
             }}>
             {formatMessage('CreateAccount')}
           </Text>
+          <InputContainer>
+            <View
+              style={{
+                flexDirection: 'row',
+              }}>
+              <View style={{justifyContent: "center"}}>
+                <Icon name="account-outline" size={24} />
+              </View>
+              <TextInput
+                placeholder={formatMessage('PutNameHere')}
+                placeholderTextColor={Colors.secondaryText}
+                value={name}
+                autoCapitalize="words"
+                selectionColor={Colors.primary}
+                onChangeText={handleNameChange}
+                returnKeyType="next"
+                textContentType="name"
+                style={{
+                  width: '85%',
+                  marginLeft: Metrics.smallMargin,
+                  fontSize: name ? 18 : 14,
+                  fontWeight: name ? '500' : '300',
+                }}
+              />
+            </View>
+          </InputContainer>
           <InputContainer>
             <View
               style={{
@@ -158,7 +223,7 @@ export default ({ navigation }: Props) => {
               <TextInput
                 placeholder={formatMessage('ConfirmPasswordHere')}
                 placeholderTextColor={Colors.secondaryText}
-                value={password}
+                value={confirmPassword}
                 autoCapitalize="none"
                 selectionColor={Colors.primary}
                 onChangeText={handleConfirmPasswordChange}
