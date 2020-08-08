@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { KeyboardAvoidingView, Platform, View, StatusBar } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import {
@@ -10,6 +10,11 @@ import { ScreenHeader, RotatingIcon } from '../'
 import { Colors } from '../../themes'
 import { ActionsContainer, IconContainer } from './components'
 import Footer from '../Footer'
+import AsyncStorage from '@react-native-community/async-storage'
+import storage, { User } from '../../utils/storage'
+import { clearRealmStorage } from '../../utils/dataUtils'
+import { RealmContext } from '../../App'
+import { AuthContext } from '../../Navigator'
 
 const LayoutContainerView = Platform.OS === 'ios' ? KeyboardAvoidingView : View
 
@@ -33,11 +38,10 @@ interface Props {
   backAction?: () => void
   headerIconAction?: () => void
   handleInformationPress?: () => void
-  handleSynchronizePress?: () => void
   handleAddPress?: () => void
   handleEditPress?: () => void
+  handleSynchronizePress?: () => void
   handleDeletePress?: () => void
-  handleLogoutPress?: () => void
   onLeftFlingGesture?: () => void
   onRightFlingGesture?: () => void
 }
@@ -58,14 +62,17 @@ const SignedInLayout: React.FC<Props> = ({
   isSynchronizing,
   headerIconAction,
   handleInformationPress,
-  handleSynchronizePress,
   handleAddPress,
   handleEditPress,
   handleDeletePress,
-  handleLogoutPress,
+  handleSynchronizePress,
   onLeftFlingGesture,
   onRightFlingGesture,
 }) => {
+  const realm = useContext(RealmContext)
+
+  const { signOut } = React.useContext(AuthContext)
+
   const handleLeftFlingStateChange = (event) => {
     if (!supressNavigation) {
       const { oldState } = event.nativeEvent
@@ -73,6 +80,30 @@ const SignedInLayout: React.FC<Props> = ({
         onLeftFlingGesture()
       }
     }
+  }
+
+  const handleLogoutPress = async () => {
+    await AsyncStorage.removeItem('isLoggedIn')
+    await AsyncStorage.removeItem('refresh_token')
+    await AsyncStorage.removeItem('access_token')
+    await AsyncStorage.removeItem('userId')
+    await storage.writeTransaction((realmInstance: Realm) => {
+      const user = realmInstance.objects<User>('User')
+      realmInstance.delete(user)
+      realmInstance.create(
+        'UserSession',
+        {
+          type: 'singleInstance',
+          email: null,
+          fullName: null,
+        },
+        Realm.UpdateMode.All
+      )
+    })
+    if (realm) {
+      await clearRealmStorage(realm)
+    }
+    signOut && signOut()
   }
 
   const handleRightFlingStateChange = (event) => {

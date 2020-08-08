@@ -62,7 +62,7 @@ export default () => {
       showLogout
       isSynchronizing={isSynchronizing}
       handleSynchronizePress={handleSynchronizePress}
-      handleLogoutPress={handleLogoutPress}
+      // handleLogoutPress={handleLogoutPress}
       // onLeftFlingGesture={handleLeftFlingGesture}
       onRightFlingGesture={handleRightFlingGesture}
       activeTabIndex={2}>
