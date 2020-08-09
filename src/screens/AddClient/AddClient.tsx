@@ -5,7 +5,7 @@ import {
   Text,
   TextInput,
   ScrollView,
-  Platform
+  Platform,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { Guid } from 'guid-typescript'
@@ -157,22 +157,24 @@ export default ({ route }) => {
               </IconHeaderContainer>
             </IconHeaderContainerWrapper>
             <InputContainer>
-                <TextInput
-                  placeholder={formatMessage('firstName')}
-                  placeholderTextColor={Colors.secondaryText}
-                  value={firstName}
-                  autoCapitalize="words"
-                  selectionColor={Colors.primary}
-                  onChangeText={handleFirstName}
-                  returnKeyType="next"
-                  textContentType="givenName"
-                  style={{
-                    width: '100%',
-                    marginLeft: Metrics.smallMargin,
-                    fontSize: 14,
-                    fontWeight: '300',
-                  }}
-                />
+              <TextInput
+                placeholder={formatMessage('firstName')}
+                placeholderTextColor={Colors.secondaryText}
+                value={firstName}
+                autoCapitalize="words"
+                selectionColor={Colors.primary}
+                onChangeText={handleFirstName}
+                returnKeyType="next"
+                textContentType="givenName"
+                style={{
+                  height: Platform.OS == 'ios' ? 26 : 'auto',
+                  width: '100%',
+                  marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
+                  marginLeft: Metrics.smallMargin,
+                  fontSize: 14,
+                  fontWeight: '300',
+                }}
+              />
             </InputContainer>
             {errors.firstName && (
               <Text
@@ -184,22 +186,24 @@ export default ({ route }) => {
               </Text>
             )}
             <InputContainer>
-                <TextInput
-                  placeholder={formatMessage('lastName')}
-                  placeholderTextColor={Colors.secondaryText}
-                  value={lastName}
-                  autoCapitalize="words"
-                  selectionColor={Colors.primary}
-                  onChangeText={handleLastName}
-                  returnKeyType="next"
-                  textContentType="familyName"
-                  style={{
-                    width: '100%',
-                    marginLeft: Metrics.smallMargin,
-                    fontSize: 14,
-                    fontWeight: '300',
-                  }}
-                />
+              <TextInput
+                placeholder={formatMessage('lastName')}
+                placeholderTextColor={Colors.secondaryText}
+                value={lastName}
+                autoCapitalize="words"
+                selectionColor={Colors.primary}
+                onChangeText={handleLastName}
+                returnKeyType="next"
+                textContentType="familyName"
+                style={{
+                  height: Platform.OS == 'ios' ? 26 : 'auto',
+                  width: '100%',
+                  marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
+                  marginLeft: Metrics.smallMargin,
+                  fontSize: 14,
+                  fontWeight: '300',
+                }}
+              />
             </InputContainer>
             {errors.lastName && (
               <Text
@@ -211,55 +215,61 @@ export default ({ route }) => {
               </Text>
             )}
             <InputContainer>
-                <TextInput
-                  placeholder={formatMessage('age')}
-                  placeholderTextColor={Colors.secondaryText}
-                  value={age}
-                  selectionColor={Colors.primary}
-                  onChangeText={handleAge}
-                  returnKeyType="next"
-                  keyboardType="numeric"
-                  style={{
-                    width: '100%',
-                    marginLeft: Metrics.smallMargin,
-                    fontSize: 14,
-                    fontWeight: '300',
-                  }}
-                />
+              <TextInput
+                placeholder={formatMessage('age')}
+                placeholderTextColor={Colors.secondaryText}
+                value={age}
+                selectionColor={Colors.primary}
+                onChangeText={handleAge}
+                returnKeyType="next"
+                keyboardType="numeric"
+                style={{
+                  height: Platform.OS == 'ios' ? 26 : 'auto',
+                  width: '100%',
+                  marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
+                  marginLeft: Metrics.smallMargin,
+                  fontSize: 14,
+                  fontWeight: '300',
+                }}
+              />
             </InputContainer>
             <InputContainer>
-                <TextInput
-                  placeholder={formatMessage('room')}
-                  placeholderTextColor={Colors.secondaryText}
-                  value={room}
-                  selectionColor={Colors.primary}
-                  onChangeText={handleRoom}
-                  returnKeyType="next"
-                  keyboardType="numeric"
-                  style={{
-                    width: '100%',
-                    marginLeft: Metrics.smallMargin,
-                    fontSize: 14,
-                    fontWeight: '300',
-                  }}
-                />
+              <TextInput
+                placeholder={formatMessage('room')}
+                placeholderTextColor={Colors.secondaryText}
+                value={room}
+                selectionColor={Colors.primary}
+                onChangeText={handleRoom}
+                returnKeyType="next"
+                keyboardType="numeric"
+                style={{
+                  height: Platform.OS == 'ios' ? 26 : 'auto',
+                  width: '100%',
+                  marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
+                  marginLeft: Metrics.smallMargin,
+                  fontSize: 14,
+                  fontWeight: '300',
+                }}
+              />
             </InputContainer>
             <InputContainer>
-                <TextInput
-                  placeholder={formatMessage('description')}
-                  placeholderTextColor={Colors.secondaryText}
-                  value={description}
-                  autoCapitalize="sentences"
-                  selectionColor={Colors.primary}
-                  onChangeText={handleDescription}
-                  returnKeyType="go"
-                  style={{
-                    width: '100%',
-                    marginLeft: Metrics.smallMargin,
-                    fontSize: 14,
-                    fontWeight: '300',
-                  }}
-                />
+              <TextInput
+                placeholder={formatMessage('description')}
+                placeholderTextColor={Colors.secondaryText}
+                value={description}
+                autoCapitalize="sentences"
+                selectionColor={Colors.primary}
+                onChangeText={handleDescription}
+                returnKeyType="go"
+                style={{
+                  height: Platform.OS === 'ios' ? 26 : 'auto',
+                  width: '100%',
+                  marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
+                  marginLeft: Metrics.smallMargin,
+                  fontSize: 14,
+                  fontWeight: '300',
+                }}
+              />
             </InputContainer>
           </Container>
           <TouchableOpacity onPress={handleAddClientPress}>

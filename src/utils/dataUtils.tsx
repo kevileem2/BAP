@@ -1,10 +1,10 @@
 import { useContext } from 'react'
-import Realm from 'realm'
+import Realm, { Results } from 'realm'
 import { RealmContext } from '../App'
 import storage, { Clients, Notes } from './storage'
 import { format } from 'date-fns'
 
-const remapNewClientsItems = (data) => {
+const remapNewClientsItems = (data: Results<Clients>) => {
   let result = []
   data.filtered('changeType = 1').forEach((element: Clients) => {
     result = [
@@ -23,7 +23,7 @@ const remapNewClientsItems = (data) => {
   })
   return result
 }
-const remapUpdatedClientsItems = (data) => {
+const remapUpdatedClientsItems = (data: Results<Clients>) => {
   let result = []
   data.filtered('changeType = 2').forEach((element: Clients) => {
     result = [
@@ -41,7 +41,22 @@ const remapUpdatedClientsItems = (data) => {
   })
   return result
 }
-const remapUpdatedNotesItems = (data) => {
+
+const remapDeletedClientsItems = (data: Results<Clients>) => {
+  let result = []
+  data.filtered('changeType = 0').forEach((element: Clients) => {
+    result = [
+      ...result,
+      {
+        id: element.id,
+        changeType: element.changeType,
+      },
+    ]
+  })
+  return result
+}
+
+const remapUpdatedNotesItems = (data: Results<Notes>) => {
   let result = []
   data.filtered('changeType = 2').forEach((element: Notes) => {
     result = [
@@ -62,7 +77,7 @@ const remapUpdatedNotesItems = (data) => {
   })
   return result
 }
-const remapNewNotesItems = (data) => {
+const remapNewNotesItems = (data: Results<Notes>) => {
   let result = []
   data.filtered('changeType = 1').forEach((element: Notes) => {
     result = [
@@ -84,6 +99,20 @@ const remapNewNotesItems = (data) => {
   return result
 }
 
+const remapDeletedNotesItems = (data: Results<Notes>) => {
+  let result = []
+  data.filtered('changeType = 0').forEach((element: Notes) => {
+    result = [
+      ...result,
+      {
+        id: element.id,
+        changeType: element.changeType,
+      },
+    ]
+  })
+  return result
+}
+
 export const getUpdatePackage = async () => {
   const updatePackage = {
     clients: [],
@@ -95,10 +124,12 @@ export const getUpdatePackage = async () => {
     updatePackage.clients = [
       ...remapNewClientsItems(ClientItems),
       ...remapUpdatedClientsItems(ClientItems),
+      ...remapDeletedClientsItems(ClientItems),
     ]
     updatePackage.notes = [
       ...remapNewNotesItems(NoteItems),
       ...remapUpdatedNotesItems(NoteItems),
+      ...remapDeletedNotesItems(NoteItems),
     ]
   })
   return updatePackage
