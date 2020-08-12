@@ -156,7 +156,7 @@ export const applyPackageToStorage = async (object) => {
           name: element.firstName,
           lastName: element.lastName,
           room: element.room.length ? parseInt(element.room) : null,
-          age: element.age,
+          age: element.age ? parseInt(element.age) : null,
           description: element.condition,
         },
         Realm.UpdateMode.All
