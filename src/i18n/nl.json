@@ -52,5 +52,6 @@
   "fetchingData": "Data ophalen...",
   "passwordsDontMatch": "De wachtwoorden komen niet overeen",
   "checkEverythingFilledIn": "Gelieve alle velden in te vullen",
-  "LogginFailed": "Aanmelden is mislukt"
+  "LogginFailed": "Aanmelden is mislukt",
+  "noInternet": "Geen internet verbinding beschikbaar"
 }

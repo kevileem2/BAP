@@ -8,8 +8,9 @@ import React, {
 import { View, TouchableOpacity } from 'react-native'
 import { Results } from 'realm'
 import { useNavigation } from '@react-navigation/native'
+import NetInfo from '@react-native-community/netinfo'
 import SignedInLayout from '../../shared/SignedInStack'
-import { formatMessage } from '../../shared'
+import { formatMessage, message } from '../../shared'
 import useRealm from '../../utils/useRealm'
 import { Clients } from '../../utils/storage'
 import {
@@ -29,6 +30,8 @@ import {
 } from '../../utils/dataUtils'
 import AsyncStorage from '@react-native-community/async-storage'
 import { RealmContext } from '../../App'
+
+const offlineStateTypes = ['none', 'unknown', 'NONE', 'UNKNOWN']
 
 export default () => {
   const navigation = useNavigation()
@@ -52,8 +55,12 @@ export default () => {
   }, [])
 
   const handleSynchronizePress = async () => {
-    setIsSynchronize(true)
+    const netConnectionState = await NetInfo.fetch()
+    if (offlineStateTypes.some((value) => value === netConnectionState.type)) {
+      throw formatMessage('noInternet')
+    }
     try {
+      setIsSynchronize(true)
       const accessToken = await AsyncStorage.getItem('access_token')
       const userId = await AsyncStorage.getItem('userId')
       const updatePackage = await getUpdatePackage()
@@ -84,6 +91,7 @@ export default () => {
       applyPackageToStorage(responseJson)
     } catch (e) {
       console.log(e)
+      await message({ message: e, realm })
     }
     setIsSynchronize(false)
   }
@@ -162,6 +170,7 @@ export default () => {
     <SignedInLayout
       headerTitle={formatMessage('clients')}
       showSynchronizeIcon
+      showLogout
       isSynchronizing={isSynchronizing}
       showAddIcon={Boolean(clients?.length)}
       handleSynchronizePress={handleSynchronizePress}

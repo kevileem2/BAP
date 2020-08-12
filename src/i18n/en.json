@@ -52,5 +52,6 @@
   "fetchingData": "Fetching data...",
   "passwordsDontMatch": "Passwords don't match",
   "checkEverythingFilledIn": "Please fill in every field",
-  "LogginFailed": "Login failed"
+  "LogginFailed": "Login failed",
+  "noInternet": "No internet connection available"
 }

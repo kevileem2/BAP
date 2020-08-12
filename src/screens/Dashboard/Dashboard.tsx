@@ -5,9 +5,8 @@ import SignedInLayout from '../../shared/SignedInStack'
 import { StyledButton, Title, SubTitle, Icon } from './components'
 import { Colors, Metrics } from '../../themes'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Results } from 'realm'
+import NetInfo from '@react-native-community/netinfo'
 import { UserSession, Notes } from '../../utils/storage'
-import useRealm from 'utils/useRealm'
 import { formatMessage } from '../../shared/formatMessage'
 import ListCard from './ListCard'
 import { RealmContext } from '../../App'
@@ -17,6 +16,9 @@ import {
   clearRealmStorage,
   applyPackageToStorage,
 } from '../../utils/dataUtils'
+import { message } from '../../shared'
+
+const offlineStateTypes = ['none', 'unknown', 'NONE', 'UNKNOWN']
 
 export default () => {
   const navigation = useNavigation()
@@ -49,11 +51,25 @@ export default () => {
         console.log(e)
       }
     }
-  }, [realm])
+  }, [])
+
+  useEffect(() => {
+    if (realm) {
+      const notes = realm.objects<Notes>('Notes').filtered(`changeType != 0`)
+      if (notes?.length) {
+        const endIndexNotes = notes?.length < 3 ? notes.length : 3
+        setNoteList(notes.sorted('updatedAt', true).slice(0, endIndexNotes))
+      }
+    }
+  }, [realm, navigation])
 
   const handleSynchronizePress = async () => {
-    setIsSynchronize(true)
+    const netConnectionState = await NetInfo.fetch()
+    if (offlineStateTypes.some((value) => value === netConnectionState.type)) {
+      throw formatMessage('noInternet')
+    }
     try {
+      setIsSynchronize(true)
       const accessToken = await AsyncStorage.getItem('access_token')
       const userId = await AsyncStorage.getItem('userId')
       const updatePackage = await getUpdatePackage()

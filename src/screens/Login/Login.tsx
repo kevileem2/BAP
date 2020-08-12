@@ -13,6 +13,7 @@ import { NavigationScreenProp } from 'react-navigation'
 import Realm, { Results } from 'realm'
 import { Guid } from 'guid-typescript'
 import { Buffer } from 'buffer'
+import NetInfo from '@react-native-community/netinfo'
 import storage, { UserSession } from '../../utils/storage'
 import { formatMessage } from '../../shared/formatMessage'
 import { Metrics, Colors } from '../../themes'
@@ -21,11 +22,14 @@ import { Icon, InputContainer, Button } from './components'
 import AsyncStorage from '@react-native-community/async-storage'
 import { AuthContext } from '../../Navigator'
 import { RealmContext } from '../../App'
+import { message } from '../../shared'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
   userSession: Results<UserSession>
 }
+
+const offlineStateTypes = ['none', 'unknown', 'NONE', 'UNKNOWN']
 
 export default ({ navigation }: Props) => {
   const { signIn } = React.useContext(AuthContext)
@@ -54,6 +58,12 @@ export default ({ navigation }: Props) => {
   const handleLoginPress = async () => {
     const btoa = new Buffer(`${email}:${password}`).toString('base64')
     try {
+      const netConnectionState = await NetInfo.fetch()
+      if (
+        offlineStateTypes.some((value) => value === netConnectionState.type)
+      ) {
+        throw formatMessage('noInternet')
+      }
       if (email && password) {
         setError(null)
         let firstRefreshToken = ''
@@ -131,7 +141,11 @@ export default ({ navigation }: Props) => {
         setError(formatMessage('checkEverythingFilledIn'))
       }
     } catch (e) {
-      setError(formatMessage('LogginFailed'))
+      if (typeof e === typeof '') {
+        setError(formatMessage('noInternet'))
+      } else {
+        setError(formatMessage('LogginFailed'))
+      }
       console.log(e)
     }
   }

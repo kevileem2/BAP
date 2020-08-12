@@ -52,5 +52,6 @@
   "fetchingData": "Collecter des données...",
   "passwordsDontMatch": "Les mots de passe ne correspondent pas",
   "checkEverythingFilledIn": "veuillez remplir tous les champs",
-  "LogginFailed": "échec de la connexion"
+  "LogginFailed": "échec de la connexion",
+  "noInternet": "Pas de connexion internet disponible"
 }

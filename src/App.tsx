@@ -9,6 +9,7 @@ import { UserSession } from './utils/storage'
 import Navigator from './Navigator'
 
 YellowBox.ignoreWarnings(['Warning: componentWill'])
+console.disableYellowBox = true
 
 export const RealmContext = React.createContext<Realm | undefined>(undefined)
 

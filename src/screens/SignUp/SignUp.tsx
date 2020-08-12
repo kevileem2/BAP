@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
+import NetInfo from '@react-native-community/netinfo'
 import { formatMessage } from '../../shared/formatMessage'
 import { Metrics, Colors } from '../../themes'
 import { Buffer } from 'buffer'
@@ -20,6 +21,8 @@ import { AuthContext } from '../../Navigator'
 import storage from '../../utils/storage'
 import { Guid } from 'guid-typescript'
 import { RealmContext } from '../../App'
+
+const offlineStateTypes = ['none', 'unknown', 'NONE', 'UNKNOWN']
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -59,11 +62,17 @@ export default ({ navigation }: Props) => {
   }
 
   const handleSignUpPress = async () => {
+    const netConnectionState = await NetInfo.fetch()
     if (email && name && password) {
       if (password === confirmPassword) {
         setError(null)
         const btoa = new Buffer(`${name}:${password}`).toString('base64')
         try {
+          if (
+            offlineStateTypes.some((value) => value === netConnectionState.type)
+          ) {
+            throw formatMessage('noInternet')
+          }
           await fetch('https://kevin.is.giestig.be/api/add-user', {
             method: 'POST',
             headers: {
@@ -149,6 +158,11 @@ export default ({ navigation }: Props) => {
           await AsyncStorage.setItem('isLoggedIn', 'true')
         } catch (e) {
           console.log(e)
+          if (typeof e === typeof '') {
+            setError(formatMessage('noInternet'))
+          } else {
+            setError(formatMessage('LogginFailed'))
+          }
         }
       } else {
         setError(formatMessage('passwordsDontMatch'))

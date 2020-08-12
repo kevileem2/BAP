@@ -24,6 +24,7 @@ interface MessagePayload {
 }
 
 export default async ({ message, realm }: MessagePayload) => {
+  console.log('comes in here')
   let errorMessage =
     typeof message === 'string' ? message : 'Something went wrong'
   let errorDetails = ''
