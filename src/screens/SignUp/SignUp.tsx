@@ -71,7 +71,7 @@ export default ({ navigation }: Props) => {
           if (
             offlineStateTypes.some((value) => value === netConnectionState.type)
           ) {
-            throw formatMessage('noInternet')
+            throw formatMessage('noInternet', realm)
           }
           await fetch('https://kevin.is.giestig.be/api/add-user', {
             method: 'POST',
@@ -159,16 +159,16 @@ export default ({ navigation }: Props) => {
         } catch (e) {
           console.log(e)
           if (typeof e === typeof '') {
-            setError(formatMessage('noInternet'))
+            setError(formatMessage('noInternet', realm))
           } else {
-            setError(formatMessage('LogginFailed'))
+            setError(formatMessage('LogginFailed', realm))
           }
         }
       } else {
-        setError(formatMessage('passwordsDontMatch'))
+        setError(formatMessage('passwordsDontMatch', realm))
       }
     } else {
-      setError(formatMessage('checkEverythingFilledIn'))
+      setError(formatMessage('checkEverythingFilledIn', realm))
     }
   }
 
@@ -219,7 +219,7 @@ export default ({ navigation }: Props) => {
               fontWeight: '700',
               marginBottom: Metrics.smallMargin,
             }}>
-            {formatMessage('CreateAccount')}
+            {formatMessage('CreateAccount', realm)}
           </Text>
           <InputContainer>
             <View
@@ -230,7 +230,7 @@ export default ({ navigation }: Props) => {
                 <Icon name="account-outline" size={24} />
               </View>
               <TextInput
-                placeholder={formatMessage('PutUserNameHere')}
+                placeholder={formatMessage('PutUserNameHere', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={name}
                 autoCapitalize="words"
@@ -256,7 +256,7 @@ export default ({ navigation }: Props) => {
                 <Icon name="email-outline" size={24} />
               </View>
               <TextInput
-                placeholder={formatMessage('PutEmailHere')}
+                placeholder={formatMessage('PutEmailHere', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={email}
                 autoCapitalize="none"
@@ -283,7 +283,7 @@ export default ({ navigation }: Props) => {
                 <Icon name="lock-outline" size={24} />
               </View>
               <TextInput
-                placeholder={formatMessage('PutPasswordHere')}
+                placeholder={formatMessage('PutPasswordHere', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={password}
                 autoCapitalize="none"
@@ -308,7 +308,7 @@ export default ({ navigation }: Props) => {
                 <Icon name="lock-open-outline" size={24} />
               </View>
               <TextInput
-                placeholder={formatMessage('ConfirmPasswordHere')}
+                placeholder={formatMessage('ConfirmPasswordHere', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={confirmPassword}
                 autoCapitalize="none"
@@ -371,10 +371,10 @@ export default ({ navigation }: Props) => {
             alignSelf: 'center',
             justifyContent: 'flex-end',
           }}>
-          <Text>{formatMessage('AlreadyHaveAnAccount')} </Text>
+          <Text>{formatMessage('AlreadyHaveAnAccount', realm)} </Text>
           <TouchableWithoutFeedback onPress={handleGoBackPress}>
             <Text style={{ color: Colors.primary }}>
-              {formatMessage('SignIn')}
+              {formatMessage('SignIn', realm)}
             </Text>
           </TouchableWithoutFeedback>
         </View>

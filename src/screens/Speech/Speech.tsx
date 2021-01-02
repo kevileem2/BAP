@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useContext } from 'react'
 import {
   View,
   Text,
@@ -38,11 +38,14 @@ import { Portal, Modal } from 'react-native-paper'
 import { ModalCard, ModalButtonsContainer } from '../../shared/components'
 import { Picker } from '../../shared'
 import PickerItem from '../../shared/Picker/PickerItem'
+import { RealmContext } from '../../App'
+import ModalCardRounded from '../../shared/ModalCardRounded'
+import { useModal } from '../../utils/ModalProvider'
 
-interface Props {}
-
-export default ({}: Props) => {
+export default () => {
   const navigation = useNavigation()
+  const realm = useContext(RealmContext)
+  const { showModal, hideModal } = useModal()
 
   const [pitch, setPitch] = useState<string>('')
   const [error, setError] = useState<string>('')
@@ -180,7 +183,20 @@ export default ({}: Props) => {
   }
 
   const handleModalVisibilityChange = () => {
-    setModalVisibilityChange((prevState) => !prevState)
+    showModal(
+      <ModalCardRounded
+        title="instructions"
+        icon="information-outline"
+        iconColor={Colors.primary}
+        confirmButtonText="ok"
+        confirmButtonColor={Colors.accentButtonColorDark}
+        handleConfirmAction={hideModal}
+        hideCancelButton
+        realm={realm}
+        hideModal={hideModal}
+        speech
+      />
+    )
   }
 
   const handleDelete = () => {
@@ -207,7 +223,7 @@ export default ({}: Props) => {
       setErrors('')
       navigation.navigate('ClientDetail', { userGuid: selectedItem })
     } else {
-      setErrors(formatMessage('clientIsMandatory'))
+      setErrors(formatMessage('clientIsMandatory', realm))
     }
   }
 
@@ -252,7 +268,7 @@ export default ({}: Props) => {
       label={
         item.name && item.lastName
           ? `${item.name} ${item.lastName}`
-          : formatMessage('unknown')
+          : formatMessage('unknown', realm)
       }
       value={item.guid}
       onPress={handleValuePress}
@@ -283,20 +299,20 @@ export default ({}: Props) => {
   return (
     <>
       <SignedInLayout
-        headerTitle={formatMessage('addNote')}
+        headerTitle={formatMessage('addNote', realm)}
         headerIcon="arrow-left"
         headerIconAction={handleHeaderIconAction}
         showInformation
         handleInformationPress={handleModalVisibilityChange}
         hideFooter>
         <View style={{ flex: 1, margin: Metrics.baseMargin }}>
-          <Title>{formatMessage('speechNoteTitle')}</Title>
-          <SubTitle>{formatMessage('speechNoteSubtitle')}</SubTitle>
+          <Title>{formatMessage('speechNoteTitle', realm)}</Title>
+          <SubTitle>{formatMessage('speechNoteSubtitle', realm)}</SubTitle>
           <OutputTitle>Output</OutputTitle>
           <TouchableOpacity onPress={handlePickerVisibilityChange}>
             <Dropdown>
               <DropdownTitle>
-                {formatMessage('client')}: {value}
+                {formatMessage('client', realm)}: {value}
               </DropdownTitle>
               <Icon name="chevron-down" size={24} />
             </Dropdown>
@@ -349,8 +365,8 @@ export default ({}: Props) => {
                       color: Colors.primaryTextLight,
                     }}>
                     {isEditing
-                      ? formatMessage('stopEditing')
-                      : formatMessage('edit')}
+                      ? formatMessage('stopEditing', realm)
+                      : formatMessage('edit', realm)}
                   </Text>
                 </StyledButton>
               </TouchableOpacity>
@@ -375,7 +391,7 @@ export default ({}: Props) => {
                           marginRight: Metrics.smallMargin,
                           color: Colors.primaryTextLight,
                         }}>
-                        {formatMessage('delete')}
+                        {formatMessage('delete', realm)}
                       </Text>
                     </StyledButton>
                   </TouchableOpacity>
@@ -401,7 +417,7 @@ export default ({}: Props) => {
                           marginRight: Metrics.smallMargin,
                           color: Colors.primaryTextLight,
                         }}>
-                        {formatMessage('save')}
+                        {formatMessage('save', realm)}
                       </Text>
                     </StyledButton>
                   </TouchableOpacity>
@@ -476,17 +492,19 @@ export default ({}: Props) => {
         <Modal visible={modalVisible} onDismiss={handleModalVisibilityChange}>
           <ModalCard>
             <AdditionalInfoTitle>
-              {formatMessage('instructions')}:
+              {formatMessage('instructions', realm)}:
             </AdditionalInfoTitle>
-            <AdditionalInfo>• {formatMessage('speakClearly')}</AdditionalInfo>
             <AdditionalInfo>
-              • {formatMessage('recordNoteCompletely')}
+              • {formatMessage('speakClearly', realm)}
             </AdditionalInfo>
             <AdditionalInfo>
-              • {formatMessage('speakPunctuation')}
+              • {formatMessage('recordNoteCompletely', realm)}
             </AdditionalInfo>
             <AdditionalInfo>
-              • {formatMessage('punctuationExample')}
+              • {formatMessage('speakPunctuation', realm)}
+            </AdditionalInfo>
+            <AdditionalInfo>
+              • {formatMessage('punctuationExample', realm)}
             </AdditionalInfo>
             <ModalButtonsContainer>
               <TouchableOpacity onPress={handleModalVisibilityChange}>

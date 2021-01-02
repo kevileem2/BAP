@@ -190,8 +190,8 @@ export default ({ route }) => {
                   flexDirection: 'row',
                 }}>
                 <Text style={{ fontWeight: '700' }}>{`${
-                  formatMessage('name').charAt(0).toUpperCase() +
-                  formatMessage('name').slice(1)
+                  formatMessage('name', realm).charAt(0).toUpperCase() +
+                  formatMessage('name', realm).slice(1)
                 }: `}</Text>
                 <Text>{`${client?.name} ${client?.lastName}`}</Text>
               </View>
@@ -203,8 +203,8 @@ export default ({ route }) => {
                     flexDirection: 'row',
                   }}>
                   <Text style={{ fontWeight: '700' }}>{`${
-                    formatMessage('age').charAt(0).toUpperCase() +
-                    formatMessage('age').slice(1)
+                    formatMessage('age', realm).charAt(0).toUpperCase() +
+                    formatMessage('age', realm).slice(1)
                   }: `}</Text>
                   <Text>{`${client?.age}`}</Text>
                 </View>
@@ -217,8 +217,8 @@ export default ({ route }) => {
                     flexDirection: 'row',
                   }}>
                   <Text style={{ fontWeight: '700' }}>{`${
-                    formatMessage('room').charAt(0).toUpperCase() +
-                    formatMessage('room').slice(1)
+                    formatMessage('room', realm).charAt(0).toUpperCase() +
+                    formatMessage('room', realm).slice(1)
                   }: `}</Text>
                   <Text>{`${client?.room}`}</Text>
                 </View>
@@ -231,8 +231,10 @@ export default ({ route }) => {
                     flexDirection: 'row',
                   }}>
                   <Text style={{ fontWeight: '700' }}>{`${
-                    formatMessage('description').charAt(0).toUpperCase() +
-                    formatMessage('description').slice(1)
+                    formatMessage('description', realm)
+                      .charAt(0)
+                      .toUpperCase() +
+                    formatMessage('description', realm).slice(1)
                   }: `}</Text>
                   <Text>{`${client?.description}`}</Text>
                 </View>

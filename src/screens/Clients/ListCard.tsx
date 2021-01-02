@@ -1,16 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { TouchableWithoutFeedback } from 'react-native'
-import { Portal, Button, Modal } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import useRealm from 'utils/useRealm'
 import { Results } from 'realm'
-import { Colors, Metrics } from '../../themes'
-import { formatMessage, AvatarInitials } from '../../shared'
-import {
-  ModalCard,
-  ModalText,
-  ModalButtonsContainer,
-} from '../../shared/components'
+import { AvatarInitials } from '../../shared'
 import {
   ContactRow,
   Name,
@@ -19,6 +12,9 @@ import {
   Icon,
 } from './components'
 import { Clients, Notes } from '../../utils/storage'
+import { RealmContext } from '../../App'
+import { useModal } from '../../utils/ModalProvider'
+import ModalCardRounded from '../../shared/ModalCardRounded'
 
 interface Props {
   id?: number
@@ -30,8 +26,8 @@ interface Props {
 
 export default ({ name, lastName, guid, changeType }: Props) => {
   const navigation = useNavigation()
-  const [modalVisible, changeModalVisibility] = useState<boolean>(false)
-  const [isDeleted, changeIsDeleted] = useState<boolean>(false)
+  const realm = useContext(RealmContext)
+  const { showModal, hideModal } = useModal()
 
   const {
     objects: {
@@ -97,16 +93,23 @@ export default ({ name, lastName, guid, changeType }: Props) => {
           })
         }
       }
-      changeIsDeleted(true)
-      handleModalVisibilityChange()
     } catch (error) {
       console.log(error)
     }
+    hideModal()
   }
 
   // handles the modal visibility
   const handleModalVisibilityChange = () => {
-    changeModalVisibility((currentVisibility) => !currentVisibility)
+    showModal(
+      <ModalCardRounded
+        title="deleteClient"
+        text="deleteConfirmationClient"
+        handleConfirmAction={handleContactCardDelete}
+        hideModal={hideModal}
+        realm={realm}
+      />
+    )
   }
 
   const handleClientCardPress = () => {
@@ -115,40 +118,19 @@ export default ({ name, lastName, guid, changeType }: Props) => {
     })
   }
 
-  return !isDeleted ? (
-    <>
-      <TouchableWithoutFeedback
-        onPress={handleClientCardPress}
-        onLongPress={handleModalVisibilityChange}>
-        <ContactRow>
-          <AvatarInitials firstName={name} lastName={lastName} size={28} />
-          <ContactInfoContainer>
-            <Name>{`${name} ${lastName}`}</Name>
-          </ContactInfoContainer>
-          <IconContainer>
-            <Icon size={24} name="chevron-right" />
-          </IconContainer>
-        </ContactRow>
-      </TouchableWithoutFeedback>
-      <Portal>
-        <Modal visible={modalVisible} onDismiss={handleModalVisibilityChange}>
-          <ModalCard>
-            <ModalText>{formatMessage('deleteConfirmationClient')}</ModalText>
-            <ModalButtonsContainer>
-              <Button
-                mode="contained"
-                color={Colors.errorDark}
-                onPress={handleContactCardDelete}
-                style={{ marginRight: Metrics.baseMargin }}>
-                {formatMessage('yes')}
-              </Button>
-              <Button mode="outlined" onPress={handleModalVisibilityChange}>
-                {formatMessage('no')}
-              </Button>
-            </ModalButtonsContainer>
-          </ModalCard>
-        </Modal>
-      </Portal>
-    </>
-  ) : null
+  return (
+    <TouchableWithoutFeedback
+      onPress={handleClientCardPress}
+      onLongPress={handleModalVisibilityChange}>
+      <ContactRow>
+        <AvatarInitials firstName={name} lastName={lastName} size={28} />
+        <ContactInfoContainer>
+          <Name>{`${name} ${lastName}`}</Name>
+        </ContactInfoContainer>
+        <IconContainer>
+          <Icon size={24} name="chevron-right" />
+        </IconContainer>
+      </ContactRow>
+    </TouchableWithoutFeedback>
+  )
 }

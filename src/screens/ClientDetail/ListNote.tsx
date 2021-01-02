@@ -1,14 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, Text, View } from 'react-native'
-import { Divider, Portal, Modal, Button } from 'react-native-paper'
+import React, { useContext } from 'react'
+import { Text, View } from 'react-native'
+import { Divider } from 'react-native-paper'
 import { Results } from 'realm'
 import { Colors, Metrics } from '../../themes'
-import { formatMessage } from '../../shared'
-import {
-  ModalCard,
-  ModalText,
-  ModalButtonsContainer,
-} from '../../shared/components'
+import { RealmContext } from '../../App'
 import {
   IconContainer,
   TrashIcon,
@@ -20,6 +15,8 @@ import useRealm from '../../utils/useRealm'
 import { Notes } from '../../utils/storage'
 import { format } from 'date-fns'
 import { useNavigation } from '@react-navigation/native'
+import { useModal } from '../../utils/ModalProvider'
+import ModalCardRounded from '../../shared/ModalCardRounded'
 
 interface Props {
   guid: string
@@ -39,10 +36,8 @@ const ListNote = ({
   parentGuid,
 }: Props) => {
   const navigation = useNavigation()
-  const [modalDeleteVisible, changeModalDeleteVisibility] = useState<boolean>(
-    false
-  )
-  const [isDeleted, changeIsDeleted] = useState<boolean>(false)
+  const realm = useContext(RealmContext)
+  const { showModal, hideModal } = useModal()
 
   const {
     objects: { notes, thisNote },
@@ -57,7 +52,15 @@ const ListNote = ({
 
   // handles the delete modal visibility
   const handleModalDeleteVisibilityChange = () => {
-    changeModalDeleteVisibility((currentVisibility) => !currentVisibility)
+    showModal(
+      <ModalCardRounded
+        title="deleteNote"
+        text="deleteNoteConfirmation"
+        handleConfirmAction={handleDeleteNotePress}
+        hideModal={hideModal}
+        realm={realm}
+      />
+    )
   }
 
   // handles the relationship deletion
@@ -76,8 +79,7 @@ const ListNote = ({
         realmInstance.delete(thisNote)
       }
     })
-    changeIsDeleted(true)
-    handleModalDeleteVisibilityChange()
+    hideModal()
   }
 
   const handleEditPress = () => {
@@ -89,7 +91,7 @@ const ListNote = ({
     })
   }
 
-  return !isDeleted ? (
+  return (
     <>
       <NoteRow>
         <NoteInfoContainer>
@@ -132,31 +134,8 @@ const ListNote = ({
           }}
         />
       )}
-      <Portal>
-        <Modal
-          visible={modalDeleteVisible}
-          onDismiss={handleModalDeleteVisibilityChange}>
-          <ModalCard>
-            <ModalText>{formatMessage('deleteConfirmationNote')}</ModalText>
-            <ModalButtonsContainer>
-              <Button
-                mode="contained"
-                color={Colors.errorDark}
-                onPress={handleDeleteNotePress}
-                style={{ marginRight: Metrics.baseMargin }}>
-                {formatMessage('yes')}
-              </Button>
-              <Button
-                mode="outlined"
-                onPress={handleModalDeleteVisibilityChange}>
-                {formatMessage('no')}
-              </Button>
-            </ModalButtonsContainer>
-          </ModalCard>
-        </Modal>
-      </Portal>
     </>
-  ) : null
+  )
 }
 
 export default ListNote

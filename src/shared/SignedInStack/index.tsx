@@ -15,6 +15,8 @@ import storage, { User } from '../../utils/storage'
 import { clearRealmStorage } from '../../utils/dataUtils'
 import { RealmContext } from '../../App'
 import { AuthContext } from '../../Navigator'
+import { useModal } from '../../utils/ModalProvider'
+import ModalCardRounded from '../../shared/ModalCardRounded'
 
 const LayoutContainerView = Platform.OS === 'ios' ? KeyboardAvoidingView : View
 
@@ -71,7 +73,9 @@ const SignedInLayout: React.FC<Props> = ({
 }) => {
   const realm = useContext(RealmContext)
 
-  const { signOut } = React.useContext(AuthContext)
+  const { signOut } = useContext(AuthContext)
+
+  const { showModal, hideModal } = useModal()
 
   const handleLeftFlingStateChange = (event) => {
     if (!supressNavigation) {
@@ -80,6 +84,18 @@ const SignedInLayout: React.FC<Props> = ({
         onLeftFlingGesture()
       }
     }
+  }
+
+  const showLogoutConfirmation = () => {
+    showModal(
+      <ModalCardRounded
+        title="logout"
+        text="saveConfirmation"
+        handleConfirmAction={handleLogoutPress}
+        hideModal={hideModal}
+        realm={realm}
+      />
+    )
   }
 
   const handleLogoutPress = async () => {
@@ -104,6 +120,7 @@ const SignedInLayout: React.FC<Props> = ({
       await clearRealmStorage(realm)
     }
     signOut && signOut()
+    hideModal()
   }
 
   const handleRightFlingStateChange = (event) => {
@@ -184,7 +201,7 @@ const SignedInLayout: React.FC<Props> = ({
                     icon="logout"
                     size={25}
                     color={Colors.primaryTextLight}
-                    onPress={handleLogoutPress}
+                    onPress={showLogoutConfirmation}
                   />
                 )}
               </ActionsContainer>

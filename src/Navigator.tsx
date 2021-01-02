@@ -76,7 +76,7 @@ export default () => {
               <Stack.Screen name="Dashboard" component={Dashboard} />
               <Stack.Screen name="Clients" component={Clients} />
               <Stack.Screen name="Profile" component={Profile} />
-              {/* <Stack.Screen name="Settings" component={Settings} /> */}
+              <Stack.Screen name="Settings" component={Settings} />
               <Stack.Screen name="Speech" component={Speech} />
               <Stack.Screen name="TextInput" component={TextInput} />
               <Stack.Screen name="AddClient" component={AddClient} />

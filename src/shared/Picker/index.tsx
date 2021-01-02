@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Platform, ScrollView, View, Keyboard } from 'react-native'
 import { Picker } from '@react-native-community/picker'
 import { Portal, Modal, Searchbar } from 'react-native-paper'
 import { Metrics } from '../../themes'
 import { ModalCard } from '../components'
 import { formatMessage } from '..'
+import { RealmContext } from '../../App'
 
 interface Props {
   visible: boolean
@@ -23,6 +24,7 @@ const getModalMaxHeight = (keyboardIsOpen: boolean) =>
     : {}
 
 export default (props: Props) => {
+  const realm = useContext(RealmContext)
   const [keyboardIsOpen, changeKeyboardOpenState] = useState<boolean>(false)
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export default (props: Props) => {
         <ModalCard {...getModalMaxHeight(keyboardIsOpen)}>
           {props.showSearch && (
             <Searchbar
-              placeholder={formatMessage('search')}
+              placeholder={formatMessage('search', realm)}
               onChangeText={props.onSearchChange}
               value={props.searchText}
               style={{

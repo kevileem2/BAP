@@ -62,7 +62,7 @@ export default ({ navigation }: Props) => {
       if (
         offlineStateTypes.some((value) => value === netConnectionState.type)
       ) {
-        throw formatMessage('noInternet')
+        throw formatMessage('noInternet', realm)
       }
       if (email && password) {
         setError(null)
@@ -138,13 +138,13 @@ export default ({ navigation }: Props) => {
         await AsyncStorage.setItem('userId', userId.toString())
         await AsyncStorage.setItem('isLoggedIn', 'true')
       } else {
-        setError(formatMessage('checkEverythingFilledIn'))
+        setError(formatMessage('checkEverythingFilledIn', realm))
       }
     } catch (e) {
       if (typeof e === typeof '') {
-        setError(formatMessage('noInternet'))
+        setError(formatMessage('noInternet', realm))
       } else {
-        setError(formatMessage('LogginFailed'))
+        setError(formatMessage('LogginFailed', realm))
       }
       console.log(e)
     }
@@ -182,7 +182,7 @@ export default ({ navigation }: Props) => {
               fontWeight: '700',
               marginBottom: Metrics.smallMargin,
             }}>
-            {formatMessage('Login')}
+            {formatMessage('Login', realm)}
           </Text>
           <Text
             style={{
@@ -190,7 +190,7 @@ export default ({ navigation }: Props) => {
               fontWeight: '400',
               color: Colors.secondaryText,
             }}>
-            {formatMessage('PleaseSignIn')}
+            {formatMessage('PleaseSignIn', realm)}
           </Text>
           <InputContainer>
             <View
@@ -205,7 +205,7 @@ export default ({ navigation }: Props) => {
                 />
               </View>
               <TextInput
-                placeholder={formatMessage('PutUserNameHere')}
+                placeholder={formatMessage('PutUserNameHere', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={email}
                 autoCapitalize="none"
@@ -234,7 +234,7 @@ export default ({ navigation }: Props) => {
                 />
               </View>
               <TextInput
-                placeholder={formatMessage('PutPasswordHere')}
+                placeholder={formatMessage('PutPasswordHere', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={password}
                 autoCapitalize="none"
@@ -313,10 +313,10 @@ export default ({ navigation }: Props) => {
             alignSelf: 'center',
             justifyContent: 'flex-end',
           }}>
-          <Text>{formatMessage('DontHaveAnAccount')} </Text>
+          <Text>{formatMessage('DontHaveAnAccount', realm)} </Text>
           <TouchableWithoutFeedback onPress={handleSignUpPress}>
             <Text style={{ color: Colors.primary }}>
-              {formatMessage('SignUp')}
+              {formatMessage('SignUp', realm)}
             </Text>
           </TouchableWithoutFeedback>
         </View>

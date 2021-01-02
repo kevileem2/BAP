@@ -53,5 +53,20 @@
   "passwordsDontMatch": "Les mots de passe ne correspondent pas",
   "checkEverythingFilledIn": "veuillez remplir tous les champs",
   "LogginFailed": "échec de la connexion",
-  "noInternet": "Pas de connexion internet disponible"
+  "noInternet": "Pas de connexion internet disponible",
+  "system": "système",
+  "language": "langue",
+  "en": "Anglais",
+  "fr": "Français",
+  "nl": "Néerlandais",
+  "clearCache": "Vider le cache",
+  "settings": "Réglages",
+  "saveConfirmation": "Toutes les données non synchronisées sont perdues. Êtes-vous sûr?",
+  "deleteNote": "Supprimer la note",
+  "deleteNoteConfirmation": "Êtes-vous sûr de vouloir supprimer cette note?",
+  "deleteClient": "Supprimer le client",
+  "account": "Compte",
+  "logout": "Se déconnecter",
+  "ok": "ok",
+  "information": "Informations"
 }

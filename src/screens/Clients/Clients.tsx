@@ -57,7 +57,7 @@ export default () => {
   const handleSynchronizePress = async () => {
     const netConnectionState = await NetInfo.fetch()
     if (offlineStateTypes.some((value) => value === netConnectionState.type)) {
-      throw formatMessage('noInternet')
+      throw formatMessage('noInternet', realm)
     }
     try {
       setIsSynchronize(true)
@@ -100,9 +100,9 @@ export default () => {
     setShouldRefetch(refetch)
   }
 
-  // const handleLeftFlingGesture = () => {
-  //   navigation.navigate('Profile')
-  // }
+  const handleLeftFlingGesture = () => {
+    navigation.navigate('Settings')
+  }
 
   const handleRightFlingGesture = () => {
     navigation.navigate('Dashboard')
@@ -168,14 +168,14 @@ export default () => {
 
   return (
     <SignedInLayout
-      headerTitle={formatMessage('clients')}
+      headerTitle={formatMessage('clients', realm)}
       showSynchronizeIcon
       showLogout
       isSynchronizing={isSynchronizing}
       showAddIcon={Boolean(clients?.length)}
       handleSynchronizePress={handleSynchronizePress}
       handleAddPress={handleAddClientPress}
-      // onLeftFlingGesture={handleLeftFlingGesture}
+      onLeftFlingGesture={handleLeftFlingGesture}
       onRightFlingGesture={handleRightFlingGesture}
       activeTabIndex={1}>
       <View style={{ flex: 1 }}>
@@ -183,7 +183,7 @@ export default () => {
           (Boolean(clients?.length) ? (
             <>
               <SearchBarStyled
-                placeholder={formatMessage('search')}
+                placeholder={formatMessage('search', realm)}
                 onChangeText={handleSearchChange}
                 value={searchText}
               />
@@ -197,9 +197,11 @@ export default () => {
             </>
           ) : (
             <>
-              <NoClientsInfo>{formatMessage('noClientsYet')}</NoClientsInfo>
+              <NoClientsInfo>
+                {formatMessage('noClientsYet', realm)}
+              </NoClientsInfo>
               <NoClientsInfoSubTitle>
-                {formatMessage('addClients')}
+                {formatMessage('addClients', realm)}
               </NoClientsInfoSubTitle>
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                 <TouchableOpacity onPress={handleAddClientPress}>

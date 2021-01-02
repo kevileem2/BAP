@@ -1,3 +1,4 @@
+// tslint:disable: max-classes-per-file
 import Realm, { Results } from 'realm'
 
 export class Clients {
@@ -77,6 +78,7 @@ export class UserSession {
       email: 'string?',
       fullName: 'string?',
       message: 'string?',
+      language: 'string?',
       loading: 'bool',
       tokenCheck: 'bool',
     },
@@ -86,6 +88,7 @@ export class UserSession {
   public email: string | null
   public fullName: string | null
   public message: string | null
+  public language: string | null
   public loading: boolean
   public tokenCheck: boolean | null
 }

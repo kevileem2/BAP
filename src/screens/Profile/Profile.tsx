@@ -57,7 +57,7 @@ export default () => {
 
   return (
     <SignedInLayout
-      headerTitle={formatMessage('profile')}
+      headerTitle={formatMessage('profile', realm)}
       showSynchronizeIcon
       showLogout
       isSynchronizing={isSynchronizing}

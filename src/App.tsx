@@ -7,6 +7,7 @@ import { PaperTheme } from './themes'
 import { StyledSnackbar } from './shared/components'
 import { UserSession } from './utils/storage'
 import Navigator from './Navigator'
+import { ModalProvider } from 'utils/ModalProvider'
 
 YellowBox.ignoreWarnings(['Warning: componentWill'])
 console.disableYellowBox = true
@@ -100,30 +101,32 @@ export default () => {
   return (
     <PaperProvider theme={PaperTheme}>
       <RealmContext.Provider value={realm}>
-        <View style={{ flex: 1 }}>
-          <NavigatorWrapper.Provider value={false}>
-            <Navigator />
-          </NavigatorWrapper.Provider>
-          <StyledSnackbar
-            visible={Boolean(message)}
-            onDismiss={handleSnackbarDismiss}
-            action={{
-              label: 'x',
-              onPress: handleSnackbarDismiss,
-            }}
-            duration={59999}
-            style={
-              keyboardIsOpen
-                ? {
-                    marginBottom:
-                      Dimensions.get('window').height * 0.9 -
-                      (isIphoneX() ? 42 : 0),
-                  }
-                : {}
-            }>
-            {message}
-          </StyledSnackbar>
-        </View>
+        <ModalProvider>
+          <View style={{ flex: 1 }}>
+            <NavigatorWrapper.Provider value={false}>
+              <Navigator />
+            </NavigatorWrapper.Provider>
+            <StyledSnackbar
+              visible={Boolean(message)}
+              onDismiss={handleSnackbarDismiss}
+              action={{
+                label: 'x',
+                onPress: handleSnackbarDismiss,
+              }}
+              duration={59999}
+              style={
+                keyboardIsOpen
+                  ? {
+                      marginBottom:
+                        Dimensions.get('window').height * 0.9 -
+                        (isIphoneX() ? 42 : 0),
+                    }
+                  : {}
+              }>
+              {message}
+            </StyledSnackbar>
+          </View>
+        </ModalProvider>
       </RealmContext.Provider>
     </PaperProvider>
   )

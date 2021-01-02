@@ -53,5 +53,20 @@
   "passwordsDontMatch": "Passwords don't match",
   "checkEverythingFilledIn": "Please fill in every field",
   "LogginFailed": "Login failed",
-  "noInternet": "No internet connection available"
+  "noInternet": "No internet connection available",
+  "system": "system",
+  "language": "language",
+  "en": "English",
+  "fr": "French",
+  "nl": "Dutch",
+  "clearCache": "Clear cache",
+  "settings": "Settings",
+  "saveConfirmation": "All unsynchronized data will be lost. Do you want to proceed?",
+  "deleteNote": "Delete note",
+  "deleteNoteConfirmation": "Are you sure you wish to delete this note?",
+  "deleteClient": "Delete client",
+  "account": "Account",
+  "logout": "Logout",
+  "ok": "ok",
+  "information": "Information"
 }

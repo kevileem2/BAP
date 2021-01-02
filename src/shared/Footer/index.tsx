@@ -41,7 +41,7 @@ export default ({ activeTabIndex }: FooterProps) => {
     }
   }
   const handleSettingsPress = () => {
-    if (activeTabIndex !== 3) {
+    if (activeTabIndex !== 2) {
       navigation.navigate('Settings')
     }
   }
@@ -75,7 +75,7 @@ export default ({ activeTabIndex }: FooterProps) => {
           />
         </TouchableWithoutFeedback>
       </Section> */}
-      {/* <Section>
+      <Section>
         <TouchableWithoutFeedback onPress={handleSettingsPress}>
           <Icon
             name={getIconName(pageKeys.SETTINGS)}
@@ -83,7 +83,7 @@ export default ({ activeTabIndex }: FooterProps) => {
             color={Colors.primaryTextLight}
           />
         </TouchableWithoutFeedback>
-      </Section> */}
+      </Section>
     </FooterContainer>
   )
 }

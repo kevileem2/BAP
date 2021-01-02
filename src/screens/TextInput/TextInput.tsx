@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useContext } from 'react'
 import {
   View,
   Text,
@@ -29,6 +29,7 @@ import {
   StyledButton,
 } from './components'
 import { Picker } from '../../shared'
+import { RealmContext } from '../../App'
 
 interface Error {
   client?: string
@@ -37,6 +38,7 @@ interface Error {
 
 export default ({ route }) => {
   const navigation = useNavigation()
+  const realm = useContext(RealmContext)
   const { parentGuid, message, guid, changeType } = route?.params || {}
   const [search, setSearch] = useState<string>('')
   const [pickerVisible, setPickerVisible] = useState<boolean>(false)
@@ -114,10 +116,16 @@ export default ({ route }) => {
       navigation.navigate('ClientDetail', { userGuid: selectedItem })
     } else {
       if (!selectedItem) {
-        setError({ ...error, client: formatMessage('clientIsMandatory') })
+        setError({
+          ...error,
+          client: formatMessage('clientIsMandatory', realm),
+        })
       }
       if (!text) {
-        setError({ ...error, message: formatMessage('messageIsMandatory') })
+        setError({
+          ...error,
+          message: formatMessage('messageIsMandatory', realm),
+        })
       }
     }
   }
@@ -158,7 +166,7 @@ export default ({ route }) => {
       label={
         item.name && item.lastName
           ? `${item.name} ${item.lastName}`
-          : formatMessage('unknown')
+          : formatMessage('unknown', realm)
       }
       value={item.guid}
       onPress={handleValuePress}
@@ -193,17 +201,17 @@ export default ({ route }) => {
   return (
     <>
       <SignedInLayout
-        headerTitle={formatMessage('addNote')}
+        headerTitle={formatMessage('addNote', realm)}
         headerIcon="arrow-left"
         headerIconAction={handleHeaderIconAction}
         hideFooter>
         <View style={{ flex: 1, margin: Metrics.baseMargin }}>
-          <Title>{formatMessage('textNoteTitle')}</Title>
+          <Title>{formatMessage('textNoteTitle', realm)}</Title>
           <OutputTitle>Output</OutputTitle>
           <TouchableOpacity onPress={handlePickerVisibilityChange}>
             <Dropdown>
               <DropdownTitle>
-                {formatMessage('client')}: {value}
+                {formatMessage('client', realm)}: {value}
               </DropdownTitle>
               <Icon name="chevron-down" size={24} />
             </Dropdown>
@@ -254,7 +262,7 @@ export default ({ route }) => {
                     marginRight: Metrics.smallMargin,
                     color: Colors.primaryTextLight,
                   }}>
-                  {formatMessage('save')}
+                  {formatMessage('save', realm)}
                 </Text>
               </StyledButton>
             </TouchableOpacity>

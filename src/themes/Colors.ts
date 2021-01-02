@@ -16,7 +16,7 @@ const common = {
   primaryText: 'rgba(0,0,0,0.87)',
   secondaryText: 'rgba(0,0,0,0.5)',
   primaryTextLight: '#fff',
-  secondaryTextLight: 'rgba(255,255,255,0.5)',
+  secondaryTextLight: 'rgba(255,255,255,0.4)',
   background: '#ffffff',
   backgroundGray: '#e7eff2',
   backgroundDisabled: 'rgb(126,126,126)',

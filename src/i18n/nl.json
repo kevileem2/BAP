@@ -53,5 +53,20 @@
   "passwordsDontMatch": "De wachtwoorden komen niet overeen",
   "checkEverythingFilledIn": "Gelieve alle velden in te vullen",
   "LogginFailed": "Aanmelden is mislukt",
-  "noInternet": "Geen internet verbinding beschikbaar"
+  "noInternet": "Geen internet verbinding beschikbaar",
+  "system": "systeem",
+  "language": "taal",
+  "en": "Engels",
+  "fr": "Frans",
+  "nl": "Nederlands",
+  "clearCache": "Verwijder cache",
+  "settings": "Instellingen",
+  "saveConfirmation": "Alle niet-gesynchroniseerde data gaat verloren. Bent u zeker?",
+  "deleteNote": "Verwijder notitie",
+  "deleteNoteConfirmation": "Bent u zeker dat u deze notitie wilt verwijderen?",
+  "deleteClient": "Verwijder cliënt",
+  "account": "Account",
+  "logout": "Afmelden",
+  "ok": "ok",
+  "information": "Informatie"
 }

@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { RealmContext } from '../App'
 import { Text } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { Colors, Metrics } from '../themes'
 import { formatMessage, RotatingIcon } from '../shared'
 
 export default () => {
+  const realm = useContext(RealmContext)
   return (
     <LinearGradient
       start={{ x: 0, y: 0 }}
@@ -19,7 +21,7 @@ export default () => {
           marginTop: Metrics.largeMargin,
           marginBottom: Metrics.largeMargin,
         }}>
-        {formatMessage('fetchingData')}
+        {formatMessage('fetchingData', realm)}
       </Text>
       <RotatingIcon name="sync" size={48} color={Colors.primaryTextLight} />
     </LinearGradient>

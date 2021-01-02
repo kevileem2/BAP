@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
   View,
   TouchableOpacity,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native'
+import { RealmContext } from '../../App'
 import { useNavigation } from '@react-navigation/native'
 import { Guid } from 'guid-typescript'
 import SignedInLayout from '../../shared/SignedInStack'
@@ -32,6 +33,7 @@ interface Errors {
 
 export default ({ route }) => {
   const navigation = useNavigation()
+  const realm = useContext(RealmContext)
   const userGuid = route.params?.userGuid
   const [firstName, setFirstName] = useState<string | undefined>(undefined)
   const [lastName, setLastName] = useState<string | undefined>(undefined)
@@ -130,7 +132,7 @@ export default ({ route }) => {
 
   return (
     <SignedInLayout
-      headerTitle={formatMessage('addClient')}
+      headerTitle={formatMessage('addClient', realm)}
       headerIcon="arrow-left"
       headerIconAction={handleHeaderIconAction}
       hideFooter>
@@ -158,7 +160,7 @@ export default ({ route }) => {
             </IconHeaderContainerWrapper>
             <InputContainer>
               <TextInput
-                placeholder={formatMessage('firstName')}
+                placeholder={formatMessage('firstName', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={firstName}
                 autoCapitalize="words"
@@ -182,12 +184,12 @@ export default ({ route }) => {
                   color: Colors.errorDark,
                   marginTop: Metrics.baseMargin,
                 }}>
-                * {formatMessage('firstNameIsMandatory')}
+                * {formatMessage('firstNameIsMandatory', realm)}
               </Text>
             )}
             <InputContainer>
               <TextInput
-                placeholder={formatMessage('lastName')}
+                placeholder={formatMessage('lastName', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={lastName}
                 autoCapitalize="words"
@@ -211,12 +213,12 @@ export default ({ route }) => {
                   color: Colors.errorDark,
                   marginTop: Metrics.baseMargin,
                 }}>
-                * {formatMessage('lastNameIsMandatory')}
+                * {formatMessage('lastNameIsMandatory', realm)}
               </Text>
             )}
             <InputContainer>
               <TextInput
-                placeholder={formatMessage('age')}
+                placeholder={formatMessage('age', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={age}
                 selectionColor={Colors.primary}
@@ -235,7 +237,7 @@ export default ({ route }) => {
             </InputContainer>
             <InputContainer>
               <TextInput
-                placeholder={formatMessage('room')}
+                placeholder={formatMessage('room', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={room}
                 selectionColor={Colors.primary}
@@ -254,7 +256,7 @@ export default ({ route }) => {
             </InputContainer>
             <InputContainer>
               <TextInput
-                placeholder={formatMessage('description')}
+                placeholder={formatMessage('description', realm)}
                 placeholderTextColor={Colors.secondaryText}
                 value={description}
                 autoCapitalize="sentences"
@@ -288,7 +290,7 @@ export default ({ route }) => {
                     color: Colors.primaryTextLight,
                     fontWeight: '500',
                   }}>
-                  {formatMessage('addClient').toUpperCase()}
+                  {formatMessage('addClient', realm).toUpperCase()}
                 </Text>
                 <Icon
                   name="plus"

@@ -16,7 +16,6 @@ import {
   clearRealmStorage,
   applyPackageToStorage,
 } from '../../utils/dataUtils'
-import { message } from '../../shared'
 
 const offlineStateTypes = ['none', 'unknown', 'NONE', 'UNKNOWN']
 
@@ -66,7 +65,7 @@ export default () => {
   const handleSynchronizePress = async () => {
     const netConnectionState = await NetInfo.fetch()
     if (offlineStateTypes.some((value) => value === netConnectionState.type)) {
-      throw formatMessage('noInternet')
+      throw formatMessage('noInternet', realm)
     }
     try {
       setIsSynchronize(true)
@@ -152,12 +151,12 @@ export default () => {
         }}>
         {userName ? (
           <Title>
-            {formatMessage('Welcome')}, {userName}!
+            {formatMessage('Welcome', realm)}, {userName}!
           </Title>
         ) : (
-          <Title>{formatMessage('Welcome')}!</Title>
+          <Title>{formatMessage('Welcome', realm)}!</Title>
         )}
-        <SubTitle>{formatMessage('QuicklyAddNote')}</SubTitle>
+        <SubTitle>{formatMessage('QuicklyAddNote', realm)}</SubTitle>
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <TouchableOpacity onPress={handleSpeechPress}>
             <StyledButton
@@ -210,7 +209,7 @@ export default () => {
                   fontWeight: '500',
                   fontSize: 18,
                 }}>
-                {formatMessage('recentNotes')}
+                {formatMessage('recentNotes', realm)}
               </Text>
             </View>
             <View style={{ flex: 1 }}>{mapNotes}</View>
