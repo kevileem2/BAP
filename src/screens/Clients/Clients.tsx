@@ -101,7 +101,7 @@ export default () => {
   }
 
   const handleLeftFlingGesture = () => {
-    navigation.navigate('Settings')
+    navigation.navigate('Profile')
   }
 
   const handleRightFlingGesture = () => {
@@ -170,7 +170,6 @@ export default () => {
     <SignedInLayout
       headerTitle={formatMessage('clients', realm)}
       showSynchronizeIcon
-      showLogout
       isSynchronizing={isSynchronizing}
       showAddIcon={Boolean(clients?.length)}
       handleSynchronizePress={handleSynchronizePress}

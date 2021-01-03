@@ -139,7 +139,6 @@ export default () => {
     <SignedInLayout
       headerTitle="Dashboard"
       showSynchronizeIcon
-      showLogout
       isSynchronizing={isSynchronizing}
       handleSynchronizePress={handleSynchronizePress}
       onLeftFlingGesture={handleLeftFlingGesture}

@@ -98,7 +98,7 @@ export default () => {
   }, [language])
 
   const handleRightFlingGesture = () => {
-    navigation.navigate('Clients')
+    navigation.navigate('Profile')
   }
 
   const handlePickerVisibilityChange = () => {
