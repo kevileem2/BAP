@@ -97,6 +97,24 @@ export class Tasks {
   public changeType: number | null
 }
 
+export class Memories {
+  public static schema: Realm.ObjectSchema = {
+    name: 'Memories',
+    primaryKey: 'guid',
+    properties: {
+      guid: 'string',
+      title: 'string?',
+      description: 'string?',
+      changeType: 'int?'
+    }
+  }
+
+  public guid: string
+  public title: string | null
+  public description: string | null
+  public changeType: number | null
+}
+
 export class UserSession {
   public static schema: Realm.ObjectSchema = {
     name: 'UserSession',
@@ -122,7 +140,7 @@ export class UserSession {
 }
 
 const config = {
-  schema: [Clients, UserSession, Notes, User, Tasks],
+  schema: [Clients, UserSession, Notes, User, Tasks, Memories],
   schemaVersion: 0,
   migration: (oldRealm: Realm, newRealm: Realm) => {},
 }

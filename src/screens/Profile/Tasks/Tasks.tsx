@@ -83,16 +83,10 @@ export default ({}: Props) => {
     setForceRefresh((prevState) => !prevState)
   }, [userSession])
 
-  // renders each contact with props
-  const renderTasks = (item, type) => {
-    const task =
-      type === 'completed'
-        ? completedTasks?.find((record) => record.guid === item.guid)
-        : uncompletedTasks?.find((record) => record.guid === item.guid)
-    return (
-      <ListCard key={`contact-list-card-${item.guid}`} {...item} task={task} />
-    )
-  }
+  // renders each task with props
+  const renderTasks = (item) => (
+    <ListCard key={`task-list-card-${item.guid}`} {...item} />
+  )
 
   // use memo for mapping the tasks
   const mapCompletedTasksData = useMemo(
@@ -132,13 +126,13 @@ export default ({}: Props) => {
           {formatMessage('uncompletedTasks', realm).toUpperCase()}
         </HeaderText>
       </Header>
-      {mapUncompletedTasksData?.map((item) => renderTasks(item, 'uncompleted'))}
+      {mapUncompletedTasksData?.map(renderTasks)}
       <Header>
         <HeaderText>
           {formatMessage('completedTasks', realm).toUpperCase()}
         </HeaderText>
       </Header>
-      {mapCompletedTasksData?.map((item) => renderTasks(item, 'completed'))}
+      {mapCompletedTasksData?.map(renderTasks)}
     </View>
   ) : (
     <>

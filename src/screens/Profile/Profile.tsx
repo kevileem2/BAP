@@ -49,6 +49,10 @@ export default () => {
     navigation.navigate('AddTask')
   }
 
+  const handleAddMemoryPress = () => {
+    navigation.navigate('AddMemory')
+  }
+
   const renderTab = () => {
     switch (activeTab) {
       case 0:
@@ -66,6 +70,8 @@ export default () => {
       showSynchronizeIcon
       isSynchronizing={isSynchronizing}
       showAddTask={activeTab === 1}
+      showAddMemory={activeTab === 2}
+      handleAddMemoryPress={handleAddMemoryPress}
       handleAddTaskPress={handleAddTaskPress}
       handleSynchronizePress={handleSynchronizePress}
       onLeftFlingGesture={handleLeftFlingGesture}

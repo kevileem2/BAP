@@ -79,5 +79,13 @@
   "title": "Titre",
   "dueDate": "Date d'échéance",
   "completed": "Complété",
-  "completedAt": "Complétée à"
+  "completedAt": "Complétée à",
+  "thingsToRemember": "Choses à retenir",
+  "noMemoriesYet": "Vous n'avez pas de choses à vous rappeler",
+  "noMemoriesYetSubTitle": "Ajouter des choses à retenir en appuyant sur le bouton ci-dessus",
+  "deleteMemory": "Supprimer cette chose pour s'en souvenir",
+  "deleteConfirmationMemory": "Êtes-vous sûr de vouloir supprimer cette chose à retenir?",
+  "addMemory": "Ajouter une chose à retenir",
+  "noOverviewrecords": "Vous n'avez rien à mémoriser ou à compléter",
+  "noOverviewRecordsSubTitle": "Pour ajouter quelque chose à faire ou à retenir, veuillez cliquer sur l'un des onglets ci-dessus"
 }

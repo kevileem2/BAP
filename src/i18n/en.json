@@ -79,5 +79,13 @@
   "title": "Title",
   "dueDate": "Due date",
   "completed": "completed",
-  "completedAt": "Completed at"
+  "completedAt": "Completed at",
+  "thingsToRemember": "Things to remember",
+  "noMemoriesYet": "U don't have things to remember yet",
+  "noMemoriesYetSubTitle": "Add things to remember by pressing the button above",
+  "deleteMemory": "Delete this thing to remember",
+  "deleteConfirmationMemory": "Are you sure you wish to delete this thing to remember?",
+  "addMemory": "Add thing to remember",
+  "noOverviewrecords": "U don't have anything to remember or complete",
+  "noOverviewRecordsSubTitle": "To add something to do or remember, please click on 1 of the tabs above"
 }

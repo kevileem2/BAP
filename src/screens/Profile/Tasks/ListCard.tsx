@@ -9,6 +9,8 @@ import {
   ModalTitle,
   ModalDescription,
   ModalDueTime,
+  ModalButtonsContainer,
+  SubTitle,
 } from './components'
 import { RealmContext } from '../../../App'
 import { useModal } from '../../../utils/ModalProvider'
@@ -19,9 +21,9 @@ import useRealm from '../../../utils/useRealm'
 import { formatMessage } from '../../../shared'
 import { ModalCardRounded as ModalCardRoundedStyled } from '../../../shared/components'
 import { format } from 'date-fns'
+import { Button } from 'react-native-paper'
 
 interface Props {
-  task: Tasks
   guid: string
   title: string
   description: string
@@ -122,6 +124,10 @@ export default ({
     )
   }
 
+  const handleConfirmAction = () => {
+    hideModal()
+  }
+
   const handleTaskPress = () => {
     showModal(
       <ModalCardRoundedStyled>
@@ -138,6 +144,16 @@ export default ({
           'completedAt',
           realm
         )}: ${format(completedAt, 'dd/MM/yyyy')}`}</ModalDueTime>
+        <ModalButtonsContainer>
+          <Button
+            mode="text"
+            color={Colors.accentButtonColorDark}
+            onPress={handleConfirmAction}>
+            <Text style={{ fontWeight: '800', fontSize: 14 }}>
+              {formatMessage('ok', realm)}
+            </Text>
+          </Button>
+        </ModalButtonsContainer>
       </ModalCardRoundedStyled>
     )
   }
@@ -148,7 +164,8 @@ export default ({
         onPress={handleTaskPress}
         onLongPress={handleModalVisibilityChange}>
         <TasksInfoContainer>
-          <Title>{`${title}`}</Title>
+          <Title>{title}</Title>
+          <SubTitle>{`- ${format(dueTime, 'dd/MM/yyyy')}`}</SubTitle>
         </TasksInfoContainer>
       </TouchableWithoutFeedback>
       <View

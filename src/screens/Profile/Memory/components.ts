@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Text, View } from 'react-native'
 import {Colors, Metrics} from '../../../themes'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export const NoTasksInfo = styled(Text)`
   text-align: center;
@@ -17,18 +18,23 @@ export const NoTasksSubTitle = styled(Text)`
   margin-bottom: ${Metrics.tinyMargin}px;
 `
 
+export const Header = styled(View)`
+  padding-bottom: ${Metrics.baseMargin}px;
+  margin-bottom: ${Metrics.largeMargin}px;
+  margin-top: ${Metrics.smallMargin}px;
+  border-color: ${Colors.secondaryText};
+  border-bottom-width: 1px;
+`
+
+export const HeaderText = styled(Text)`
+  font-size: 16px;
+  color: ${Colors.secondaryText};
+`
+
 export const Title = styled(Text)`
   font-size: 16px;
   font-weight: 300;
-  margin-bottom: ${Metrics.smallMargin}px;
 `
-
-export const SubTitle = styled(Text)`
-  font-size: 12px;
-  font-weight: 300;
-  color: ${Colors.hintText};
-`
-
 export const Info = styled(Text)`
   font-size: 12px;
   font-weight: 300;
@@ -51,26 +57,6 @@ export const TasksInfoContainer = styled(View)`
   margin-right: ${Metrics.baseMargin}px;
 `
 
-interface HeaderProps {
-  isFirst?: boolean
-}
-
-export const Header = styled(View)`
-  padding-bottom: ${Metrics.baseMargin}px;
-  margin-bottom: ${Metrics.largeMargin}px;
-    ${({isFirst}: HeaderProps) => 
-      isFirst ? 
-      `margin-top: ${Metrics.smallMargin}px;` : `margin-top: ${Metrics.doubleLargeMargin}px;` 
-    }}
-  border-color: ${Colors.secondaryText};
-  border-bottom-width: 1px;
-`
-
-export const HeaderText = styled(Text)`
-  font-size: 16px;
-  color: ${Colors.secondaryText};
-`
-
 export const ModalTitle = styled(Text)`
   font-size: 18px;
   margin-top: ${Metrics.baseMargin}px;
@@ -83,13 +69,18 @@ export const ModalDescription = styled(Text)`
   margin-bottom: ${Metrics.baseMargin}px;
 `
 
-export const ModalDueTime = styled(Text)`
-  color: ${Colors.hintText};
-`
-
 export const ModalButtonsContainer = styled(View)`
   flex-direction: row;
   align-self: center;
   margin-top: ${Metrics.baseMargin}px;
   margin-bottom: ${Metrics.baseMargin}px;
+`
+
+export const IconContainer = styled(View)`
+  flex: 1;
+  align-items: flex-end;
+`
+
+export const Icon = styled(MaterialCommunityIcons)`
+  color: ${Colors.errorDark};
 `

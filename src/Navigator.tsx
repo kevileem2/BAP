@@ -8,6 +8,7 @@ import React, {
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-community/async-storage'
+import { RealmContext } from './App'
 import { Login } from './screens/Login'
 import { SignUp } from './screens/SignUp'
 import { Dashboard } from './screens/Dashboard'
@@ -20,7 +21,7 @@ import { AddClient } from './screens/AddClient'
 import { ClientDetail } from './screens/ClientDetail'
 import Loading from './screens/Loading'
 import { AddTask } from './screens/AddTask'
-import { RealmContext } from './App'
+import { AddMemory } from './screens/AddMemory'
 
 interface AuthContextInterface {
   signOut?: () => void
@@ -83,6 +84,7 @@ export default () => {
               <Stack.Screen name="AddClient" component={AddClient} />
               <Stack.Screen name="ClientDetail" component={ClientDetail} />
               <Stack.Screen name="AddTask" component={AddTask} />
+              <Stack.Screen name="AddMemory" component={AddMemory} />
             </>
           )}
         </Stack.Navigator>

@@ -79,5 +79,13 @@
   "title": "Titel",
   "dueDate": "Einddatum",
   "completed": "Voltooid",
-  "completedAt": "Voltooid op"
+  "completedAt": "Voltooid op",
+  "thingsToRemember": "Dingen om te onthouden",
+  "noMemoriesYet": "U heeft nog geen dingen om te onthouden",
+  "noMemoriesYetSubTitle": "Voeg dingen toe om te onthouden door op de knop bovenaan te drukken",
+  "deleteMemory": "Verwijder dit ding om te onthouden",
+  "deleteConfirmationMemory": "Bent u zeker dat u dit ding om te onthouden wil verwijderen?",
+  "addMemory": "voeg ding om te onthouden toe",
+  "noOverviewrecords": "U heeft niets om te onthouden of te doen",
+  "noOverviewRecordsSubTitle": "Als je iets wil toe voegen om te onthouden of doen, klik dan alstublieft op 1 van de tabs bovenaan"
 }
