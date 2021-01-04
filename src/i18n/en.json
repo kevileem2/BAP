@@ -68,5 +68,16 @@
   "account": "Account",
   "logout": "Logout",
   "ok": "ok",
-  "information": "Information"
+  "information": "Information",
+  "noTasksYet": "U don't have tasks yet",
+  "noTasksYetSubTitle": "Add tasks by pressing the button above",
+  "addTask": "Add task",
+  "completedTasks": "Completed tasks",
+  "uncompletedTasks": "Unfinished tasks",
+  "deleteTask": "Delete task",
+  "deleteConfirmationTask": "Are you sure you wish to delete this task?",
+  "title": "Title",
+  "dueDate": "Due date",
+  "completed": "completed",
+  "completedAt": "Completed at"
 }

@@ -1,13 +1,19 @@
-import React, { useState, useContext } from 'react'
-import { View, Text } from 'react-native'
+import React, { useState, useContext, useEffect } from 'react'
+import { View, Text, ScrollView, TouchableWithoutFeedback } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import SignedInLayout from '../../shared/SignedInStack'
 import { formatMessage } from '../../shared'
 import { RealmContext } from '../../App'
+import { Metrics } from '../../themes'
+import { Header, Icon, Section } from './components'
+import { Overview } from './Overview'
+import { Tasks } from './Tasks'
+import { Memory } from './Memory'
 
 export default () => {
   const navigation = useNavigation()
   const [isSynchronizing, setIsSynchronize] = useState<boolean>(false)
+  const [activeTab, setActiveTab] = useState<number>(0)
 
   const realm = useContext(RealmContext)
 
@@ -24,18 +30,77 @@ export default () => {
     navigation.navigate('Clients')
   }
 
+  const getIconName = (type: 'overview' | 'tasks' | 'memory') => {
+    switch (type) {
+      case 'overview':
+        return activeTab === 0 ? 'calendar-account' : 'calendar-account-outline'
+      case 'tasks':
+        return activeTab === 1 ? 'clipboard-check' : 'clipboard-check-outline'
+      case 'memory':
+        return activeTab === 2 ? 'head-check' : 'head-check-outline'
+    }
+  }
+
+  const changeActiveTabIndex = (index: number) => () => {
+    setActiveTab(index)
+  }
+
+  const handleAddTaskPress = () => {
+    navigation.navigate('AddTask')
+  }
+
+  const renderTab = () => {
+    switch (activeTab) {
+      case 0:
+        return <Overview />
+      case 1:
+        return <Tasks />
+      case 2:
+        return <Memory />
+    }
+  }
+
   return (
     <SignedInLayout
       headerTitle={formatMessage('profile', realm)}
       showSynchronizeIcon
       isSynchronizing={isSynchronizing}
+      showAddTask={activeTab === 1}
+      handleAddTaskPress={handleAddTaskPress}
       handleSynchronizePress={handleSynchronizePress}
       onLeftFlingGesture={handleLeftFlingGesture}
       onRightFlingGesture={handleRightFlingGesture}
       activeTabIndex={2}>
-      <View style={{ flex: 1 }}>
-        <Text>Profile</Text>
-      </View>
+      <Header>
+        <TouchableWithoutFeedback
+          style={{ flex: 1 }}
+          onPress={changeActiveTabIndex(0)}>
+          <Section isFirst isActive={activeTab === 0}>
+            <Icon size={20} name={getIconName('overview')} />
+          </Section>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          style={{ flex: 1 }}
+          onPress={changeActiveTabIndex(1)}>
+          <Section isActive={activeTab === 1}>
+            <Icon size={20} name={getIconName('tasks')} />
+          </Section>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          style={{ flex: 1 }}
+          onPress={changeActiveTabIndex(2)}>
+          <Section isLast isActive={activeTab === 2}>
+            <Icon
+              isActive={activeTab === 2}
+              size={20}
+              name={getIconName('memory')}
+            />
+          </Section>
+        </TouchableWithoutFeedback>
+      </Header>
+      <ScrollView style={{ flex: 1, padding: Metrics.largeMargin }}>
+        {renderTab()}
+      </ScrollView>
     </SignedInLayout>
   )
 }

@@ -1,5 +1,5 @@
 // tslint:disable: max-classes-per-file
-import Realm, { Results } from 'realm'
+import Realm from 'realm'
 
 export class Clients {
   public static schema: Realm.ObjectSchema = {
@@ -69,6 +69,34 @@ export class User {
   public lastName: string | null
 }
 
+export class Tasks {
+  public static schema: Realm.ObjectSchema = {
+    name: 'Tasks',
+    primaryKey: 'guid',
+    properties: {
+      guid: 'string',
+      title: 'string?',
+      description: 'string?',
+      completed: 'bool?',
+      createdAt: 'date?',
+      updatedAt: 'date?',
+      completedAt: 'date?',
+      dueTime: 'date?',
+      changeType: 'int?'
+    }
+  }
+
+  public guid: string
+  public title: string | null
+  public description: string | null
+  public completed: boolean | null
+  public createdAt: Date | null
+  public updatedAt: Date | null
+  public completedAt: Date | null
+  public dueTime: Date | null
+  public changeType: number | null
+}
+
 export class UserSession {
   public static schema: Realm.ObjectSchema = {
     name: 'UserSession',
@@ -94,7 +122,7 @@ export class UserSession {
 }
 
 const config = {
-  schema: [Clients, UserSession, Notes, User],
+  schema: [Clients, UserSession, Notes, User, Tasks],
   schemaVersion: 0,
   migration: (oldRealm: Realm, newRealm: Realm) => {},
 }

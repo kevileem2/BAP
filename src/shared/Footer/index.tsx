@@ -41,7 +41,7 @@ export default ({ activeTabIndex }: FooterProps) => {
     }
   }
   const handleSettingsPress = () => {
-    if (activeTabIndex !== 2) {
+    if (activeTabIndex !== 3) {
       navigation.navigate('Settings')
     }
   }

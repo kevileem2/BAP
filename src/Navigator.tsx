@@ -19,6 +19,7 @@ import { TextInput } from './screens/TextInput'
 import { AddClient } from './screens/AddClient'
 import { ClientDetail } from './screens/ClientDetail'
 import Loading from './screens/Loading'
+import { AddTask } from './screens/AddTask'
 import { RealmContext } from './App'
 
 interface AuthContextInterface {
@@ -81,6 +82,7 @@ export default () => {
               <Stack.Screen name="TextInput" component={TextInput} />
               <Stack.Screen name="AddClient" component={AddClient} />
               <Stack.Screen name="ClientDetail" component={ClientDetail} />
+              <Stack.Screen name="AddTask" component={AddTask} />
             </>
           )}
         </Stack.Navigator>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { KeyboardAvoidingView, Platform, View, StatusBar } from 'react-native'
 import { IconButton } from 'react-native-paper'
 import {
@@ -33,8 +33,9 @@ interface Props {
   showEdit?: boolean
   showDelete?: boolean
   showLogout?: boolean
+  showAddTask?: boolean
   notificationCount?: number
-  activeTabIndex: number
+  activeTabIndex?: number
   isSynchronizing?: boolean
   nextAction?: () => void
   backAction?: () => void
@@ -44,6 +45,7 @@ interface Props {
   handleEditPress?: () => void
   handleSynchronizePress?: () => void
   handleDeletePress?: () => void
+  handleAddTaskPress?: () => void
   onLeftFlingGesture?: () => void
   onRightFlingGesture?: () => void
 }
@@ -60,6 +62,7 @@ const SignedInLayout: React.FC<Props> = ({
   showEdit,
   showDelete,
   showLogout,
+  showAddTask,
   activeTabIndex,
   isSynchronizing,
   headerIconAction,
@@ -68,6 +71,7 @@ const SignedInLayout: React.FC<Props> = ({
   handleEditPress,
   handleDeletePress,
   handleSynchronizePress,
+  handleAddTaskPress,
   onLeftFlingGesture,
   onRightFlingGesture,
 }) => {
@@ -77,10 +81,15 @@ const SignedInLayout: React.FC<Props> = ({
 
   const { showModal, hideModal } = useModal()
 
-  const handleLeftFlingStateChange = (event) => {
+  const [activeTab, setActiveTab] = useState(activeTabIndex)
+  useEffect(() => {
+    setActiveTab(activeTabIndex)
+  }, [activeTabIndex])
+
+  const handleLeftFlingStateChange = ({ nativeEvent }) => {
     if (!supressNavigation) {
-      const { oldState } = event.nativeEvent
-      if (oldState === GestureState.ACTIVE && onLeftFlingGesture) {
+      const { state } = nativeEvent
+      if (state === GestureState.ACTIVE && onLeftFlingGesture) {
         onLeftFlingGesture()
       }
     }
@@ -123,10 +132,10 @@ const SignedInLayout: React.FC<Props> = ({
     hideModal()
   }
 
-  const handleRightFlingStateChange = (event) => {
+  const handleRightFlingStateChange = ({ nativeEvent }) => {
     if (!supressNavigation) {
-      const { oldState } = event.nativeEvent
-      if (oldState === GestureState.ACTIVE && onRightFlingGesture) {
+      const { state } = nativeEvent
+      if (state === GestureState.ACTIVE && onRightFlingGesture) {
         onRightFlingGesture()
       }
     }
@@ -153,6 +162,14 @@ const SignedInLayout: React.FC<Props> = ({
                     size={25}
                     color={Colors.primaryTextLight}
                     onPress={handleAddPress}
+                  />
+                )}
+                {showAddTask && (
+                  <IconButton
+                    icon="clipboard-check-outline"
+                    size={25}
+                    color={Colors.primaryTextLight}
+                    onPress={handleAddTaskPress}
                   />
                 )}
                 {showSynchronizeIcon &&
@@ -210,7 +227,7 @@ const SignedInLayout: React.FC<Props> = ({
           </LayoutContainerView>
         </FlingGestureHandler>
       </FlingGestureHandler>
-      {!hideFooter && <Footer activeTabIndex={activeTabIndex} />}
+      {!hideFooter && <Footer activeTabIndex={activeTab} />}
     </>
   )
 }

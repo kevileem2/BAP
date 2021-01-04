@@ -220,7 +220,6 @@ export default () => {
           type: 'singleInstance',
           email: null,
           fullName: null,
-          language: null,
         },
         Realm.UpdateMode.All
       )

@@ -68,5 +68,16 @@
   "account": "Account",
   "logout": "Afmelden",
   "ok": "ok",
-  "information": "Informatie"
+  "information": "Informatie",
+  "noTasksYet": "U heeft nog geen taken",
+  "noTasksYetSubTitle": "Voeg taken toe door op de knop bovenaan te drukken",
+  "addTask": "Voeg taak toe",
+  "completedTasks": "Voltooide taken",
+  "uncompletedTasks": "Onvoltooide taken",
+  "deleteTask": "Verwijder taak",
+  "deleteConfirmationTask": "Bent u zeker dat u deze taak wilt verwijderen?",
+  "title": "Titel",
+  "dueDate": "Einddatum",
+  "completed": "Voltooid",
+  "completedAt": "Voltooid op"
 }

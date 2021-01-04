@@ -68,5 +68,16 @@
   "account": "Compte",
   "logout": "Se déconnecter",
   "ok": "ok",
-  "information": "Informations"
+  "information": "Informations",
+  "noTasksYet": "Vous n'avez pas encore de tâches",
+  "noTasksYetSubTitle": "Ajouter des tâches en appuyant sur le bouton ci-dessus",
+  "addTask": "Ajouter une tâche",
+  "completedTasks": "tâches terminées",
+  "uncompletedTasks": "les tâches inachevées",
+  "deleteTask": "Supprimer la tâche",
+  "deleteConfirmationTask": "Êtes-vous sûr de vouloir supprimer cette tâche?",
+  "title": "Titre",
+  "dueDate": "Date d'échéance",
+  "completed": "Complété",
+  "completedAt": "Complétée à"
 }
