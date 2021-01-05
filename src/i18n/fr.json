@@ -90,5 +90,19 @@
   "noOverviewRecordsSubTitle": "Pour ajouter quelque chose à faire ou à retenir, veuillez cliquer sur l'un des onglets ci-dessus",
   "overview": "aperçu",
   "tasks": "pris",
-  "remember": "ne pas oublier"
+  "remember": "ne pas oublier",
+  "intakeForms": "Formulaires d'admission",
+  "noIntakeFormYet": "Vous n'avez pas encore de formulaire d'admission",
+  "noIntakeFormYetSubTitle": "Ajouter des formulaires d'admission en appuyant sur le bouton ci-dessus.",
+  "continue": "continuer",
+  "titleMandatory": "le titre est obligatoire",
+  "deleteIntakeForm": "Supprimer le formulaire d'admission",
+  "deleteIntakeFormSubTitle": "Êtes-vous sûr de vouloir supprimer ce formulaire d'admission?",
+  "noIntakeFormQuestionsYet": "Vous n'avez pas de questions préparées pour ce formulaire d'admission",
+  "noIntakeFormQuestionsYetSubTitle": "Ajoutez quelques questions à ce formulaire en appuyant sur le bouton ci-dessus",
+  "question": "Question",
+  "questions": "Questions",
+  "addQuestion": "ajouter une question",
+  "deleteQuestion": "Supprimer la question",
+  "deleteQuestionSubTitle": "Êtes-vous sûr de vouloir supprimer cette question?"
 }

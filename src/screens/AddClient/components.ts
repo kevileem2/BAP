@@ -28,10 +28,6 @@ export const Icon = styled(MaterialIcons)`
   color: ${Colors.primaryTextLight};
 `
 
-interface InputContainerProps {
-  isFirst?: boolean
-}
-
 export const InputContainer = styled(View)`
   flex-direction: column;
   border-bottom-width: 2px;

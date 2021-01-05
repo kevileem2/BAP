@@ -115,6 +115,57 @@ export class Memories {
   public changeType: number | null
 }
 
+export class IntakeForms {
+  public static schema: Realm.ObjectSchema = {
+    name: 'IntakeForms',
+    primaryKey: 'guid',
+    properties: {
+      guid: 'string',
+      title: 'string?',
+      changeType: 'int?'
+    }
+  }
+
+  public guid: string
+  public title: string | null
+  public changeType: number | null
+}
+export class IntakeFormQuestions {
+  public static schema: Realm.ObjectSchema = {
+    name: 'IntakeFormQuestions',
+    primaryKey: 'guid',
+    properties: {
+      guid: 'string',
+      parentRecordGuid: 'string',
+      question: 'string?',
+      changeType: 'int?'
+    }
+  }
+
+  public guid: string
+  public parentRecordguid: string
+  public question: string | null
+  public changeType: number | null
+}
+export class ClientIntakeFormQuestions {
+  public static schema: Realm.ObjectSchema = {
+    name: 'ClientIntakeFormQuestions',
+    primaryKey: 'guid',
+    properties: {
+      guid: 'string',
+      parentRecordGuid: 'string',
+      question: 'string?',
+      answer: "string?",
+      changeType: 'int?'
+    }
+  }
+
+  public guid: string
+  public parentRecordguid: string
+  public question: string | null
+  public changeType: number | null
+}
+
 export class UserSession {
   public static schema: Realm.ObjectSchema = {
     name: 'UserSession',
@@ -140,7 +191,17 @@ export class UserSession {
 }
 
 const config = {
-  schema: [Clients, UserSession, Notes, User, Tasks, Memories],
+  schema: [
+    Clients,
+    UserSession,
+    Notes,
+    User,
+    Tasks,
+    Memories,
+    IntakeForms,
+    IntakeFormQuestions,
+    ClientIntakeFormQuestions
+  ],
   schemaVersion: 0,
   migration: (oldRealm: Realm, newRealm: Realm) => {},
 }

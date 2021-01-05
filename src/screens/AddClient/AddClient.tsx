@@ -169,7 +169,7 @@ export default ({ route }) => {
                 returnKeyType="next"
                 textContentType="givenName"
                 style={{
-                  height: Platform.OS == 'ios' ? 26 : 'auto',
+                  height: Platform.OS === 'ios' ? 26 : 'auto',
                   width: '100%',
                   marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
                   marginLeft: Metrics.smallMargin,
@@ -198,7 +198,7 @@ export default ({ route }) => {
                 returnKeyType="next"
                 textContentType="familyName"
                 style={{
-                  height: Platform.OS == 'ios' ? 26 : 'auto',
+                  height: Platform.OS === 'ios' ? 26 : 'auto',
                   width: '100%',
                   marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
                   marginLeft: Metrics.smallMargin,
@@ -226,7 +226,7 @@ export default ({ route }) => {
                 returnKeyType="next"
                 keyboardType="numeric"
                 style={{
-                  height: Platform.OS == 'ios' ? 26 : 'auto',
+                  height: Platform.OS === 'ios' ? 26 : 'auto',
                   width: '100%',
                   marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
                   marginLeft: Metrics.smallMargin,
@@ -245,7 +245,7 @@ export default ({ route }) => {
                 returnKeyType="next"
                 keyboardType="numeric"
                 style={{
-                  height: Platform.OS == 'ios' ? 26 : 'auto',
+                  height: Platform.OS === 'ios' ? 26 : 'auto',
                   width: '100%',
                   marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
                   marginLeft: Metrics.smallMargin,

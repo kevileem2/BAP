@@ -18,7 +18,7 @@ import { Guid } from 'guid-typescript'
 export default () => {
   const navigation = useNavigation()
   const realm = useContext(RealmContext)
-  const { showModal, hideModal } = useModal()
+  const { showModal } = useModal()
 
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')

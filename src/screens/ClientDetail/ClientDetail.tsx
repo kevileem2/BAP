@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react'
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { Results } from 'realm'
 import SignedInLayout from '../../shared/SignedInStack'
 import { Clients, Notes } from '../../utils/storage'
 import { Metrics, Colors } from '../../themes'
@@ -11,9 +12,8 @@ import {
   IconHeaderContainer,
   Container,
   IconHeaderContainerWrapper,
+  ContainerBody,
 } from './components'
-import { Results } from 'realm'
-import { ContainerBody } from './components'
 import ListNote from './ListNote'
 import useRealm from '../../utils/useRealm'
 import { StyledButton, Icon } from '../Dashboard/components'
@@ -64,7 +64,7 @@ export default ({ route }) => {
   }
   const handleDeletePress = () => {
     try {
-      if (client) {
+      if (client && realm) {
         if (client?.changeType === 1) {
           write((realmInstance: Realm) => {
             realmInstance.delete(

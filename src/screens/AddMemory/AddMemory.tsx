@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { format } from 'date-fns'
 import { formatMessage } from '../../shared'
 import { RealmContext } from '../../App'
 import SignedInLayout from '../../shared/SignedInStack'

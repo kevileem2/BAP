@@ -35,6 +35,7 @@ interface Props {
   showLogout?: boolean
   showAddTask?: boolean
   showAddMemory?: boolean
+  showIntakeFormIcon?: boolean
   notificationCount?: number
   activeTabIndex?: number
   isSynchronizing?: boolean
@@ -48,6 +49,7 @@ interface Props {
   handleDeletePress?: () => void
   handleAddTaskPress?: () => void
   handleAddMemoryPress?: () => void
+  handleIntakeFormPress?: () => void
   onLeftFlingGesture?: () => void
   onRightFlingGesture?: () => void
 }
@@ -66,6 +68,7 @@ const SignedInLayout: React.FC<Props> = ({
   showLogout,
   showAddTask,
   showAddMemory,
+  showIntakeFormIcon,
   activeTabIndex,
   isSynchronizing,
   headerIconAction,
@@ -76,6 +79,7 @@ const SignedInLayout: React.FC<Props> = ({
   handleSynchronizePress,
   handleAddTaskPress,
   handleAddMemoryPress,
+  handleIntakeFormPress,
   onLeftFlingGesture,
   onRightFlingGesture,
 }) => {
@@ -166,6 +170,14 @@ const SignedInLayout: React.FC<Props> = ({
                     size={25}
                     color={Colors.primaryTextLight}
                     onPress={handleAddPress}
+                  />
+                )}
+                {showIntakeFormIcon && (
+                  <IconButton
+                    icon="file-document-edit-outline"
+                    size={25}
+                    color={Colors.primaryTextLight}
+                    onPress={handleIntakeFormPress}
                   />
                 )}
                 {showAddTask && (
