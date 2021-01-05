@@ -87,5 +87,8 @@
   "deleteConfirmationMemory": "Bent u zeker dat u dit ding om te onthouden wil verwijderen?",
   "addMemory": "voeg ding om te onthouden toe",
   "noOverviewrecords": "U heeft niets om te onthouden of te doen",
-  "noOverviewRecordsSubTitle": "Als je iets wil toe voegen om te onthouden of doen, klik dan alstublieft op 1 van de tabs bovenaan"
+  "noOverviewRecordsSubTitle": "Als je iets wil toe voegen om te onthouden of doen, klik dan alstublieft op 1 van de tabs bovenaan",
+  "overview": "overzicht",
+  "tasks": "taken",
+  "remember": "onthouden"
 }

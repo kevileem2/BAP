@@ -87,5 +87,8 @@
   "deleteConfirmationMemory": "Are you sure you wish to delete this thing to remember?",
   "addMemory": "Add thing to remember",
   "noOverviewrecords": "U don't have anything to remember or complete",
-  "noOverviewRecordsSubTitle": "To add something to do or remember, please click on 1 of the tabs above"
+  "noOverviewRecordsSubTitle": "To add something to do or remember, please click on 1 of the tabs above",
+  "overview": "overview",
+  "tasks": "tasks",
+  "remember": "remember"
 }

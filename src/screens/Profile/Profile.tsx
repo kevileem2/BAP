@@ -41,6 +41,21 @@ export default () => {
     }
   }
 
+  const getHeaderTitle = () => {
+    let messageTitle
+    switch (activeTab) {
+      case 0:
+        messageTitle = formatMessage('overview', realm)
+        return `${messageTitle.charAt(0).toUpperCase()}${messageTitle.slice(1)}`
+      case 1:
+        messageTitle = formatMessage('tasks', realm)
+        return `${messageTitle.charAt(0).toUpperCase()}${messageTitle.slice(1)}`
+      case 2:
+        messageTitle = formatMessage('remember', realm)
+        return `${messageTitle.charAt(0).toUpperCase()}${messageTitle.slice(1)}`
+    }
+  }
+
   const changeActiveTabIndex = (index: number) => () => {
     setActiveTab(index)
   }
@@ -66,7 +81,7 @@ export default () => {
 
   return (
     <SignedInLayout
-      headerTitle={formatMessage('profile', realm)}
+      headerTitle={getHeaderTitle()}
       showSynchronizeIcon
       isSynchronizing={isSynchronizing}
       showAddTask={activeTab === 1}

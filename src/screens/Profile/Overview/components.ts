@@ -22,7 +22,7 @@ interface HeaderProps {
 }
 
 export const Header = styled(View)`
-  padding-bottom: ${Metrics.baseMargin}px;
+  padding-bottom: ${Metrics.smallMargin}px;
   margin-bottom: ${Metrics.largeMargin}px;
     ${({isFirst}: HeaderProps) => 
       isFirst ? 

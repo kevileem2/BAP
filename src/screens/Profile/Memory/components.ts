@@ -19,7 +19,7 @@ export const NoTasksSubTitle = styled(Text)`
 `
 
 export const Header = styled(View)`
-  padding-bottom: ${Metrics.baseMargin}px;
+  padding-bottom: ${Metrics.smallMargin}px;
   margin-bottom: ${Metrics.largeMargin}px;
   margin-top: ${Metrics.smallMargin}px;
   border-color: ${Colors.secondaryText};
