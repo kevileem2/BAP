@@ -125,7 +125,7 @@ export default ({ route }) => {
       showAddIcon
       handleAddPress={handleModalVisibilityChange}
       hideFooter>
-      <View style={{ flex: 1, padding: Metrics.baseMargin }}>
+      <View style={{ flex: 1 }}>
         {loading ? null : questions?.length ? (
           <ListContainer
             keyboardShouldPersistTaps="handled"

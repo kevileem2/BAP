@@ -108,5 +108,10 @@
   "deleteQuestionSubTitle": "Bent u zeker dat u deze vraag wil verwijderen?",
   "none": "Geen",
   "additionalComments": "Bijkomende opmerkingen",
-  "updateClient": "update client"
+  "updateClient": "Update client",
+  "updateNote": "Update notitie",
+  "noNotesYet": "U heeft nog geen notities voor deze cliënt",
+  "noNotesYetSubTitle": "Voeg notities aan deze cliënt toe door op het potlood icoon bovenaan te drukken",
+  "noClientIntakeForm": "U heeft geen extra informatie over deze cliënt",
+  "note": "notitie"
 }

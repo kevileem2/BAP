@@ -1,66 +1,18 @@
 import styled from 'styled-components'
-import { Dimensions, View, TouchableOpacity } from 'react-native'
-import { Card } from 'react-native-paper'
-import LinearGradient from 'react-native-linear-gradient'
+import { View, TouchableOpacity, Text } from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Metrics, Colors } from '../../themes'
 
-export const Container = styled(Card)`
-  position: relative;
-  justify-content: center;
-  width: 100%;
-  margin-top: ${Metrics.largeMargin}px;
-  margin-bottom: ${Metrics.doubleLargeMargin}px;
-  padding: ${Metrics.baseMargin}px;
-  padding-bottom: ${Metrics.largeMargin}px;
-  min-height: 100px;
-  background: ${Colors.primaryTextLight};
-  border-radius: 7px;
-  box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.16);
-`
-
-export const ContainerBody = styled(View)`
-  position: relative;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  width: 100%;
-  margin-top: ${Metrics.largeMargin}px;
-  margin-left: ${Metrics.baseMargin}px;
-  margin-right: ${Metrics.baseMargin}px;
-`
-
-export const IconHeaderContainer = styled(LinearGradient)`
-  position: absolute;
-  margin: auto;
-  justify-content: center;
-  align-items: center;
-  left: ${Dimensions.get('window').width / 2 -
-  Metrics.doubleLargeMargin -
-  Metrics.baseMargin}px;
-  height: ${Metrics.doubleLargeMargin}px;
-  width: ${Metrics.doubleLargeMargin}px;
-  top: -${Metrics.largeMargin + Metrics.baseMargin}px;
-  border-radius: 50px;
-`
-
-export const IconHeaderContainerWrapper = styled(View)`
-  box-shadow: 0px 7px 6px rgba(0, 0, 0, 0.2);
-`
-
-export const IconHeader = styled(MaterialIcons)`
-  color: ${Colors.primaryTextLight};
-`
-
 export const NoteRow = styled(View)`
-  width: 95%;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: ${Metrics.baseMargin}px;
-  margin-bottom: ${Metrics.baseMargin}px;
-  padding-right: ${Metrics.baseMargin}px;
-  margin-right: ${Metrics.baseMargin}px;
+flex-direction: row;
+align-items: center;
+background: ${Colors.primaryTextLight};
+padding: ${Metrics.baseMargin}px;
+margin-bottom: ${Metrics.baseMargin}px;
+padding: ${Metrics.smallMargin}px;
+border-radius: 5px;
+box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.14);
+elevation: 2;
 `
 
 export const NoteInfoContainer = styled(View)`
@@ -80,4 +32,25 @@ export const TrashIcon = styled(MaterialIcons)`
 `
 export const EditIcon = styled(MaterialIcons)`
   color: ${Colors.succesDark};
+`
+
+export const Title = styled(Text)`
+font-size: 16px;
+font-weight: 300;
+margin-bottom: ${Metrics.tinyMargin}px;
+`
+
+export const NoNotes = styled(Text)`
+  text-align: center;
+  font-size: 24px;
+  font-weight: 500;
+  margin-top: ${Metrics.doubleLargeMargin}px;
+`
+
+export const NoNotesSubTitle = styled(Text)`
+  text-align: center;
+  font-size: 18px;
+  font-weight: 400;
+  margin-top: ${Metrics.baseMargin}px;
+  margin-bottom: ${Metrics.tinyMargin}px;
 `

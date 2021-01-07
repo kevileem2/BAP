@@ -37,22 +37,36 @@ export default () => {
   const navigation = useNavigation()
   const [loading, setLoading] = useState<boolean>(true)
   const [isSynchronizing, setIsSynchronize] = useState<boolean>(false)
-  const [shouldRefetch, setShouldRefetch] = useState<boolean>(false)
   const [searchText, setSearchText] = useState<string>('')
-
-  const {
-    objects: { clients },
-  } = useRealm<{
-    clients: Results<Clients>
-  }>([{ object: 'Clients', name: 'clients', query: 'changeType != 0' }])
+  const [clients, setClients] = useState<Results<Clients> | null>(null)
 
   const realm = useContext(RealmContext)
 
   useEffect(() => {
+    realm?.addListener('change', realmListener)
     setLoading(false)
-    navigation.addListener('focus', handleRefetch(true))
-    navigation.addListener('blur', handleRefetch(false))
+    return () => {
+      realm?.removeListener('change', realmListener)
+    }
   }, [])
+
+  const realmListener = () => {
+    if (realm) {
+      const clientQuestions = realm
+        .objects<Clients>('Clients')
+        .filtered(`changeType != 0`)
+      setClients(clientQuestions)
+    }
+  }
+
+  useEffect(() => {
+    if (realm) {
+      const clientQuestions = realm
+        .objects<Clients>('Clients')
+        .filtered(`changeType != 0`)
+      setClients(clientQuestions)
+    }
+  }, [realm, navigation])
 
   const handleSynchronizePress = async () => {
     const netConnectionState = await NetInfo.fetch()
@@ -94,10 +108,6 @@ export default () => {
       await message({ message: e, realm })
     }
     setIsSynchronize(false)
-  }
-
-  const handleRefetch = (refetch: boolean) => () => {
-    setShouldRefetch(refetch)
   }
 
   const handleLeftFlingGesture = () => {
@@ -159,7 +169,7 @@ export default () => {
         name: item.name,
         lastName: item.lastName,
       })),
-    [clients, shouldRefetch]
+    [clients]
   )
 
   const handleAddClientPress = () => {

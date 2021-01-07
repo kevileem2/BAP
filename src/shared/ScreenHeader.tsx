@@ -1,7 +1,7 @@
 import React from 'react'
 import { Platform, View } from 'react-native'
 import { Appbar } from 'react-native-paper'
-import { Colors } from '../themes'
+import { Colors, Metrics } from '../themes'
 import { useNavigation } from '@react-navigation/native'
 
 interface Props {
@@ -41,6 +41,7 @@ const ScreenHeader: React.FC<Props> = ({
       <Appbar.Content
         title={title}
         subtitle={subtitle}
+        style={{ paddingHorizontal: 0 }}
         titleStyle={{
           fontSize: 20,
           color: Colors.primaryTextLight,

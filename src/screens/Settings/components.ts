@@ -11,7 +11,7 @@ interface HeaderProps {
 export const Header = styled(View)`
 margin-left: ${Metrics.largeMargin}px;
 margin-right: ${Metrics.largeMargin}px;
-margin-bottom: ${Metrics.largeMargin}px;
+margin-bottom: ${Metrics.smallMargin}px;
   ${({isFirst}: HeaderProps) => 
     isFirst ? 
     `margin-top: ${Metrics.largeMargin}px;` : `margin-top: ${Metrics.doubleLargeMargin}px;` 

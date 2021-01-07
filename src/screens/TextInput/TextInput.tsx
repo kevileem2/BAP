@@ -19,14 +19,14 @@ import { formatMessage } from '../../shared/formatMessage'
 import { Colors, Metrics } from '../../themes'
 import PickerItem from '../../shared/Picker/PickerItem'
 import {
-  Title,
-  OutputTitle,
   Dropdown,
   DropdownTitle,
   Icon,
   ErrorText,
-  OutputContainer,
   StyledButton,
+  Header,
+  HeaderText,
+  StyledTextInput,
 } from './components'
 import { Picker } from '../../shared'
 import { RealmContext } from '../../App'
@@ -139,7 +139,9 @@ export default ({ route }) => {
   }
 
   const handlePickerVisibilityChange = () => {
-    setPickerVisible((prevState) => !prevState)
+    if (!parentGuid) {
+      setPickerVisible((prevState) => !prevState)
+    }
   }
 
   const handleValueChange = (value: string | null) => {
@@ -201,41 +203,41 @@ export default ({ route }) => {
   return (
     <>
       <SignedInLayout
-        headerTitle={formatMessage('addNote', realm)}
+        headerTitle={
+          guid
+            ? formatMessage('updateNote', realm)
+            : formatMessage('addNote', realm)
+        }
         headerIcon="arrow-left"
         headerIconAction={handleHeaderIconAction}
         hideFooter>
         <View style={{ flex: 1, margin: Metrics.baseMargin }}>
-          <Title>{formatMessage('textNoteTitle', realm)}</Title>
-          <OutputTitle>Output</OutputTitle>
           <TouchableOpacity onPress={handlePickerVisibilityChange}>
             <Dropdown>
               <DropdownTitle>
                 {formatMessage('client', realm)}: {value}
               </DropdownTitle>
-              <Icon name="chevron-down" size={24} />
+              {!parentGuid && <Icon name="chevron-down" size={24} />}
             </Dropdown>
           </TouchableOpacity>
           {Boolean(error?.client) && <ErrorText>* {error.client}</ErrorText>}
-          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <OutputContainer>
-              <TextInput
-                value={text}
-                autoCapitalize="none"
-                selectionColor={Colors.primary}
-                onChangeText={handleOnChangeText}
-                returnKeyType="default"
-                blurOnSubmit
-                multiline
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  marginLeft: Metrics.smallMargin,
-                  marginRight: Metrics.smallMargin,
-                }}
-              />
-            </OutputContainer>
-          </TouchableWithoutFeedback>
+          <Header>
+            <HeaderText>{`${formatMessage('note', realm)
+              .charAt(0)
+              .toUpperCase()}${formatMessage('note', realm).slice(
+              1
+            )}`}</HeaderText>
+          </Header>
+          <StyledTextInput
+            style={{ height: 100, paddingTop: Metrics.baseMargin }}
+            textAlignVertical="center"
+            value={text}
+            autoCapitalize="sentences"
+            selectionColor={Colors.primaryText}
+            onChangeText={handleOnChangeText}
+            returnKeyType="next"
+            multiline={true}
+          />
           {Boolean(error?.message) && <ErrorText>* {error.message}</ErrorText>}
           <View
             style={{
@@ -249,7 +251,7 @@ export default ({ route }) => {
                 end={{ x: 0, y: 1 }}
                 colors={[Colors.buttonColorLight, Colors.buttonColorDark]}>
                 <Icon
-                  name="content-save"
+                  name="plus"
                   size={18}
                   style={{
                     color: Colors.primaryTextLight,
@@ -262,7 +264,7 @@ export default ({ route }) => {
                     marginRight: Metrics.smallMargin,
                     color: Colors.primaryTextLight,
                   }}>
-                  {formatMessage('save', realm)}
+                  {formatMessage('addNote', realm).toUpperCase()}
                 </Text>
               </StyledButton>
             </TouchableOpacity>

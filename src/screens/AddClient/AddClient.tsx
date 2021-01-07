@@ -333,7 +333,11 @@ export default ({ route }) => {
   return (
     <>
       <SignedInLayout
-        headerTitle={formatMessage('addClient', realm)}
+        headerTitle={
+          userGuid
+            ? formatMessage('updateClient', realm)
+            : formatMessage('addClient', realm)
+        }
         headerIcon="arrow-left"
         headerIconAction={handleHeaderIconAction}
         hideFooter>

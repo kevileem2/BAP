@@ -10,6 +10,7 @@ import {
   NoteRow,
   NoteInfoContainer,
   EditIcon,
+  Title,
 } from './components'
 import useRealm from '../../utils/useRealm'
 import { Notes } from '../../utils/storage'
@@ -92,49 +93,36 @@ const ListNote = ({
   }
 
   return (
-    <>
-      <NoteRow>
-        <NoteInfoContainer>
-          {Boolean(message?.length) && (
-            <Text style={{ color: '#000' }}>{message}</Text>
-          )}
-          {Boolean(updatedAt) && (
-            <Text style={{ color: Colors.secondaryText }}>
-              {`${format(updatedAt, 'dd/MM/yyyy')} - ${format(
-                new Date(
-                  updatedAt.getTime() + new Date().getTimezoneOffset() * 60000
-                ),
-                'HH:mm'
-              )}`}
-            </Text>
-          )}
-        </NoteInfoContainer>
-        <View
-          style={{
-            flex: 0.4,
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-          }}>
-          <IconContainer onPress={handleEditPress}>
-            <EditIcon size={22} name="pencil" />
-          </IconContainer>
-          <IconContainer onPress={handleModalDeleteVisibilityChange}>
-            <TrashIcon size={22} name="trash-can-outline" />
-          </IconContainer>
-        </View>
-      </NoteRow>
-      {notes && index !== notes.length - 1 && (
-        <Divider
-          style={{
-            alignSelf: 'center',
-            width: '90%',
-            paddingRight: Metrics.baseMargin,
-            marginBottom: Metrics.smallMargin,
-            backgroundColor: Colors.primaryText,
-          }}
-        />
-      )}
-    </>
+    <NoteRow>
+      <NoteInfoContainer>
+        {Boolean(message?.length) && (
+          <Title style={{ color: '#000' }}>{message}</Title>
+        )}
+        {Boolean(updatedAt) && (
+          <Text style={{ color: Colors.secondaryText, fontSize: 12 }}>
+            {`${format(updatedAt, 'dd/MM/yyyy')} - ${format(
+              new Date(
+                updatedAt.getTime() + new Date().getTimezoneOffset() * 60000
+              ),
+              'HH:mm'
+            )}`}
+          </Text>
+        )}
+      </NoteInfoContainer>
+      <View
+        style={{
+          flex: 0.4,
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+        }}>
+        <IconContainer onPress={handleEditPress}>
+          <EditIcon size={22} name="pencil" />
+        </IconContainer>
+        <IconContainer onPress={handleModalDeleteVisibilityChange}>
+          <TrashIcon size={22} name="trash-can-outline" />
+        </IconContainer>
+      </View>
+    </NoteRow>
   )
 }
 

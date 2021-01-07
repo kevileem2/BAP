@@ -108,5 +108,10 @@
   "deleteQuestionSubTitle": "Are you sure you wish to delete this question?",
   "none": "None",
   "additionalComments": "Additional comments",
-  "updateClient": "update client"
+  "updateClient": "Update client",
+  "updateNote": "Update note",
+  "noNotesYet": "You don't have any notes for this client",
+  "noNotesYetSubTitle": "Add some notes by clicking on the pencil icon above",
+  "noClientIntakeForm": "You don't have any extra information about this client",
+  "note": "note"
 }

@@ -122,7 +122,7 @@ export default () => {
       showAddIcon
       handleAddPress={handleModalVisibilityChange}
       hideFooter>
-      <View style={{ flex: 1, padding: Metrics.baseMargin }}>
+      <View style={{ flex: 1 }}>
         {loading ? null : intakeForms?.length ? (
           <ListContainer
             keyboardShouldPersistTaps="handled"

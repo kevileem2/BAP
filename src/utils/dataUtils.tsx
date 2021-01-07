@@ -1,6 +1,4 @@
-import { useContext } from 'react'
 import Realm, { Results } from 'realm'
-import { RealmContext } from '../App'
 import storage, { Clients, Notes } from './storage'
 import { format } from 'date-fns'
 
@@ -11,12 +9,8 @@ const remapNewClientsItems = (data: Results<Clients>) => {
       ...result,
       {
         guid: element.guid,
-        parentRecordGuid: element.parentRecordGuid,
         firstName: element.name,
         lastName: element.lastName,
-        description: element.description,
-        age: element.age,
-        room: element.room,
         changeType: element.changeType,
       },
     ]
@@ -32,9 +26,6 @@ const remapUpdatedClientsItems = (data: Results<Clients>) => {
         id: element.id,
         firstName: element.name,
         lastName: element.lastName,
-        description: element.description,
-        age: element.age,
-        room: element.room,
         changeType: element.changeType,
       },
     ]
@@ -152,12 +143,8 @@ export const applyPackageToStorage = async (object) => {
         {
           guid: element.guid,
           id: element.id,
-          parentRecordGuid: element.parentRecordGuid,
           name: element.firstName,
           lastName: element.lastName,
-          room: element.room.length ? parseInt(element.room) : null,
-          age: element.age ? parseInt(element.age) : null,
-          description: element.condition,
         },
         Realm.UpdateMode.All
       )

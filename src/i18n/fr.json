@@ -108,5 +108,10 @@
   "deleteQuestionSubTitle": "Êtes-vous sûr de vouloir supprimer cette question?",
   "none": "Aucun",
   "additionalComments": "Commentaires supplémentaires",
-  "updateClient": "mettre à jour le client"
+  "updateClient": "Mettre à jour le client",
+  "updateNote": "Mettre à jour la note",
+  "noNotesYet": "Vous n'avez pas de notes pour ce client",
+  "noNotesYetSubTitle": "Ajouter des notes en cliquant sur l'icône du crayon ci-dessus",
+  "noClientIntakeForm": "Vous n'avez pas d'informations supplémentaires sur ce client",
+  "note": "note"
 }

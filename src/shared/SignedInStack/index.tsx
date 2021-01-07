@@ -36,6 +36,7 @@ interface Props {
   showAddTask?: boolean
   showAddMemory?: boolean
   showIntakeFormIcon?: boolean
+  showAddNoteIcon?: boolean
   notificationCount?: number
   activeTabIndex?: number
   isSynchronizing?: boolean
@@ -50,6 +51,7 @@ interface Props {
   handleAddTaskPress?: () => void
   handleAddMemoryPress?: () => void
   handleIntakeFormPress?: () => void
+  handleAddNotePress?: () => void
   onLeftFlingGesture?: () => void
   onRightFlingGesture?: () => void
 }
@@ -69,6 +71,7 @@ const SignedInLayout: React.FC<Props> = ({
   showAddTask,
   showAddMemory,
   showIntakeFormIcon,
+  showAddNoteIcon,
   activeTabIndex,
   isSynchronizing,
   headerIconAction,
@@ -80,6 +83,7 @@ const SignedInLayout: React.FC<Props> = ({
   handleAddTaskPress,
   handleAddMemoryPress,
   handleIntakeFormPress,
+  handleAddNotePress,
   onLeftFlingGesture,
   onRightFlingGesture,
 }) => {
@@ -180,6 +184,14 @@ const SignedInLayout: React.FC<Props> = ({
                     onPress={handleIntakeFormPress}
                   />
                 )}
+                {showAddNoteIcon && (
+                  <IconButton
+                    icon="pencil-plus"
+                    size={25}
+                    color={Colors.primaryTextLight}
+                    onPress={handleAddNotePress}
+                  />
+                )}
                 {showAddTask && (
                   <IconButton
                     icon="clipboard-check-outline"
@@ -213,20 +225,20 @@ const SignedInLayout: React.FC<Props> = ({
                       onPress={handleSynchronizePress}
                     />
                   ))}
-                {showInformation && (
-                  <IconButton
-                    icon="information"
-                    size={25}
-                    color={Colors.primaryTextLight}
-                    onPress={handleInformationPress}
-                  />
-                )}
                 {showEdit && (
                   <IconButton
                     icon="account-edit"
                     size={25}
                     color={Colors.primaryTextLight}
                     onPress={handleEditPress}
+                  />
+                )}
+                {showInformation && (
+                  <IconButton
+                    icon="information"
+                    size={25}
+                    color={Colors.primaryTextLight}
+                    onPress={handleInformationPress}
                   />
                 )}
                 {showDelete && (
