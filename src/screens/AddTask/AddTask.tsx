@@ -83,6 +83,9 @@ export default () => {
       headerTitle={formatMessage('addTask', realm)}
       hideFooter>
       <ScrollView
+        contentContainerStyle={{
+          paddingBottom: Metrics.baseMargin,
+        }}
         style={{ flex: 1, padding: Metrics.largeMargin }}
         keyboardShouldPersistTaps="handled">
         <Header>

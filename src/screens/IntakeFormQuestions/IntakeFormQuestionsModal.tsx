@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, KeyboardAvoidingView } from 'react-native'
+import { View, Text } from 'react-native'
 import { Button } from 'react-native-paper'
 import Realm from 'realm'
 import { Guid } from 'guid-typescript'
@@ -7,7 +7,6 @@ import { StyledTextInput } from './components'
 import { Colors, Metrics } from '../../themes'
 import { ModalTitle } from '../../shared/components'
 import { formatMessage } from '../../shared'
-import { ScrollView } from 'react-native-gesture-handler'
 
 interface Props {
   hideModal: () => void

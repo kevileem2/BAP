@@ -53,6 +53,9 @@ export default () => {
       hideFooter>
       <ScrollView
         style={{ flex: 1, padding: Metrics.largeMargin }}
+        contentContainerStyle={{
+          paddingBottom: Metrics.baseMargin,
+        }}
         keyboardShouldPersistTaps="handled">
         <Header>
           <HeaderText>{`${formatMessage('title', realm)

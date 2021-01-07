@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react'
-import { View, Text } from 'react-native'
+import { Results } from 'realm'
+import { View, ScrollView, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import SignedInLayout from '../../shared/SignedInStack'
-import { StyledButton, Title, SubTitle, Icon } from './components'
+import { StyledButton, Icon, Header, HeaderText } from './components'
 import { Colors, Metrics } from '../../themes'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import NetInfo from '@react-native-community/netinfo'
-import { UserSession, Notes } from '../../utils/storage'
+import { Memories, Notes, Tasks } from '../../utils/storage'
 import { formatMessage } from '../../shared/formatMessage'
 import ListCard from './ListCard'
+import { default as ListCardTask } from '../Profile/Tasks/ListCard'
+import { default as ListCardMemory } from '../Profile/Memory/ListCard'
 import { RealmContext } from '../../App'
 import AsyncStorage from '@react-native-community/async-storage'
 import {
@@ -25,39 +27,71 @@ export default () => {
   const realm = useContext(RealmContext)
 
   const [isSynchronizing, setIsSynchronize] = useState<boolean>(false)
-  const [userName, setUserName] = useState<string>('')
-  const [noteList, setNoteList] = useState<Notes[]>([])
+  const [noteList, setNoteList] = useState<Results<Notes> | null>(null)
+  const [tasksList, setTasksList] = useState<Results<Tasks> | null>(null)
+  const [memoriesList, setMemoriesList] = useState<Results<Memories> | null>(
+    null
+  )
 
   useEffect(() => {
     if (realm) {
-      try {
-        realm.addListener('change', () => {
-          const notes = realm
-            ?.objects<Notes>('Notes')
-            .filtered('changeType != 0')
-          if (notes?.length) {
-            const endIndexNotes = notes?.length < 3 ? notes.length : 3
-            setNoteList(notes.sorted('updatedAt', true).slice(0, endIndexNotes))
-          } else {
-            setNoteList([])
-          }
-        })
-        const userSession = realm?.objects<UserSession>('UserSession')
-        if (userSession?.[0].fullName) {
-          setUserName(userSession[0].fullName)
-        }
-      } catch (e) {
-        console.log(e)
-      }
+      realm.addListener('change', realmListener)
+    }
+    return () => {
+      realm?.removeListener('change', realmListener)
     }
   }, [])
 
+  const realmListener = () => {
+    const notes = realm
+      ?.objects<Notes>('Notes')
+      .filtered('changeType != 0')
+      .sorted('updatedAt', true)
+    const tasks = realm
+      ?.objects<Tasks>('Tasks')
+      .filtered('changeType != 0 AND completed == false')
+      .sorted('dueTime')
+    const memories = realm
+      ?.objects<Memories>('Memories')
+      .filtered('changeType != 0')
+
+    if (notes?.length) {
+      setNoteList(notes)
+    }
+
+    if (tasks?.length) {
+      setTasksList(tasks)
+    }
+
+    if (memories?.length) {
+      setMemoriesList(memories)
+    }
+  }
+
   useEffect(() => {
     if (realm) {
-      const notes = realm.objects<Notes>('Notes').filtered(`changeType != 0`)
+      const notes = realm
+        .objects<Notes>('Notes')
+        .filtered(`changeType != 0`)
+        .sorted('updatedAt', true)
+      const tasks = realm
+        ?.objects<Tasks>('Tasks')
+        .filtered('changeType != 0 AND completed == false')
+        .sorted('dueTime')
+      const memories = realm
+        ?.objects<Memories>('Memories')
+        .filtered('changeType != 0')
+
       if (notes?.length) {
-        const endIndexNotes = notes?.length < 3 ? notes.length : 3
-        setNoteList(notes.sorted('updatedAt', true).slice(0, endIndexNotes))
+        setNoteList(notes)
+      }
+
+      if (tasks?.length) {
+        setTasksList(tasks)
+      }
+
+      if (memories?.length) {
+        setMemoriesList(memories)
       }
     }
   }, [realm, navigation])
@@ -130,10 +164,45 @@ export default () => {
     return null
   }
 
-  const mapNotes = useMemo(() => noteList && noteList.map(renderNoteList), [
-    noteList,
-    realm,
-  ])
+  const renderMemory = (item) => (
+    <ListCardMemory key={`memory-list-card-${item.guid}`} {...item} />
+  )
+
+  const renderTasksList = (item) => (
+    <ListCardTask key={`task-list-card-${item.guid}`} {...item} />
+  )
+
+  const mapMemories = useMemo(
+    () =>
+      memoriesList &&
+      memoriesList.slice(0, 5).map((item) => ({
+        guid: item.guid,
+        title: item.title,
+        description: item.description,
+        changeType: item.changeType,
+      })),
+    [memoriesList, realm]
+  )
+
+  const mapTasks = useMemo(
+    () =>
+      tasksList &&
+      tasksList.slice(0, 5).map((item) => ({
+        guid: item.guid,
+        title: item.title,
+        description: item.description,
+        completed: item.completed,
+        completedAt: item.completedAt,
+        dueTime: item.dueTime,
+        changeType: item.changeType,
+      })),
+    [tasksList, realm]
+  )
+
+  const mapNotes = useMemo(
+    () => noteList && noteList.slice(0, 5).map(renderNoteList),
+    [noteList, realm]
+  )
 
   return (
     <SignedInLayout
@@ -143,19 +212,15 @@ export default () => {
       handleSynchronizePress={handleSynchronizePress}
       onLeftFlingGesture={handleLeftFlingGesture}
       activeTabIndex={0}>
-      <View
-        style={{
-          flex: 1,
-          margin: Metrics.largeMargin,
+      <ScrollView
+        contentContainerStyle={{
+          padding: Metrics.baseMargin,
         }}>
-        {userName ? (
-          <Title>
-            {formatMessage('Welcome', realm)}, {userName}!
-          </Title>
-        ) : (
-          <Title>{formatMessage('Welcome', realm)}!</Title>
-        )}
-        <SubTitle>{formatMessage('QuicklyAddNote', realm)}</SubTitle>
+        <Header isFirst>
+          <HeaderText>
+            {formatMessage('addNote', realm).toUpperCase()}
+          </HeaderText>
+        </Header>
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <TouchableOpacity onPress={handleSpeechPress}>
             <StyledButton
@@ -192,29 +257,37 @@ export default () => {
             </StyledButton>
           </TouchableOpacity>
         </View>
-        {Boolean(noteList.length) && (
+        {Boolean(tasksList?.length) && (
           <>
-            <View
-              style={{
-                borderBottomColor: Colors.buttonColorDark,
-                borderBottomWidth: 2,
-                alignSelf: 'flex-start',
-                paddingBottom: Metrics.tinyMargin,
-                marginTop: Metrics.largeMargin,
-                marginBottom: Metrics.largeMargin,
-              }}>
-              <Text
-                style={{
-                  fontWeight: '500',
-                  fontSize: 18,
-                }}>
-                {formatMessage('recentNotes', realm)}
-              </Text>
-            </View>
+            <Header>
+              <HeaderText>
+                {formatMessage('uncompletedTasks', realm).toUpperCase()}
+              </HeaderText>
+            </Header>
+            <View style={{ flex: 1 }}>{mapTasks?.map(renderTasksList)}</View>
+          </>
+        )}
+        {Boolean(tasksList?.length) && (
+          <>
+            <Header>
+              <HeaderText>
+                {formatMessage('thingsToRemember', realm).toUpperCase()}
+              </HeaderText>
+            </Header>
+            <View style={{ flex: 1 }}>{mapMemories?.map(renderMemory)}</View>
+          </>
+        )}
+        {Boolean(noteList?.length) && (
+          <>
+            <Header>
+              <HeaderText>
+                {formatMessage('recentNotes', realm).toUpperCase()}
+              </HeaderText>
+            </Header>
             <View style={{ flex: 1 }}>{mapNotes}</View>
           </>
         )}
-      </View>
+      </ScrollView>
     </SignedInLayout>
   )
 }

@@ -19,7 +19,9 @@ export default ({ activeTabIndex }: FooterProps) => {
       case pageKeys.CLIENTS:
         return activeTabIndex === 1 ? 'account-group' : 'account-group-outline'
       case pageKeys.PROFILE:
-        return activeTabIndex === 2 ? 'account' : 'account-outline'
+        return activeTabIndex === 2
+          ? 'calendar-account'
+          : 'calendar-account-outline'
       case pageKeys.SETTINGS:
         return activeTabIndex === 3 ? 'cog' : 'cog-outline'
     }

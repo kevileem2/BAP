@@ -75,6 +75,9 @@ export default (props: Props) => {
             </Picker>
           ) : props.options && props.options.length > 7 ? (
             <ScrollView
+              contentContainerStyle={{
+                padding: Metrics.baseMargin,
+              }}
               style={{
                 maxHeight: props.showSearch ? '85%' : '100%',
                 marginBottom: Metrics.smallMargin,

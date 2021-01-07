@@ -119,7 +119,11 @@ export default () => {
           </Section>
         </TouchableWithoutFeedback>
       </Header>
-      <ScrollView style={{ flex: 1, padding: Metrics.largeMargin }}>
+      <ScrollView
+        contentContainerStyle={{
+          paddingBottom: Metrics.baseMargin,
+        }}
+        style={{ flex: 1, padding: Metrics.largeMargin }}>
         {renderTab()}
       </ScrollView>
     </SignedInLayout>

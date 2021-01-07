@@ -333,7 +333,10 @@ export default () => {
                 }}
               />
             ) : (
-              <ScrollView>
+              <ScrollView
+                contentContainerStyle={{
+                  padding: Metrics.baseMargin,
+                }}>
                 <Text key={`result`}>{results || partialResults}</Text>
               </ScrollView>
             )}

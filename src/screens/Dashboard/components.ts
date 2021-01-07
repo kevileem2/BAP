@@ -8,7 +8,8 @@ export const StyledButton = styled(LinearGradient)`
   flex-direction: row;
   align-items: center;
   padding: ${Metrics.smallMargin}px;
-  margin: ${Metrics.largeMargin}px;
+  margin-right: ${Metrics.largeMargin}px;
+  margin-left: ${Metrics.largeMargin}px;
   border-radius: 50px;
 `
 
@@ -59,4 +60,24 @@ export const ContactInfoContainer = styled(View)`
 export const IconContainer = styled(View)`
   flex: 1;
   align-items: flex-end;
+`
+
+interface HeaderProps {
+  isFirst?: boolean
+}
+
+export const Header = styled(View)`
+  padding-bottom: ${Metrics.smallMargin}px;
+  margin-bottom: ${Metrics.largeMargin}px;
+    ${({isFirst}: HeaderProps) => 
+      isFirst ? 
+      `margin-top: ${Metrics.smallMargin}px;` : `margin-top: ${Metrics.doubleLargeMargin}px;` 
+    }}
+  border-color: ${Colors.secondaryText};
+  border-bottom-width: 1px;
+`
+
+export const HeaderText = styled(Text)`
+  font-size: 16px;
+  color: ${Colors.secondaryText};
 `
