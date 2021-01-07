@@ -50,7 +50,7 @@ export default ({
         )
       })
       navigation.navigate('IntakeFormQuestions', {
-        guid,
+        parentRecordGuid: guid,
       })
       hideModal()
     } else {

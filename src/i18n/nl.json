@@ -29,7 +29,7 @@
   "addNote": "Voeg notitie toe",
   "name": "naam",
   "firstName": "voornaam",
-  "lastName": "familienaam",
+  "lastName": "achternaam",
   "age": "leeftijd",
   "description": "omschrijving",
   "room": "kamer",
@@ -92,6 +92,7 @@
   "tasks": "taken",
   "remember": "onthouden",
   "intakeForms": "Intake-formulieren",
+  "intakeForm": "Intake-formulier",
   "noIntakeFormYet": "U heeft nog geen intake-formulieren",
   "noIntakeFormYetSubTitle": "Voeg intake-formulieren toe via de knop bovenaan",
   "continue": "ga door",
@@ -104,5 +105,8 @@
   "questions": "Vragen",
   "addQuestion": "vraag toevoegen",
   "deleteQuestion": "Vraag verwijderen",
-  "deleteQuestionSubTitle": "Bent u zeker dat u deze vraag wil verwijderen?"
+  "deleteQuestionSubTitle": "Bent u zeker dat u deze vraag wil verwijderen?",
+  "none": "Geen",
+  "additionalComments": "Bijkomende opmerkingen",
+  "updateClient": "update client"
 }

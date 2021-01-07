@@ -21,6 +21,7 @@ import {
 import ListCard from './ListCard'
 import useRealm from '../../utils/useRealm'
 import IntakeFormModal from './IntakeFormModal'
+import { Metrics } from '../../themes'
 
 export default () => {
   const navigation = useNavigation()
@@ -121,7 +122,7 @@ export default () => {
       showAddIcon
       handleAddPress={handleModalVisibilityChange}
       hideFooter>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, padding: Metrics.baseMargin }}>
         {loading ? null : intakeForms?.length ? (
           <ListContainer
             keyboardShouldPersistTaps="handled"

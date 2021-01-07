@@ -7,25 +7,17 @@ export class Clients {
     primaryKey: 'guid',
     properties: {
       id: 'int?',
-      parentRecordGuid: 'string?',
       guid: 'string',
       changeType: 'int?',
       name: 'string?',
       lastName: 'string?',
-      age: 'int?',
-      description: 'string?',
-      room: 'int?',
     },
   }
   public guid: string
   public id: number | null
-  public parentRecordGuid: string | null
   public changeType: number | null
   public name: string | null
   public lastName: string | null
-  public age: number | null
-  public description: string | null
-  public room: number | null
 }
 
 export class Notes {
@@ -138,6 +130,7 @@ export class IntakeFormQuestions {
       guid: 'string',
       parentRecordGuid: 'string',
       question: 'string?',
+      sort: 'int?',
       changeType: 'int?'
     }
   }
@@ -145,6 +138,7 @@ export class IntakeFormQuestions {
   public guid: string
   public parentRecordguid: string
   public question: string | null
+  public sort: number | null
   public changeType: number | null
 }
 export class ClientIntakeFormQuestions {
@@ -154,6 +148,7 @@ export class ClientIntakeFormQuestions {
     properties: {
       guid: 'string',
       parentRecordGuid: 'string',
+      parentIntakeFormGuid: 'string',
       question: 'string?',
       answer: "string?",
       changeType: 'int?'
@@ -162,7 +157,9 @@ export class ClientIntakeFormQuestions {
 
   public guid: string
   public parentRecordguid: string
+  public parentIntakeFormGuid: string
   public question: string | null
+  public answer: string | null
   public changeType: number | null
 }
 

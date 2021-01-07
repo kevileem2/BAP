@@ -93,7 +93,7 @@ export default ({ route }) => {
   const mapQuestions = useMemo(
     () =>
       questions &&
-      questions.map((item) => ({
+      questions.sorted('sort').map((item) => ({
         guid: item.guid,
         question: item.question,
         changeType: item.changeType,
@@ -112,6 +112,7 @@ export default ({ route }) => {
         hideModal={hideModal}
         realm={realm}
         write={write}
+        index={questions?.length ?? 0}
       />
     )
   }
@@ -124,7 +125,7 @@ export default ({ route }) => {
       showAddIcon
       handleAddPress={handleModalVisibilityChange}
       hideFooter>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, padding: Metrics.baseMargin }}>
         {loading ? null : questions?.length ? (
           <ListContainer
             keyboardShouldPersistTaps="handled"

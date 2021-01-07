@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, KeyboardAvoidingView } from 'react-native'
 import { Button } from 'react-native-paper'
 import Realm from 'realm'
 import { Guid } from 'guid-typescript'
@@ -7,15 +7,23 @@ import { StyledTextInput } from './components'
 import { Colors, Metrics } from '../../themes'
 import { ModalTitle } from '../../shared/components'
 import { formatMessage } from '../../shared'
+import { ScrollView } from 'react-native-gesture-handler'
 
 interface Props {
   hideModal: () => void
   write: (writeAction: (realm: Realm) => void) => void
   realm: Realm | undefined
   parentRecordGuid?: string
+  index?: number
 }
 
-export default ({ hideModal, realm, write, parentRecordGuid }: Props) => {
+export default ({
+  hideModal,
+  realm,
+  write,
+  parentRecordGuid,
+  index,
+}: Props) => {
   const [question, setquestion] = useState<string>('')
   const [error, setError] = useState<boolean>(false)
 
@@ -35,6 +43,7 @@ export default ({ hideModal, realm, write, parentRecordGuid }: Props) => {
             guid: String(Guid.create()).toUpperCase(),
             question,
             parentRecordGuid,
+            sort: index,
             changeType: 1,
           },
           Realm.UpdateMode.All

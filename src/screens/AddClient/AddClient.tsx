@@ -1,30 +1,40 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useMemo } from 'react'
 import {
   View,
   TouchableOpacity,
   Text,
-  TextInput,
   ScrollView,
+  TouchableWithoutFeedback,
   Platform,
 } from 'react-native'
+import { Results } from 'realm'
 import { RealmContext } from '../../App'
 import { useNavigation } from '@react-navigation/native'
 import { Guid } from 'guid-typescript'
 import SignedInLayout from '../../shared/SignedInStack'
 import useRealm from '../../utils/useRealm'
-import { User, Clients } from '../../utils/storage'
-import { Metrics, Colors } from '../../themes'
-import { formatMessage } from '../../shared'
 import {
-  InputContainer,
+  Clients,
+  IntakeForms,
+  IntakeFormQuestions,
+  ClientIntakeFormQuestions,
+} from '../../utils/storage'
+import { Metrics, Colors } from '../../themes'
+import { formatMessage, Picker } from '../../shared'
+import PickerItem from '../../shared/Picker/PickerItem'
+import {
   Button,
   Icon,
-  IconHeader,
-  IconHeaderContainer,
-  Container,
-  IconHeaderContainerWrapper,
+  StyledTextInput,
+  InputHeaderContainer,
+  InputHeaderText,
+  Header,
+  HeaderText,
+  InfoContainer,
+  Row,
+  Name,
+  IconContainer,
 } from './components'
-import { Results } from 'realm'
 
 interface Errors {
   firstName?: boolean
@@ -32,25 +42,30 @@ interface Errors {
 }
 
 export default ({ route }) => {
+  const userGuid = route.params?.userGuid
   const navigation = useNavigation()
   const realm = useContext(RealmContext)
-  const userGuid = route.params?.userGuid
-  const [firstName, setFirstName] = useState<string | undefined>(undefined)
-  const [lastName, setLastName] = useState<string | undefined>(undefined)
-  const [age, setAge] = useState<string | undefined>(undefined)
-  const [description, setDescription] = useState<string | undefined>(undefined)
-  const [room, setRoom] = useState<string | undefined>(undefined)
-  const [changeType, setChangeType] = useState<number | undefined>(undefined)
+  const [modalVisibility, changeModalVisibility] = useState<boolean>(false)
+  const [firstName, setFirstName] = useState<string | null>(null)
+  const [lastName, setLastName] = useState<string | null>(null)
+  const [intakeForms, setIntakeForms] = useState<Results<IntakeForms> | null>(
+    null
+  )
+  const [intakeForm, setIntakeForm] = useState<{ guid: string; title: string }>(
+    { guid: 'none', title: formatMessage('none', realm) }
+  )
+  const [intakeFormQuestions, setIntakeFormQuestions] = useState<Results<
+    IntakeFormQuestions
+  > | null>(null)
+  const [questions, setQuestions] = useState<{}>({})
   const [errors, setErrors] = useState<Errors>({})
 
   const {
-    objects: { user, clients },
+    objects: { clients },
     write,
   } = useRealm<{
-    user: Results<User>
     clients: Results<Clients>
   }>([
-    { object: 'User', name: 'user' },
     {
       object: 'Clients',
       name: 'clients',
@@ -59,15 +74,86 @@ export default ({ route }) => {
   ])
 
   useEffect(() => {
-    if (userGuid && clients?.[0]) {
-      clients[0].name && setFirstName(clients[0].name)
-      clients[0].lastName && setLastName(clients[0].lastName)
-      clients[0].age && setAge(clients[0].age.toString())
-      clients[0].room && setRoom(clients[0].room.toString())
-      clients[0].description && setDescription(clients[0].description)
-      clients[0].changeType && setChangeType(clients[0].changeType)
+    if (realm) {
+      try {
+        realm.addListener('change', realmListener)
+      } catch (e) {
+        console.log(e)
+      }
     }
-  }, [clients])
+    return () => {
+      realm?.removeListener('change', realmListener)
+    }
+  }, [])
+
+  const realmListener = () => {
+    const realmIntakeForms = realm
+      ?.objects<IntakeForms>('IntakeForms')
+      .filtered('changeType != 0')
+    if (realmIntakeForms?.length) {
+      setIntakeForms(realmIntakeForms)
+    }
+  }
+
+  useEffect(() => {
+    if (realm) {
+      const realmIntakeForms = realm
+        ?.objects<IntakeForms>('IntakeForms')
+        .filtered('changeType != 0')
+      if (realmIntakeForms?.length) {
+        setIntakeForms(realmIntakeForms)
+      }
+      if (userGuid) {
+        const realmClient = realm
+          ?.objects<Clients>('Clients')
+          .filtered(`changeType != 0 AND guid == "${userGuid}"`)?.[0]
+        if (realmClient) {
+          // const realmClientIntakeFormQuestions = realm
+          //   ?.objects<ClientIntakeFormQuestions>('ClientIntakeFormQuestions')
+          //   .filtered(`changeType != 0 AND parentRecordGuid == "${userGuid}"`)
+          // if (realmClientIntakeFormQuestions?.length) {
+          //   let questionsObject = {}
+          //   realmClientIntakeFormQuestions.forEach((el) => {
+          //     questionsObject = {
+          //       ...questionsObject,
+          //       [el.guid]: {
+          //         question: el.question,
+          //         answer: el.answer,
+          //       },
+          //     }
+          //   })
+          //   setQuestions(questionsObject)
+          //   const realmSelectedIntakeForm = realm
+          //     ?.objects<IntakeForms>('IntakeForms')
+          //     .filtered(
+          //       `changeType != 0 AND guid == "${realmClientIntakeFormQuestions[0].parentIntakeFormGuid}"`
+          //     )?.[0]
+          //   setIntakeForm({
+          //     guid: realmSelectedIntakeForm.guid,
+          //     title: realmSelectedIntakeForm.title!,
+          //   })
+          // }
+          setFirstName(realmClient.name)
+          setLastName(realmClient.lastName)
+        }
+      }
+    }
+  }, [realm, navigation])
+
+  useEffect(() => {
+    if (intakeForm.guid !== 'none') {
+      const realmQuestions = realm
+        ?.objects<IntakeFormQuestions>('IntakeFormQuestions')
+        .filtered(
+          `changeType != 0 AND parentRecordGuid == "${intakeForm.guid}"`
+        )
+      if (realmQuestions?.length) {
+        setIntakeFormQuestions(realmQuestions)
+      }
+    } else {
+      setIntakeFormQuestions(null)
+    }
+  }, [intakeForm])
 
   const handleHeaderIconAction = () => {
     navigation.goBack()
@@ -79,45 +165,55 @@ export default ({ route }) => {
   const handleLastName = (text: string) => {
     setLastName(text)
   }
-  const handleAge = (text: string) => {
-    setAge(text)
-  }
-  const handleDescription = (text: string) => {
-    setDescription(text)
-  }
-  const handleRoom = (text: string) => {
-    setRoom(text)
-  }
 
   const handleAddClientPress = async () => {
     if (firstName && lastName) {
+      const clientGuid = String(Guid.create()).toUpperCase()
       if (userGuid) {
+        const realmClient = realm
+          ?.objects<Clients>('Clients')
+          .filtered(`changeType != 0 AND guid == "${userGuid}"`)?.[0]
         write((realmInstance: Realm) => {
           realmInstance.create(
             'Clients',
             {
               guid: userGuid,
-              changeType: changeType !== 1 ? 2 : 1,
+              changeType: realmClient?.changeType !== 1 ? 2 : 1,
               name: firstName,
               lastName,
-              age: age && parseInt(age),
-              room: room && parseInt(room),
-              description,
             },
-            true
+            Realm.UpdateMode.All
           )
         })
       } else {
         write((realmInstance: Realm) => {
-          realmInstance.create('Clients', {
-            guid: String(Guid.create()).toUpperCase(),
-            parentRecordGuid: user?.[0].guid,
-            changeType: 1,
-            name: firstName,
-            lastName,
-            age: age && parseInt(age),
-            room: room && parseInt(room),
-            description,
+          realmInstance.create(
+            'Clients',
+            {
+              guid: clientGuid,
+              changeType: 1,
+              name: firstName,
+              lastName,
+            },
+            Realm.UpdateMode.All
+          )
+        })
+      }
+      if (questions && Object.keys(questions)?.length) {
+        write((realmInstance: Realm) => {
+          Object.values(questions).forEach((question) => {
+            realmInstance.create(
+              'ClientIntakeFormQuestions',
+              {
+                guid: String(Guid.create()).toUpperCase(),
+                parentRecordGuid: clientGuid,
+                parentIntakeFormGuid: intakeForm.guid,
+                question: question.question,
+                answer: question.answer,
+                changeType: 1,
+              },
+              Realm.UpdateMode.All
+            )
           })
         })
       }
@@ -130,181 +226,243 @@ export default ({ route }) => {
     }
   }
 
+  const handleQuestionChange = (guid: string, question: string) => (
+    value: string
+  ) => {
+    setQuestions((prevState) => ({
+      ...prevState,
+      [guid]: {
+        question,
+        answer: value,
+      },
+    }))
+  }
+
+  const renderQuestion = (item: { guid: string; question: string | null }) =>
+    item.question ? (
+      <>
+        <InputHeaderContainer key={`header-${item.guid}`}>
+          <InputHeaderText key={`headerText-${item.guid}`}>
+            {item.question}
+          </InputHeaderText>
+        </InputHeaderContainer>
+        <StyledTextInput
+          style={{ height: 100, paddingTop: Metrics.baseMargin }}
+          key={`input-${item.guid}`}
+          value={questions[item.guid] || ''}
+          autoCapitalize="sentences"
+          selectionColor={Colors.primaryText}
+          onChangeText={handleQuestionChange(item.guid, item.question)}
+          returnKeyType="next"
+          textContentType="givenName"
+          multiline={true}
+        />
+      </>
+    ) : null
+
+  const mapAllQuestions = useMemo(() => {
+    if (intakeFormQuestions) {
+      let mappedIntakeFormQuestions = intakeFormQuestions
+        ?.sorted('sort')
+        .map((el) => ({
+          guid: el.guid,
+          question: el.question,
+        }))
+      mappedIntakeFormQuestions = [
+        ...mappedIntakeFormQuestions,
+        {
+          guid: 'additionalComments',
+          question: formatMessage('additionalComments', realm),
+        },
+      ]
+      return mappedIntakeFormQuestions?.map(renderQuestion)
+    }
+    return []
+  }, [intakeFormQuestions, questions])
+
+  const handleValueChange = (value: string | null) => {
+    const getIntakeForm = intakeForms?.find((el) => el.guid === value)
+    if (value && value !== 'none' && getIntakeForm?.title) {
+      setIntakeForm({ guid: value, title: getIntakeForm.title })
+    } else {
+      setIntakeForm({ guid: 'none', title: formatMessage('none', realm) })
+    }
+    setQuestions({})
+    handleModalVisibilityChange()
+  }
+
+  const handleModalVisibilityChange = () => {
+    changeModalVisibility((prevState) => !prevState)
+  }
+
+  const handleValuePress = (value: string | null) => () => {
+    handleValueChange(value)
+
+    handleModalVisibilityChange()
+  }
+
+  const renderPickerItem = (
+    item: { guid: string | null; title: string | null },
+    index: number
+  ) => (
+    <PickerItem
+      key={item.guid || 'none'}
+      platform={Platform.OS}
+      label={item.title || ''}
+      value={item.guid}
+      onPress={handleValuePress}
+      index={index}
+    />
+  )
+
+  const options = useMemo(() => {
+    if (intakeForms) {
+      let mappedIntakeForms = intakeForms.sorted('title').map((item) => ({
+        guid: item.guid,
+        title: item.title,
+      }))
+      mappedIntakeForms = [
+        { guid: 'none', title: formatMessage('none', realm) },
+        ...mappedIntakeForms,
+      ]
+      return mappedIntakeForms.map(renderPickerItem)
+    }
+    return []
+  }, [intakeForms])
+
   return (
-    <SignedInLayout
-      headerTitle={formatMessage('addClient', realm)}
-      headerIcon="arrow-left"
-      headerIconAction={handleHeaderIconAction}
-      hideFooter>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'flex-start',
-          paddingBottom: Metrics.smallMargin,
-          overflow: 'visible',
-        }}>
-        <ScrollView
-          keyboardShouldPersistTaps="never"
-          contentContainerStyle={{ padding: Metrics.largeMargin }}>
-          <Container>
-            <IconHeaderContainerWrapper>
-              <IconHeaderContainer
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0, y: 1 }}
-                colors={[
-                  Colors.accentButtonColorLight,
-                  Colors.accentButtonColorDark,
-                ]}>
-                <IconHeader name="account" size={32} />
-              </IconHeaderContainer>
-            </IconHeaderContainerWrapper>
-            <InputContainer>
-              <TextInput
-                placeholder={formatMessage('firstName', realm)}
-                placeholderTextColor={Colors.secondaryText}
-                value={firstName}
-                autoCapitalize="words"
-                selectionColor={Colors.primary}
-                onChangeText={handleFirstName}
-                returnKeyType="next"
-                textContentType="givenName"
-                style={{
-                  height: Platform.OS === 'ios' ? 26 : 'auto',
-                  width: '100%',
-                  marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
-                  marginLeft: Metrics.smallMargin,
-                  fontSize: 14,
-                  fontWeight: '300',
-                }}
-              />
-            </InputContainer>
+    <>
+      <SignedInLayout
+        headerTitle={formatMessage('addClient', realm)}
+        headerIcon="arrow-left"
+        headerIconAction={handleHeaderIconAction}
+        hideFooter>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-start',
+            paddingBottom: Metrics.smallMargin,
+            overflow: 'visible',
+          }}>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{ padding: Metrics.largeMargin }}>
+            <InputHeaderContainer>
+              <InputHeaderText>{`${formatMessage('firstName', realm)
+                .charAt(0)
+                .toUpperCase()}${formatMessage('firstName', realm).slice(
+                1
+              )}`}</InputHeaderText>
+            </InputHeaderContainer>
+            <StyledTextInput
+              value={firstName}
+              autoCapitalize="words"
+              selectionColor={Colors.primaryText}
+              onChangeText={handleFirstName}
+              returnKeyType="next"
+              textContentType="givenName"
+            />
             {errors.firstName && (
               <Text
                 style={{
                   color: Colors.errorDark,
-                  marginTop: Metrics.baseMargin,
+                  paddingBottom: Metrics.baseMargin,
+                  marginLeft: Metrics.smallMargin,
                 }}>
                 * {formatMessage('firstNameIsMandatory', realm)}
               </Text>
             )}
-            <InputContainer>
-              <TextInput
-                placeholder={formatMessage('lastName', realm)}
-                placeholderTextColor={Colors.secondaryText}
-                value={lastName}
-                autoCapitalize="words"
-                selectionColor={Colors.primary}
-                onChangeText={handleLastName}
-                returnKeyType="next"
-                textContentType="familyName"
-                style={{
-                  height: Platform.OS === 'ios' ? 26 : 'auto',
-                  width: '100%',
-                  marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
-                  marginLeft: Metrics.smallMargin,
-                  fontSize: 14,
-                  fontWeight: '300',
-                }}
-              />
-            </InputContainer>
+            <InputHeaderContainer>
+              <InputHeaderText>{`${formatMessage('lastName', realm)
+                .charAt(0)
+                .toUpperCase()}${formatMessage('lastName', realm).slice(
+                1
+              )}`}</InputHeaderText>
+            </InputHeaderContainer>
+            <StyledTextInput
+              value={lastName}
+              autoCapitalize="words"
+              selectionColor={Colors.primaryText}
+              onChangeText={handleLastName}
+              returnKeyType="go"
+              textContentType="familyName"
+            />
             {errors.lastName && (
               <Text
                 style={{
                   color: Colors.errorDark,
-                  marginTop: Metrics.baseMargin,
+                  paddingBottom: Metrics.baseMargin,
+                  marginLeft: Metrics.smallMargin,
                 }}>
                 * {formatMessage('lastNameIsMandatory', realm)}
               </Text>
             )}
-            <InputContainer>
-              <TextInput
-                placeholder={formatMessage('age', realm)}
-                placeholderTextColor={Colors.secondaryText}
-                value={age}
-                selectionColor={Colors.primary}
-                onChangeText={handleAge}
-                returnKeyType="next"
-                keyboardType="numeric"
+            {!userGuid && (
+              <>
+                <Header>
+                  <HeaderText>
+                    {formatMessage('intakeForm', realm).toUpperCase()}
+                  </HeaderText>
+                </Header>
+                <TouchableWithoutFeedback onPress={handleModalVisibilityChange}>
+                  <Row>
+                    <InfoContainer>
+                      <Name>{intakeForm.title}</Name>
+                    </InfoContainer>
+                    <IconContainer>
+                      <Icon
+                        style={{ color: Colors.primaryText }}
+                        size={24}
+                        name="chevron-down"
+                      />
+                    </IconContainer>
+                  </Row>
+                </TouchableWithoutFeedback>
+                {intakeFormQuestions && mapAllQuestions}
+              </>
+            )}
+            <TouchableOpacity onPress={handleAddClientPress}>
+              <View
                 style={{
-                  height: Platform.OS === 'ios' ? 26 : 'auto',
-                  width: '100%',
-                  marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
-                  marginLeft: Metrics.smallMargin,
-                  fontSize: 14,
-                  fontWeight: '300',
-                }}
-              />
-            </InputContainer>
-            <InputContainer>
-              <TextInput
-                placeholder={formatMessage('room', realm)}
-                placeholderTextColor={Colors.secondaryText}
-                value={room}
-                selectionColor={Colors.primary}
-                onChangeText={handleRoom}
-                returnKeyType="next"
-                keyboardType="numeric"
-                style={{
-                  height: Platform.OS === 'ios' ? 26 : 'auto',
-                  width: '100%',
-                  marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
-                  marginLeft: Metrics.smallMargin,
-                  fontSize: 14,
-                  fontWeight: '300',
-                }}
-              />
-            </InputContainer>
-            <InputContainer>
-              <TextInput
-                placeholder={formatMessage('description', realm)}
-                placeholderTextColor={Colors.secondaryText}
-                value={description}
-                autoCapitalize="sentences"
-                selectionColor={Colors.primary}
-                onChangeText={handleDescription}
-                returnKeyType="go"
-                style={{
-                  height: Platform.OS === 'ios' ? 26 : 'auto',
-                  width: '100%',
-                  marginTop: Platform.OS === 'ios' ? Metrics.baseMargin : 0,
-                  marginLeft: Metrics.smallMargin,
-                  fontSize: 14,
-                  fontWeight: '300',
-                }}
-              />
-            </InputContainer>
-          </Container>
-          <TouchableOpacity onPress={handleAddClientPress}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                marginTop: Metrics.baseMargin,
-              }}>
-              <Button
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                colors={[Colors.buttonColorLight, Colors.buttonColorDark]}>
-                <Text
-                  style={{
-                    color: Colors.primaryTextLight,
-                    fontWeight: '500',
-                  }}>
-                  {formatMessage('addClient', realm).toUpperCase()}
-                </Text>
-                <Icon
-                  name="plus"
-                  size={24}
-                  style={{
-                    marginLeft: Metrics.baseMargin,
-                    color: Colors.primaryTextLight,
-                  }}
-                />
-              </Button>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-    </SignedInLayout>
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  marginTop: Metrics.baseMargin,
+                }}>
+                <Button
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={[Colors.buttonColorLight, Colors.buttonColorDark]}>
+                  <Text
+                    style={{
+                      color: Colors.primaryTextLight,
+                      fontWeight: '500',
+                    }}>
+                    {formatMessage(
+                      userGuid ? 'updateClient' : 'addClient',
+                      realm
+                    ).toUpperCase()}
+                  </Text>
+                  <Icon
+                    name="plus"
+                    size={24}
+                    style={{
+                      marginLeft: Metrics.baseMargin,
+                      color: Colors.primaryTextLight,
+                    }}
+                  />
+                </Button>
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+      </SignedInLayout>
+      <Picker
+        visible={modalVisibility}
+        selectedValue={intakeForm.guid || ''}
+        options={options}
+        onValueChange={handleValueChange}
+        onDismiss={handleModalVisibilityChange}
+      />
+    </>
   )
 }

@@ -92,6 +92,7 @@
   "tasks": "pris",
   "remember": "ne pas oublier",
   "intakeForms": "Formulaires d'admission",
+  "intakeForm": "Formulaire d'admission",
   "noIntakeFormYet": "Vous n'avez pas encore de formulaire d'admission",
   "noIntakeFormYetSubTitle": "Ajouter des formulaires d'admission en appuyant sur le bouton ci-dessus.",
   "continue": "continuer",
@@ -104,5 +105,8 @@
   "questions": "Questions",
   "addQuestion": "ajouter une question",
   "deleteQuestion": "Supprimer la question",
-  "deleteQuestionSubTitle": "Êtes-vous sûr de vouloir supprimer cette question?"
+  "deleteQuestionSubTitle": "Êtes-vous sûr de vouloir supprimer cette question?",
+  "none": "Aucun",
+  "additionalComments": "Commentaires supplémentaires",
+  "updateClient": "mettre à jour le client"
 }

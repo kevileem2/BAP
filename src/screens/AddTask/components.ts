@@ -7,7 +7,7 @@ import { Colors, Metrics } from '../../themes'
 
 export const Header = styled(View)`
 margin-top: ${Metrics.baseMargin}px;
-  margin-bottom: ${Metrics.tinyMargin}px;
+  margin-bottom: ${Metrics.smallMargin}px;
   margin-left: ${Metrics.smallMargin}px;
   margin-right: ${Metrics.smallMargin}px;
 `

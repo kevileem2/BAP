@@ -92,6 +92,7 @@
   "tasks": "tasks",
   "remember": "remember",
   "intakeForms": "Intake forms",
+  "intakeForm": "Intake form",
   "noIntakeFormYet": "You don't have any intake forms yet",
   "noIntakeFormYetSubTitle": "Add intake forms by pressing the button above",
   "continue": "continue",
@@ -104,5 +105,8 @@
   "questions": "Questions",
   "addQuestion": "add question",
   "deleteQuestion": "Delete question",
-  "deleteQuestionSubTitle": "Are you sure you wish to delete this question?"
+  "deleteQuestionSubTitle": "Are you sure you wish to delete this question?",
+  "none": "None",
+  "additionalComments": "Additional comments",
+  "updateClient": "update client"
 }
