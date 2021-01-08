@@ -30,6 +30,7 @@ export class Notes {
       changeType: 'int?',
       message: 'string?',
       parentGuid: 'string?',
+      activityGuid: 'string?',
       createdAt: 'date?',
       updatedAt: 'date?',
     },
@@ -39,6 +40,7 @@ export class Notes {
   public changeType: number | null
   public message: string | null
   public parentGuid: string | null
+  public activityGuid: string | null
   public createdAt: Date | null
   public updatedAt: Date | null
 }
@@ -67,6 +69,7 @@ export class Tasks {
     primaryKey: 'guid',
     properties: {
       guid: 'string',
+      id: 'int?',
       title: 'string?',
       description: 'string?',
       completed: 'bool?',
@@ -79,6 +82,7 @@ export class Tasks {
   }
 
   public guid: string
+  public id: number
   public title: string | null
   public description: string | null
   public completed: boolean | null
@@ -95,6 +99,7 @@ export class Memories {
     primaryKey: 'guid',
     properties: {
       guid: 'string',
+      id: 'int?',
       title: 'string?',
       description: 'string?',
       changeType: 'int?'
@@ -102,6 +107,7 @@ export class Memories {
   }
 
   public guid: string
+  public id: number | null
   public title: string | null
   public description: string | null
   public changeType: number | null
@@ -113,12 +119,14 @@ export class IntakeForms {
     primaryKey: 'guid',
     properties: {
       guid: 'string',
+      id: 'int?',
       title: 'string?',
       changeType: 'int?'
     }
   }
 
   public guid: string
+  public id: number | null
   public title: string | null
   public changeType: number | null
 }
@@ -128,6 +136,7 @@ export class IntakeFormQuestions {
     primaryKey: 'guid',
     properties: {
       guid: 'string',
+      id: 'int?',
       parentRecordGuid: 'string',
       question: 'string?',
       sort: 'int?',
@@ -136,6 +145,7 @@ export class IntakeFormQuestions {
   }
 
   public guid: string
+  public id: number | null
   public parentRecordguid: string
   public question: string | null
   public sort: number | null
@@ -147,6 +157,7 @@ export class ClientIntakeFormQuestions {
     primaryKey: 'guid',
     properties: {
       guid: 'string',
+      id: 'int?',
       parentRecordGuid: 'string',
       parentIntakeFormGuid: 'string',
       question: 'string?',
@@ -156,10 +167,29 @@ export class ClientIntakeFormQuestions {
   }
 
   public guid: string
+  public id: number | null
   public parentRecordguid: string
   public parentIntakeFormGuid: string
   public question: string | null
   public answer: string | null
+  public changeType: number | null
+}
+
+export class Activity {
+  public static schema: Realm.ObjectSchema = {
+    name: 'Activity',
+    primaryKey: 'guid',
+    properties: {
+      guid: 'string',
+      id: 'int?',
+      activity: 'string?',
+      changeType: 'int?'
+    }
+  }
+
+  public guid: string
+  public id: number | null
+  public activity: string | null
   public changeType: number | null
 }
 
@@ -197,7 +227,8 @@ const config = {
     Memories,
     IntakeForms,
     IntakeFormQuestions,
-    ClientIntakeFormQuestions
+    ClientIntakeFormQuestions,
+    Activity
   ],
   schemaVersion: 0,
   migration: (oldRealm: Realm, newRealm: Realm) => {},

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Text, View } from 'react-native'
-import { Divider } from 'react-native-paper'
+import { Chip, Divider } from 'react-native-paper'
 import { Results } from 'realm'
 import { Colors, Metrics } from '../../themes'
 import { RealmContext } from '../../App'
@@ -13,7 +13,7 @@ import {
   Title,
 } from './components'
 import useRealm from '../../utils/useRealm'
-import { Notes } from '../../utils/storage'
+import { Activity, Notes } from '../../utils/storage'
 import { format } from 'date-fns'
 import { useNavigation } from '@react-navigation/native'
 import { useModal } from '../../utils/ModalProvider'
@@ -26,6 +26,7 @@ interface Props {
   updatedAt?: Date | null
   changeType?: number | null
   parentGuid?: string | null
+  activityGuid?: string | null
 }
 
 const ListNote = ({
@@ -35,19 +36,24 @@ const ListNote = ({
   changeType,
   guid,
   parentGuid,
+  activityGuid,
 }: Props) => {
   const navigation = useNavigation()
   const realm = useContext(RealmContext)
   const { showModal, hideModal } = useModal()
 
   const {
-    objects: { notes, thisNote },
+    objects: { activity, thisNote },
     write,
   } = useRealm<{
-    notes: Results<Notes>
+    activity: Results<Activity>
     thisNote: Results<Notes>
   }>([
-    { object: 'Notes', name: 'notes', query: `parentGuid == "${parentGuid}"` },
+    {
+      object: 'Activity',
+      name: 'activity',
+      query: `guid == "${activityGuid}"`,
+    },
     { object: 'Notes', name: 'thisNote', query: `guid == "${guid}"` },
   ])
 
@@ -87,6 +93,7 @@ const ListNote = ({
     navigation.navigate('TextInput', {
       guid,
       parentGuid,
+      activityGuid,
       message,
       changeType,
     })
@@ -94,34 +101,53 @@ const ListNote = ({
 
   return (
     <NoteRow>
-      <NoteInfoContainer>
-        {Boolean(message?.length) && (
-          <Title style={{ color: '#000' }}>{message}</Title>
-        )}
-        {Boolean(updatedAt) && (
-          <Text style={{ color: Colors.secondaryText, fontSize: 12 }}>
-            {`${format(updatedAt, 'dd/MM/yyyy')} - ${format(
-              new Date(
-                updatedAt.getTime() + new Date().getTimezoneOffset() * 60000
-              ),
-              'HH:mm'
-            )}`}
-          </Text>
-        )}
-      </NoteInfoContainer>
       <View
         style={{
-          flex: 0.4,
           flexDirection: 'row',
-          justifyContent: 'flex-end',
+          borderColor: Colors.secondaryText,
+          borderBottomWidth: activityGuid ? 1 : 0,
+          paddingBottom: activityGuid ? Metrics.smallMargin : 0,
         }}>
-        <IconContainer onPress={handleEditPress}>
-          <EditIcon size={22} name="pencil" />
-        </IconContainer>
-        <IconContainer onPress={handleModalDeleteVisibilityChange}>
-          <TrashIcon size={22} name="trash-can-outline" />
-        </IconContainer>
+        <NoteInfoContainer>
+          {Boolean(message?.length) && (
+            <Title style={{ color: '#000' }}>{message}</Title>
+          )}
+          {Boolean(updatedAt) && (
+            <Text style={{ color: Colors.secondaryText, fontSize: 12 }}>
+              {`${format(updatedAt, 'dd/MM/yyyy')} - ${format(
+                new Date(
+                  updatedAt.getTime() + new Date().getTimezoneOffset() * 60000
+                ),
+                'HH:mm'
+              )}`}
+            </Text>
+          )}
+        </NoteInfoContainer>
+        <View
+          style={{
+            flex: 0.4,
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          }}>
+          <IconContainer onPress={handleEditPress}>
+            <EditIcon size={22} name="pencil" />
+          </IconContainer>
+          <IconContainer onPress={handleModalDeleteVisibilityChange}>
+            <TrashIcon size={22} name="trash-can-outline" />
+          </IconContainer>
+        </View>
       </View>
+      {Boolean(activityGuid) && (
+        <Chip
+          style={{
+            width: 'auto',
+            marginTop: Metrics.smallMargin,
+            alignSelf: 'flex-start',
+          }}
+          icon="filter">
+          {activity?.[0].activity}
+        </Chip>
+      )}
     </NoteRow>
   )
 }

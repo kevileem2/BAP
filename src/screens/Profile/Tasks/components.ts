@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Text, View } from 'react-native'
 import {Colors, Metrics} from '../../../themes'
+import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export const NoTasksInfo = styled(Text)`
   text-align: center;
@@ -92,4 +93,10 @@ export const ModalButtonsContainer = styled(View)`
   align-self: center;
   margin-top: ${Metrics.baseMargin}px;
   margin-bottom: ${Metrics.baseMargin}px;
+`
+
+export const Icon = styled(MaterialIcons)`
+  opacity: 1;
+  padding-right: ${Metrics.tinyMargin}px;
+  color: ${Colors.secondaryText};
 `

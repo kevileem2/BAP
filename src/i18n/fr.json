@@ -113,5 +113,13 @@
   "noNotesYet": "Vous n'avez pas de notes pour ce client",
   "noNotesYetSubTitle": "Ajouter des notes en cliquant sur l'icône du crayon ci-dessus",
   "noClientIntakeForm": "Vous n'avez pas d'informations supplémentaires sur ce client",
-  "note": "note"
+  "note": "note",
+  "activities": "Activités",
+  "activity": "Activité",
+  "addActivity": "ajouter une activité",
+  "noActivitiesYet": "Vous n'avez pas encore d'activités à ajouter aux notes",
+  "noActivitiesYetSubTitle": "Ajoutez des activités en cliquant sur l'icône ci-dessus",
+  "activityMandatory": "L'activité est obligatoire",
+  "deleteActivity": "Supprimer l'activité",
+  "deleteActivitySubTitle": "Êtes-vous sûr de vouloir supprimer cette activité?"
 }

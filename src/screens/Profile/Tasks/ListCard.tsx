@@ -11,6 +11,7 @@ import {
   ModalDueTime,
   ModalButtonsContainer,
   SubTitle,
+  Icon,
 } from './components'
 import { RealmContext } from '../../../App'
 import { useModal } from '../../../utils/ModalProvider'
@@ -20,7 +21,7 @@ import { Colors, Metrics } from '../../../themes'
 import useRealm from '../../../utils/useRealm'
 import { formatMessage } from '../../../shared'
 import { ModalCardRounded as ModalCardRoundedStyled } from '../../../shared/components'
-import { format } from 'date-fns'
+import { format, formatDistance } from 'date-fns'
 import { Button } from 'react-native-paper'
 
 interface Props {
@@ -139,11 +140,13 @@ export default ({
           dueTime,
           'dd/MM/yyyy'
         )}`}</ModalDueTime>
-        <ModalDueTime
-          style={{ marginBottom: Metrics.baseMargin }}>{`${formatMessage(
-          'completedAt',
-          realm
-        )}: ${format(completedAt, 'dd/MM/yyyy')}`}</ModalDueTime>
+        {completedAt && (
+          <ModalDueTime
+            style={{ marginBottom: Metrics.baseMargin }}>{`${formatMessage(
+            'completedAt',
+            realm
+          )}: ${format(completedAt, 'dd/MM/yyyy')}`}</ModalDueTime>
+        )}
         <ModalButtonsContainer>
           <Button
             mode="text"
@@ -165,7 +168,13 @@ export default ({
         onLongPress={handleModalVisibilityChange}>
         <TasksInfoContainer>
           <Title>{title}</Title>
-          <SubTitle>{`- ${format(dueTime, 'dd/MM/yyyy')}`}</SubTitle>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Icon name="calendar-month" />
+            <SubTitle>{`${format(dueTime, 'dd/MM/yyyy')}`}</SubTitle>
+            <SubTitle>{` - ${formatDistance(dueTime, new Date(), {
+              addSuffix: true,
+            })}`}</SubTitle>
+          </View>
         </TasksInfoContainer>
       </TouchableWithoutFeedback>
       <View

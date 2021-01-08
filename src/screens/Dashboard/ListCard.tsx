@@ -28,6 +28,7 @@ export default ({
   message,
   updatedAt,
   guid,
+  activityGuid,
   parentGuid,
   changeType,
 }: Props) => {
@@ -52,6 +53,7 @@ export default ({
     navigation.navigate('TextInput', {
       guid,
       parentGuid,
+      activityGuid,
       message,
       changeType,
     })

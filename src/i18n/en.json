@@ -113,5 +113,13 @@
   "noNotesYet": "You don't have any notes for this client",
   "noNotesYetSubTitle": "Add some notes by clicking on the pencil icon above",
   "noClientIntakeForm": "You don't have any extra information about this client",
-  "note": "note"
+  "note": "note",
+  "activities": "Activities",
+  "activity": "Activity",
+  "addActivity": "add activity",
+  "noActivitiesYet": "You don't have any activities yet to add to notes",
+  "noActivitiesYetSubTitle": "Add some activities by clicking on the icon above",
+  "activityMandatory": "Activity is mandatory",
+  "deleteActivity": "Delete activity",
+  "deleteActivitySubTitle": "Are you sure you wish to delete this activity?"
 }

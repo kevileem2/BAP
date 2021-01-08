@@ -37,6 +37,7 @@ interface Props {
   showAddMemory?: boolean
   showIntakeFormIcon?: boolean
   showAddNoteIcon?: boolean
+  showActivityIcon?: boolean
   notificationCount?: number
   activeTabIndex?: number
   isSynchronizing?: boolean
@@ -52,6 +53,7 @@ interface Props {
   handleAddMemoryPress?: () => void
   handleIntakeFormPress?: () => void
   handleAddNotePress?: () => void
+  handleAddActivityPress?: () => void
   onLeftFlingGesture?: () => void
   onRightFlingGesture?: () => void
 }
@@ -72,6 +74,7 @@ const SignedInLayout: React.FC<Props> = ({
   showAddMemory,
   showIntakeFormIcon,
   showAddNoteIcon,
+  showActivityIcon,
   activeTabIndex,
   isSynchronizing,
   headerIconAction,
@@ -84,6 +87,7 @@ const SignedInLayout: React.FC<Props> = ({
   handleAddMemoryPress,
   handleIntakeFormPress,
   handleAddNotePress,
+  handleAddActivityPress,
   onLeftFlingGesture,
   onRightFlingGesture,
 }) => {
@@ -174,6 +178,14 @@ const SignedInLayout: React.FC<Props> = ({
                     size={25}
                     color={Colors.primaryTextLight}
                     onPress={handleAddPress}
+                  />
+                )}
+                {showActivityIcon && (
+                  <IconButton
+                    icon="filter-plus"
+                    size={25}
+                    color={Colors.primaryTextLight}
+                    onPress={handleAddActivityPress}
                   />
                 )}
                 {showIntakeFormIcon && (

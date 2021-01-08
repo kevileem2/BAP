@@ -25,6 +25,7 @@ import { AddMemory } from './screens/AddMemory'
 import { IntakeForm } from './screens/IntakeForm'
 import { IntakeFormQuestions } from './screens/IntakeFormQuestions'
 import { ClientIntakeForm } from './screens/ClientIntakeForm'
+import { Activity } from './screens/Activity'
 
 interface AuthContextInterface {
   signOut?: () => void
@@ -97,6 +98,7 @@ export default () => {
                 name="ClientIntakeForm"
                 component={ClientIntakeForm}
               />
+              <Stack.Screen name="Activity" component={Activity} />
             </>
           )}
         </Stack.Navigator>

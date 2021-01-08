@@ -165,13 +165,13 @@ export default () => {
             tintColors={{ true: Colors.primary }}
           />
         </View>
-        <TouchableOpacity onPress={handleAddTaskPress}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              marginTop: Metrics.doubleLargeMargin,
-            }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginTop: Metrics.doubleLargeMargin,
+          }}>
+          <TouchableOpacity onPress={handleAddTaskPress}>
             <Button
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
@@ -192,8 +192,8 @@ export default () => {
                 }}
               />
             </Button>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SignedInLayout>
   )

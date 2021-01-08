@@ -11,7 +11,7 @@ import {
   IconContainer,
   Icon,
 } from './components'
-import { Clients, Notes } from '../../utils/storage'
+import { ClientIntakeFormQuestions, Clients, Notes } from '../../utils/storage'
 import { RealmContext } from '../../App'
 import { useModal } from '../../utils/ModalProvider'
 import ModalCardRounded from '../../shared/ModalCardRounded'
@@ -34,12 +34,16 @@ export default ({ name, lastName, guid, changeType }: Props) => {
       client,
       getNoteswithChangeTypeNew,
       getNoteswithoutChangeTypeNew,
+      getClientIntakeFormQuestionsNew,
+      getClientIntakeFormQuestionsOld,
     },
     write,
   } = useRealm<{
     client: Results<Clients>
     getNoteswithChangeTypeNew: Results<Notes>
     getNoteswithoutChangeTypeNew: Results<Notes>
+    getClientIntakeFormQuestionsNew: Results<ClientIntakeFormQuestions>
+    getClientIntakeFormQuestionsOld: Results<ClientIntakeFormQuestions>
   }>([
     { object: 'Clients', name: 'client', query: `guid == "${guid}"` },
     { object: 'Notes', name: 'notes', query: `parentGuid == "${guid}"` },
@@ -53,6 +57,16 @@ export default ({ name, lastName, guid, changeType }: Props) => {
       name: 'getNoteswithoutChangeTypeNew',
       query: `parentGuid == "${guid}" AND changeType != 1`,
     },
+    {
+      object: 'ClientIntakeFormQuestions',
+      name: 'getClientIntakeFormQuestionsNew',
+      query: `parentRecordGuid == "${guid}" AND changeType == 1`,
+    },
+    {
+      object: 'ClientIntakeFormQuestions',
+      name: 'getClientIntakeFormQuestionsOld',
+      query: `parentRecordGuid == "${guid}" AND changeType != 1`,
+    },
   ])
 
   // handles the contact card deletion
@@ -62,6 +76,7 @@ export default ({ name, lastName, guid, changeType }: Props) => {
         write((realmInstance: Realm) => {
           if (changeType === 1) {
             realmInstance.delete(client)
+            realmInstance.delete(getClientIntakeFormQuestionsNew)
           } else {
             realmInstance.create(
               'Clients',
@@ -71,6 +86,16 @@ export default ({ name, lastName, guid, changeType }: Props) => {
               },
               Realm.UpdateMode.All
             )
+            getClientIntakeFormQuestionsOld?.forEach((el) => {
+              realmInstance.create(
+                'ClientIntakeFormQuestions',
+                {
+                  guid: el.guid,
+                  changeType: 0,
+                },
+                Realm.UpdateMode.All
+              )
+            })
           }
         })
         if (getNoteswithChangeTypeNew?.length) {

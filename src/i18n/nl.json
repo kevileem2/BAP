@@ -113,5 +113,13 @@
   "noNotesYet": "U heeft nog geen notities voor deze cliënt",
   "noNotesYetSubTitle": "Voeg notities aan deze cliënt toe door op het potlood icoon bovenaan te drukken",
   "noClientIntakeForm": "U heeft geen extra informatie over deze cliënt",
-  "note": "notitie"
+  "note": "notitie",
+  "activities": "Activiteiten",
+  "activity": "Activiteit",
+  "addActivity": "activiteit toevoegen",
+  "noActivitiesYet": "U heeft nog geen activiteiten om toe te voegen aan notities",
+  "noActivitiesYetSubTitle": "Voeg activiteiten toe via de knop bovenaan",
+  "activityMandatory": "Activiteit is verplicht",
+  "deleteActivity": "Verwijder activiteit",
+  "deleteActivitySubTitle": "Bent u zeker dat u deze activiteit wil verwijderen?"
 }

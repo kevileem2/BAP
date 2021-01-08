@@ -49,7 +49,7 @@ export default () => {
     <SignedInLayout
       headerIcon="arrow-left"
       headerIconAction={handleHeaderIconAction}
-      headerTitle={formatMessage('addTask', realm)}
+      headerTitle={formatMessage('addMemory', realm)}
       hideFooter>
       <ScrollView
         style={{ flex: 1, padding: Metrics.largeMargin }}
@@ -88,13 +88,13 @@ export default () => {
           returnKeyType="next"
           multiline={true}
         />
-        <TouchableOpacity onPress={handleAddMemoryPress}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              marginTop: Metrics.doubleLargeMargin,
-            }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginTop: Metrics.doubleLargeMargin,
+          }}>
+          <TouchableOpacity onPress={handleAddMemoryPress}>
             <Button
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
@@ -115,8 +115,8 @@ export default () => {
                 }}
               />
             </Button>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SignedInLayout>
   )

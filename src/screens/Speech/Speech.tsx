@@ -13,7 +13,7 @@ import Voice from 'react-native-voice'
 import { useNavigation } from '@react-navigation/native'
 import SignedInLayout from '../../shared/SignedInStack'
 import { Results } from 'realm'
-import { Clients } from '../../utils/storage'
+import { Activity, Clients } from '../../utils/storage'
 import useRealm from 'utils/useRealm'
 
 import { formatMessage, localeString } from '../../shared/formatMessage'
@@ -21,17 +21,17 @@ import message from '../../shared/message'
 import {
   StyledButton,
   Icon,
-  Title,
-  SubTitle,
   AdditionalInfo,
   AdditionalInfoTitle,
   Button,
   OutputContainer,
-  OutputTitle,
   MicrophoneIcon,
   Dropdown,
   DropdownTitle,
   ErrorText,
+  Header,
+  HeaderText,
+  StyledTextInput,
 } from './components'
 import { Colors, Metrics } from '../../themes'
 import { Portal, Modal } from 'react-native-paper'
@@ -54,35 +54,22 @@ export default () => {
   const [started, setStarted] = useState<boolean>(false)
   const [results, setResults] = useState<string>('')
   const [partialResults, setPartialResults] = useState<[]>([])
-  const [modalVisible, setModalVisibilityChange] = useState<boolean>(false)
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [search, setSearch] = useState<string>('')
   const [pickerVisible, setPickerVisible] = useState<boolean>(false)
+  const [activityPickerVisible, setActivityPickerVisible] = useState<boolean>(
+    false
+  )
   const [selectedItem, setSelectedItem] = useState<string>('')
   const [value, setValue] = useState<string>('')
+  const [clients, setClients] = useState<Results<Clients> | null>(null)
+  const [activities, setActivities] = useState<Results<Activity> | null>(null)
+  const [selectedActivity, setSelectedActivity] = useState<{
+    guid: string
+    activity: string
+  }>({ guid: 'none', activity: formatMessage('none', realm) })
 
-  const {
-    objects: { clients },
-    write,
-  } = useRealm<{
-    clients: Results<Clients>
-  }>([{ object: 'Clients', name: 'clients', query: 'changeType != 0' }])
-
-  useEffect(() => {
-    if (!selectedItem && !value) {
-      const getClientGuid = clients?.sorted('name')?.[0]?.guid
-      const getClientName = clients?.find(
-        (client) => client.guid === getClientGuid
-      )
-      getClientGuid && setSelectedItem(getClientGuid)
-      getClientName &&
-        setValue(`${getClientName.name} ${getClientName.lastName}`)
-    }
-  }, [clients])
-
-  const handleHeaderIconAction = () => {
-    navigation.goBack()
-  }
+  const { write } = useRealm<{}>([])
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStart
@@ -91,10 +78,70 @@ export default () => {
     Voice.onSpeechResults = onSpeechResults
     Voice.onSpeechPartialResults = onSpeechPartialResults
     Voice.onSpeechVolumeChanged = onSpeechVolumeChanged
+    if (realm) {
+      try {
+        realm.addListener('change', realmListener)
+      } catch (e) {
+        console.log(e)
+      }
+    }
     return () => {
+      realm?.removeListener('change', realmListener)
       Voice.destroy().then(Voice.removeAllListeners)
     }
   }, [])
+
+  const realmListener = () => {
+    const realmActivities = realm
+      ?.objects<Activity>('Activity')
+      .filtered(`changeType != 0`)
+    const realmClients = realm
+      ?.objects<Clients>('Clients')
+      .filtered(`changeType != 0`)
+    if (realmClients?.length) {
+      setClients(realmClients)
+    }
+    if (!selectedItem && !value && realmClients?.length) {
+      const getClientGuid = realmClients.sorted('name')?.[0]?.guid
+      const getClientName = realmClients.find(
+        (client) => client.guid === getClientGuid
+      )
+      if (getClientGuid && getClientName) {
+        setSelectedItem(getClientGuid)
+        setValue(`${getClientName.name} ${getClientName.lastName}`)
+      }
+    }
+    if (realmActivities?.length) {
+      setActivities(realmActivities)
+    }
+  }
+
+  useEffect(() => {
+    if (realm) {
+      const realmActivities = realm
+        ?.objects<Activity>('Activity')
+        .filtered(`changeType != 0`)
+      const realmClients = realm
+        ?.objects<Clients>('Clients')
+        .filtered(`changeType != 0`)
+      if (realmClients?.length) {
+        setClients(realmClients)
+      }
+      if (!selectedItem && !value && realmClients?.length) {
+        const getClientGuid = realmClients.sorted('name')?.[0]?.guid
+        const getClientName = realmClients.find(
+          (client) => client.guid === getClientGuid
+        )
+        if (getClientGuid && getClientName) {
+          setSelectedItem(getClientGuid)
+          setValue(`${getClientName.name} ${getClientName.lastName}`)
+        }
+      }
+      if (realmActivities?.length) {
+        setActivities(realmActivities)
+      }
+    }
+  }, [realm, navigation])
 
   const onSpeechStart = (e) => {
     setStarted(true)
@@ -125,7 +172,7 @@ export default () => {
   }
 
   const startRecognizing = async () => {
-    //Starts listening for speech for a specific locale
+    // Starts listening for speech for a specific locale
     setIsEditing(false)
     setPitch('')
     setError('')
@@ -135,39 +182,29 @@ export default () => {
     setEnd(false)
 
     try {
-      await Voice.start(localeString())
+      await Voice.start(localeString(realm))
     } catch (e) {
-      //eslint-disable-next-line
+      // eslint-disable-next-line
       console.error(e)
     }
   }
 
   const stopRecognizing = async () => {
-    //Stops listening for speech
+    // Stops listening for speech
     try {
       await Voice.stop()
     } catch (e) {
-      //eslint-disable-next-line
-      console.error(e)
-    }
-  }
-
-  const cancelRecognizing = async () => {
-    //Cancels the speech recognition
-    try {
-      await Voice.cancel()
-    } catch (e) {
-      //eslint-disable-next-line
+      // eslint-disable-next-line
       console.error(e)
     }
   }
 
   const destroyRecognizer = async () => {
-    //Destroys the current SpeechRecognizer instance
+    // Destroys the current SpeechRecognizer instance
     try {
       await Voice.destroy()
     } catch (e) {
-      //eslint-disable-next-line
+      // eslint-disable-next-line
       console.error(e)
     }
     setPitch('')
@@ -201,6 +238,7 @@ export default () => {
 
   const handleDelete = () => {
     setResults('')
+    setPartialResults([])
   }
 
   const handleSave = () => {
@@ -213,6 +251,8 @@ export default () => {
             guid: String(Guid.create()).toUpperCase(),
             changeType: 1,
             parentGuid: selectedItem,
+            activityGuid:
+              selectedActivity?.guid !== 'none' ? selectedActivity.guid : null,
             message: results,
             createdAt: now,
             updatedAt: now,
@@ -244,17 +284,17 @@ export default () => {
     setPickerVisible((prevState) => !prevState)
   }
 
-  const handleValueChange = (value: string | null) => {
-    const hasClient = clients?.find((client) => client.guid === value)
-    if (value && hasClient) {
-      setSelectedItem(value)
+  const handleValueChange = (valueString: string | null) => {
+    const hasClient = clients?.find((client) => client.guid === valueString)
+    if (valueString && hasClient) {
+      setSelectedItem(valueString)
       setValue(`${hasClient.name} ${hasClient.lastName}`)
     }
     handlePickerVisibilityChange()
   }
 
-  const handleValuePress = (value: string | null) => () => {
-    handleValueChange(value)
+  const handleValuePress = (valueString: string | null) => () => {
+    handleValueChange(valueString)
     handlePickerVisibilityChange()
   }
 
@@ -276,6 +316,47 @@ export default () => {
     />
   )
 
+  const handleActivityPickerChange = () => {
+    setActivityPickerVisible((prevState) => !prevState)
+  }
+
+  const handleActivityValueChange = (valueString: string | null) => {
+    const hasActivity = activities?.find(
+      (activity) => activity.guid === valueString
+    )
+    if (valueString && hasActivity) {
+      setSelectedActivity({
+        guid: valueString,
+        activity: hasActivity.activity!,
+      })
+    } else {
+      setSelectedActivity({
+        guid: 'none',
+        activity: formatMessage('none', realm),
+      })
+    }
+    handleActivityPickerChange()
+  }
+
+  const handleActivityChange = (valueString: string | null) => () => {
+    handleActivityValueChange(valueString)
+    handleActivityPickerChange()
+  }
+
+  const renderActivityPicker = (
+    item: { guid: string; activity: string | null },
+    index: number
+  ) => (
+    <PickerItem
+      key={item.guid}
+      platform={Platform.OS}
+      label={item.activity || ''}
+      value={item.guid}
+      onPress={handleActivityChange}
+      index={index}
+    />
+  )
+
   const filterData = (data) =>
     search.length
       ? data.filter(
@@ -292,23 +373,34 @@ export default () => {
       : data
 
   const options = useMemo(
-    () => clients && filterData(clients).map(renderPickerItem),
+    () => clients && filterData(clients.sorted('name')).map(renderPickerItem),
     [clients, search]
   )
+
+  const activityOptions = useMemo(() => {
+    if (activities) {
+      let mappedActivities = activities.sorted('activity').map((item) => ({
+        guid: item.guid,
+        activity: item.activity,
+      }))
+      mappedActivities = [
+        { guid: 'none', activity: formatMessage('none', realm) },
+        ...mappedActivities,
+      ]
+      return mappedActivities && mappedActivities.map(renderActivityPicker)
+    }
+    return []
+  }, [activities])
 
   return (
     <>
       <SignedInLayout
         headerTitle={formatMessage('addNote', realm)}
         headerIcon="arrow-left"
-        headerIconAction={handleHeaderIconAction}
         showInformation
         handleInformationPress={handleModalVisibilityChange}
         hideFooter>
         <View style={{ flex: 1, margin: Metrics.baseMargin }}>
-          <Title>{formatMessage('speechNoteTitle', realm)}</Title>
-          <SubTitle>{formatMessage('speechNoteSubtitle', realm)}</SubTitle>
-          <OutputTitle>Output</OutputTitle>
           <TouchableOpacity onPress={handlePickerVisibilityChange}>
             <Dropdown>
               <DropdownTitle>
@@ -317,10 +409,25 @@ export default () => {
               <Icon name="chevron-down" size={24} />
             </Dropdown>
           </TouchableOpacity>
+          <TouchableOpacity onPress={handleActivityPickerChange}>
+            <Dropdown>
+              <DropdownTitle>
+                {formatMessage('activity', realm)}: {selectedActivity?.activity}
+              </DropdownTitle>
+              <Icon name="chevron-down" size={24} />
+            </Dropdown>
+          </TouchableOpacity>
           {Boolean(errors) && <ErrorText>* {errors}</ErrorText>}
+          <Header>
+            <HeaderText>{`${formatMessage('note', realm)
+              .charAt(0)
+              .toUpperCase()}${formatMessage('note', realm).slice(
+              1
+            )}`}</HeaderText>
+          </Header>
           <OutputContainer>
             {isEditing ? (
-              <TextInput
+              <StyledTextInput
                 value={results}
                 autoCapitalize="none"
                 selectionColor={Colors.primary}
@@ -491,43 +598,13 @@ export default () => {
         onValueChange={handleValueChange}
         onDismiss={handlePickerVisibilityChange}
       />
-      <Portal>
-        <Modal visible={modalVisible} onDismiss={handleModalVisibilityChange}>
-          <ModalCard>
-            <AdditionalInfoTitle>
-              {formatMessage('instructions', realm)}:
-            </AdditionalInfoTitle>
-            <AdditionalInfo>
-              • {formatMessage('speakClearly', realm)}
-            </AdditionalInfo>
-            <AdditionalInfo>
-              • {formatMessage('recordNoteCompletely', realm)}
-            </AdditionalInfo>
-            <AdditionalInfo>
-              • {formatMessage('speakPunctuation', realm)}
-            </AdditionalInfo>
-            <AdditionalInfo>
-              • {formatMessage('punctuationExample', realm)}
-            </AdditionalInfo>
-            <ModalButtonsContainer>
-              <TouchableOpacity onPress={handleModalVisibilityChange}>
-                <Button
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  colors={[Colors.buttonColorLight, Colors.buttonColorDark]}>
-                  <Text
-                    style={{
-                      color: Colors.primaryTextLight,
-                      fontWeight: '500',
-                    }}>
-                    OK
-                  </Text>
-                </Button>
-              </TouchableOpacity>
-            </ModalButtonsContainer>
-          </ModalCard>
-        </Modal>
-      </Portal>
+      <Picker
+        visible={activityPickerVisible}
+        selectedValue={selectedActivity.guid}
+        options={activityOptions}
+        onValueChange={handleActivityValueChange}
+        onDismiss={handleActivityPickerChange}
+      />
     </>
   )
 }

@@ -27,8 +27,13 @@ export const formatMessage = (message: string, realm: Realm | undefined) => {
   )
 }
 
-export const localeString = () =>
-  (Platform.OS === 'ios'
+export const localeString = (realm: Realm | undefined) => {
+  const userSession = realm?.objects<UserSession>('UserSession')?.[0]
+  if(userSession?.language) {
+    return userSession?.language
+  }
+  return (Platform.OS === 'ios'
     ? NativeModules.SettingsManager.settings.AppleLocale ||
       NativeModules.SettingsManager.settings.AppleLanguages[0]
     : NativeModules.I18nManager.localeIdentifier) || 'en-US'
+}

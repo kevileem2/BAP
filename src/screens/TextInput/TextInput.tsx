@@ -13,7 +13,7 @@ import { format } from 'date-fns'
 import { Guid } from 'guid-typescript'
 import { useNavigation } from '@react-navigation/native'
 import SignedInLayout from '../../shared/SignedInStack'
-import { Clients } from '../../utils/storage'
+import { Activity, Clients } from '../../utils/storage'
 import useRealm from 'utils/useRealm'
 import { formatMessage } from '../../shared/formatMessage'
 import { Colors, Metrics } from '../../themes'
@@ -39,44 +39,134 @@ interface Error {
 export default ({ route }) => {
   const navigation = useNavigation()
   const realm = useContext(RealmContext)
-  const { parentGuid, message, guid, changeType } = route?.params || {}
+  const { parentGuid, message, guid, changeType, activityGuid } =
+    route?.params || {}
   const [search, setSearch] = useState<string>('')
   const [pickerVisible, setPickerVisible] = useState<boolean>(false)
+  const [activityPickerVisible, setActivityPickerVisible] = useState<boolean>(
+    false
+  )
   const [selectedItem, setSelectedItem] = useState<string>('')
   const [value, setValue] = useState<string>('')
   const [text, setText] = useState<string>('')
   const [error, setError] = useState<Error>({})
+  const [clients, setClients] = useState<Results<Clients> | null>(null)
+  const [activities, setActivities] = useState<Results<Activity> | null>(null)
+  const [selectedActivity, setSelectedActivity] = useState<{
+    guid: string
+    activity: string
+  }>({ guid: 'none', activity: formatMessage('none', realm) })
 
-  const {
-    objects: { clients },
-    write,
-  } = useRealm<{
-    clients: Results<Clients>
-  }>([{ object: 'Clients', name: 'clients', query: 'changeType != 0' }])
+  const { write } = useRealm<{}>([])
 
   useEffect(() => {
-    if (parentGuid && clients) {
-      const existingClients = clients?.find(
+    if (realm) {
+      try {
+        realm.addListener('change', realmListener)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    return () => {
+      realm?.removeListener('change', realmListener)
+    }
+  }, [])
+
+  const realmListener = () => {
+    const realmActivities = realm
+      ?.objects<Activity>('Activity')
+      .filtered(`changeType != 0`)
+    const realmClients = realm
+      ?.objects<Clients>('Clients')
+      .filtered(`changeType != 0`)
+    if (realmClients?.length) {
+      setClients(realmClients)
+    }
+    if (parentGuid && realmClients?.length) {
+      const existingClients = realmClients?.find(
         (client) => client.guid === parentGuid
       )
       setSelectedItem(parentGuid)
-      message && setText(message)
-      existingClients &&
+      if (message) {
+        setText(message)
+      }
+      if (existingClients) {
         setValue(`${existingClients.name} ${existingClients.lastName}`)
-    } else if (!selectedItem && !value) {
-      const getClientGuid = clients?.sorted('name')?.[0]?.guid
-      const getClientName = clients?.find(
+      }
+    } else if (!selectedItem && !value && realmClients?.length) {
+      const getClientGuid = realmClients.sorted('name')?.[0]?.guid
+      const getClientName = realmClients.find(
         (client) => client.guid === getClientGuid
       )
-      getClientGuid && setSelectedItem(getClientGuid)
-      getClientName &&
+      if (getClientGuid && getClientName) {
+        setSelectedItem(getClientGuid)
         setValue(`${getClientName.name} ${getClientName.lastName}`)
+      }
     }
-  }, [clients])
-
-  const handleHeaderIconAction = () => {
-    navigation.goBack()
+    if (realmActivities?.length) {
+      if (activityGuid) {
+        const getActivity = realmActivities.find(
+          (el) => el.guid === activityGuid
+        )
+        if (getActivity?.activity) {
+          setSelectedActivity({
+            guid: activityGuid,
+            activity: getActivity.activity,
+          })
+        }
+      }
+      setActivities(realmActivities)
+    }
   }
+
+  useEffect(() => {
+    if (realm) {
+      const realmActivities = realm
+        ?.objects<Activity>('Activity')
+        .filtered(`changeType != 0`)
+      const realmClients = realm
+        ?.objects<Clients>('Clients')
+        .filtered(`changeType != 0`)
+      if (realmClients?.length) {
+        setClients(realmClients)
+      }
+      if (parentGuid && realmClients?.length) {
+        const existingClients = realmClients.find(
+          (client) => client.guid === parentGuid
+        )
+        setSelectedItem(parentGuid)
+        if (message) {
+          setText(message)
+        }
+        if (existingClients) {
+          setValue(`${existingClients.name} ${existingClients.lastName}`)
+        }
+      } else if (!selectedItem && !value && realmClients?.length) {
+        const getClientGuid = realmClients.sorted('name')?.[0]?.guid
+        const getClientName = realmClients.find(
+          (client) => client.guid === getClientGuid
+        )
+        if (getClientGuid && getClientName) {
+          setSelectedItem(getClientGuid)
+          setValue(`${getClientName.name} ${getClientName.lastName}`)
+        }
+      }
+      if (realmActivities?.length) {
+        if (activityGuid) {
+          const getActivity = realmActivities.find(
+            (el) => el.guid === activityGuid
+          )
+          if (getActivity?.activity) {
+            setSelectedActivity({
+              guid: activityGuid,
+              activity: getActivity.activity,
+            })
+          }
+        }
+        setActivities(realmActivities)
+      }
+    }
+  }, [realm, navigation])
 
   const handleSave = () => {
     if (selectedItem && text) {
@@ -88,6 +178,10 @@ export default ({ route }) => {
             {
               guid,
               changeType: changeType === 1 ? 1 : 2,
+              activityGuid:
+                selectedActivity?.guid !== 'none'
+                  ? selectedActivity.guid
+                  : null,
               parentGuid,
               message: text,
               updatedAt: now,
@@ -104,6 +198,10 @@ export default ({ route }) => {
               guid: String(Guid.create()).toUpperCase(),
               changeType: 1,
               parentGuid: selectedItem,
+              activityGuid:
+                selectedActivity?.guid !== 'none'
+                  ? selectedActivity.guid
+                  : null,
               message: text,
               createdAt: now,
               updatedAt: now,
@@ -113,7 +211,7 @@ export default ({ route }) => {
         })
       }
       setError({})
-      navigation.navigate('ClientDetail', { userGuid: selectedItem })
+      navigation.goBack()
     } else {
       if (!selectedItem) {
         setError({
@@ -144,17 +242,17 @@ export default ({ route }) => {
     }
   }
 
-  const handleValueChange = (value: string | null) => {
-    const hasClient = clients?.find((client) => client.guid === value)
-    if (value && hasClient) {
-      setSelectedItem(value)
+  const handleValueChange = (valueString: string | null) => {
+    const hasClient = clients?.find((client) => client.guid === valueString)
+    if (valueString && hasClient) {
+      setSelectedItem(valueString)
       setValue(`${hasClient.name} ${hasClient.lastName}`)
     }
     handlePickerVisibilityChange()
   }
 
-  const handleValuePress = (value: string | null) => () => {
-    handleValueChange(value)
+  const handleValuePress = (valueString: string | null) => () => {
+    handleValueChange(valueString)
     handlePickerVisibilityChange()
   }
 
@@ -200,6 +298,62 @@ export default ({ route }) => {
     [clients, search]
   )
 
+  const handleActivityPickerChange = () => {
+    setActivityPickerVisible((prevState) => !prevState)
+  }
+
+  const handleActivityValueChange = (valueString: string | null) => {
+    const hasActivity = activities?.find(
+      (activity) => activity.guid === valueString
+    )
+    if (valueString && hasActivity) {
+      setSelectedActivity({
+        guid: valueString,
+        activity: hasActivity.activity!,
+      })
+    } else {
+      setSelectedActivity({
+        guid: 'none',
+        activity: formatMessage('none', realm),
+      })
+    }
+    handleActivityPickerChange()
+  }
+
+  const handleActivityChange = (valueString: string | null) => () => {
+    handleActivityValueChange(valueString)
+    handleActivityPickerChange()
+  }
+
+  const renderActivityPicker = (
+    item: { guid: string; activity: string | null },
+    index: number
+  ) => (
+    <PickerItem
+      key={item.guid}
+      platform={Platform.OS}
+      label={item.activity || ''}
+      value={item.guid}
+      onPress={handleActivityChange}
+      index={index}
+    />
+  )
+
+  const activityOptions = useMemo(() => {
+    if (activities) {
+      let mappedActivities = activities.sorted('activity').map((item) => ({
+        guid: item.guid,
+        activity: item.activity,
+      }))
+      mappedActivities = [
+        { guid: 'none', activity: formatMessage('none', realm) },
+        ...mappedActivities,
+      ]
+      return mappedActivities && mappedActivities.map(renderActivityPicker)
+    }
+    return []
+  }, [activities])
+
   return (
     <>
       <SignedInLayout
@@ -209,7 +363,6 @@ export default ({ route }) => {
             : formatMessage('addNote', realm)
         }
         headerIcon="arrow-left"
-        headerIconAction={handleHeaderIconAction}
         hideFooter>
         <View style={{ flex: 1, margin: Metrics.baseMargin }}>
           <TouchableOpacity onPress={handlePickerVisibilityChange}>
@@ -221,6 +374,14 @@ export default ({ route }) => {
             </Dropdown>
           </TouchableOpacity>
           {Boolean(error?.client) && <ErrorText>* {error.client}</ErrorText>}
+          <TouchableOpacity onPress={handleActivityPickerChange}>
+            <Dropdown>
+              <DropdownTitle>
+                {formatMessage('activity', realm)}: {selectedActivity?.activity}
+              </DropdownTitle>
+              <Icon name="chevron-down" size={24} />
+            </Dropdown>
+          </TouchableOpacity>
           <Header>
             <HeaderText>{`${formatMessage('note', realm)
               .charAt(0)
@@ -229,7 +390,11 @@ export default ({ route }) => {
             )}`}</HeaderText>
           </Header>
           <StyledTextInput
-            style={{ height: 100, paddingTop: Metrics.baseMargin }}
+            style={{
+              height: 100,
+              paddingTop: Metrics.baseMargin,
+              fontSize: 16,
+            }}
             textAlignVertical="center"
             value={text}
             autoCapitalize="sentences"
@@ -264,7 +429,9 @@ export default ({ route }) => {
                     marginRight: Metrics.smallMargin,
                     color: Colors.primaryTextLight,
                   }}>
-                  {formatMessage('addNote', realm).toUpperCase()}
+                  {guid
+                    ? formatMessage('updateNote', realm).toUpperCase()
+                    : formatMessage('addNote', realm).toUpperCase()}
                 </Text>
               </StyledButton>
             </TouchableOpacity>
@@ -280,6 +447,13 @@ export default ({ route }) => {
         options={options}
         onValueChange={handleValueChange}
         onDismiss={handlePickerVisibilityChange}
+      />
+      <Picker
+        visible={activityPickerVisible}
+        selectedValue={selectedActivity.guid}
+        options={activityOptions}
+        onValueChange={handleActivityValueChange}
+        onDismiss={handleActivityPickerChange}
       />
     </>
   )

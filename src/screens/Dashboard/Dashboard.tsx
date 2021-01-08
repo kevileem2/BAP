@@ -157,6 +157,7 @@ export default () => {
         updatedAt: item?.updatedAt,
         index,
         parentGuid: item?.parentGuid,
+        activityGuid: item?.activityGuid,
         changeType: item?.changeType,
       }
       return <ListCard key={index} {...props} />
@@ -267,7 +268,7 @@ export default () => {
             <View style={{ flex: 1 }}>{mapTasks?.map(renderTasksList)}</View>
           </>
         )}
-        {Boolean(tasksList?.length) && (
+        {Boolean(memoriesList?.length) && (
           <>
             <Header>
               <HeaderText>

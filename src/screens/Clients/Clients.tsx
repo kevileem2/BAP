@@ -180,16 +180,22 @@ export default () => {
     navigation.navigate('IntakeForm')
   }
 
+  const handleActivityPress = () => {
+    navigation.navigate('Activity')
+  }
+
   return (
     <SignedInLayout
       headerTitle={formatMessage('clients', realm)}
       showSynchronizeIcon
       showIntakeFormIcon
+      showActivityIcon
       isSynchronizing={isSynchronizing}
       showAddIcon={Boolean(clients?.length)}
       handleSynchronizePress={handleSynchronizePress}
       handleAddPress={handleAddClientPress}
       handleIntakeFormPress={handleIntakeFormPress}
+      handleAddActivityPress={handleActivityPress}
       onLeftFlingGesture={handleLeftFlingGesture}
       onRightFlingGesture={handleRightFlingGesture}
       activeTabIndex={1}>
