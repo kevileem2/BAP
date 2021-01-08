@@ -162,6 +162,7 @@ export class ClientIntakeFormQuestions {
       parentIntakeFormGuid: 'string',
       question: 'string?',
       answer: "string?",
+      sort: "int?",
       changeType: 'int?'
     }
   }
@@ -172,6 +173,7 @@ export class ClientIntakeFormQuestions {
   public parentIntakeFormGuid: string
   public question: string | null
   public answer: string | null
+  public sort: number | null
   public changeType: number | null
 }
 

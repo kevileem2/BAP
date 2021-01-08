@@ -169,11 +169,19 @@ export default ({
         <TasksInfoContainer>
           <Title>{title}</Title>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Icon name="calendar-month" />
-            <SubTitle>{`${format(dueTime, 'dd/MM/yyyy')}`}</SubTitle>
-            <SubTitle>{` - ${formatDistance(dueTime, new Date(), {
-              addSuffix: true,
-            })}`}</SubTitle>
+            <Icon name={completed ? 'check' : 'calendar-month'} />
+            <SubTitle>{`${
+              completed
+                ? format(completedAt, 'dd/MM/yyyy')
+                : format(dueTime, 'dd/MM/yyyy')
+            }`}</SubTitle>
+            <SubTitle>{` - ${formatDistance(
+              completed ? completedAt : dueTime,
+              new Date(),
+              {
+                addSuffix: true,
+              }
+            )}`}</SubTitle>
           </View>
         </TasksInfoContainer>
       </TouchableWithoutFeedback>

@@ -132,14 +132,14 @@ export default () => {
             extraData={{ intakeForms }}
           />
         ) : (
-          <>
+          <View style={{ padding: Metrics.baseMargin }}>
             <NoIntakeFormInfo>
               {formatMessage('noIntakeFormYet', realm)}
             </NoIntakeFormInfo>
             <NoIntakeFormInfoSubTitle>
               {formatMessage('noIntakeFormYetSubTitle', realm)}
             </NoIntakeFormInfoSubTitle>
-          </>
+          </View>
         )}
       </View>
     </SignedInLayout>

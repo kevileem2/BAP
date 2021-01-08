@@ -108,31 +108,6 @@ export default ({ route }) => {
           ?.objects<Clients>('Clients')
           .filtered(`changeType != 0 AND guid == "${userGuid}"`)?.[0]
         if (realmClient) {
-          // const realmClientIntakeFormQuestions = realm
-          //   ?.objects<ClientIntakeFormQuestions>('ClientIntakeFormQuestions')
-          //   .filtered(`changeType != 0 AND parentRecordGuid == "${userGuid}"`)
-          // if (realmClientIntakeFormQuestions?.length) {
-          //   let questionsObject = {}
-          //   realmClientIntakeFormQuestions.forEach((el) => {
-          //     questionsObject = {
-          //       ...questionsObject,
-          //       [el.guid]: {
-          //         question: el.question,
-          //         answer: el.answer,
-          //       },
-          //     }
-          //   })
-          //   setQuestions(questionsObject)
-          //   const realmSelectedIntakeForm = realm
-          //     ?.objects<IntakeForms>('IntakeForms')
-          //     .filtered(
-          //       `changeType != 0 AND guid == "${realmClientIntakeFormQuestions[0].parentIntakeFormGuid}"`
-          //     )?.[0]
-          //   setIntakeForm({
-          //     guid: realmSelectedIntakeForm.guid,
-          //     title: realmSelectedIntakeForm.title!,
-          //   })
-          // }
           setFirstName(realmClient.name)
           setLastName(realmClient.lastName)
         }
@@ -210,6 +185,7 @@ export default ({ route }) => {
                 parentIntakeFormGuid: intakeForm.guid,
                 question: question.question,
                 answer: question.answer,
+                sort: question.sort,
                 changeType: 1,
               },
               Realm.UpdateMode.All
@@ -226,19 +202,26 @@ export default ({ route }) => {
     }
   }
 
-  const handleQuestionChange = (guid: string, question: string) => (
-    value: string
-  ) => {
+  const handleQuestionChange = (
+    guid: string,
+    question: string,
+    sort: number
+  ) => (value: string) => {
     setQuestions((prevState) => ({
       ...prevState,
       [guid]: {
         question,
         answer: value,
+        sort,
       },
     }))
   }
 
-  const renderQuestion = (item: { guid: string; question: string | null }) =>
+  const renderQuestion = (item: {
+    guid: string
+    question: string | null
+    sort: number
+  }) =>
     item.question ? (
       <>
         <InputHeaderContainer key={`header-${item.guid}`}>
@@ -252,7 +235,11 @@ export default ({ route }) => {
           value={questions[item.guid] || ''}
           autoCapitalize="sentences"
           selectionColor={Colors.primaryText}
-          onChangeText={handleQuestionChange(item.guid, item.question)}
+          onChangeText={handleQuestionChange(
+            item.guid,
+            item.question,
+            item.sort
+          )}
           returnKeyType="next"
           textContentType="givenName"
           multiline={true}
@@ -267,12 +254,14 @@ export default ({ route }) => {
         .map((el) => ({
           guid: el.guid,
           question: el.question,
+          sort: el.sort,
         }))
       mappedIntakeFormQuestions = [
         ...mappedIntakeFormQuestions,
         {
           guid: 'additionalComments',
           question: formatMessage('additionalComments', realm),
+          sort: mappedIntakeFormQuestions.length,
         },
       ]
       return mappedIntakeFormQuestions?.map(renderQuestion)
@@ -425,13 +414,13 @@ export default ({ route }) => {
                 {intakeFormQuestions && mapAllQuestions}
               </>
             )}
-            <TouchableOpacity onPress={handleAddClientPress}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  marginTop: Metrics.baseMargin,
-                }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginTop: Metrics.baseMargin,
+              }}>
+              <TouchableOpacity onPress={handleAddClientPress}>
                 <Button
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
@@ -455,8 +444,8 @@ export default ({ route }) => {
                     }}
                   />
                 </Button>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
         </View>
       </SignedInLayout>

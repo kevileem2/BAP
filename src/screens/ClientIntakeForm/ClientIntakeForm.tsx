@@ -68,7 +68,7 @@ export default ({ route }) => {
   }
 
   const mapQuestions = useMemo(
-    () => questions && questions?.map(renderQuestions),
+    () => questions && questions.sorted('sort')?.map(renderQuestions),
     [questions]
   )
 
