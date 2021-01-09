@@ -89,11 +89,15 @@ export default ({ route }) => {
 
   // renders each contact with props
   const renderNotes = (item: Notes, index: number) => {
+    const activityName = realm
+      ?.objects<Activity>('Activity')
+      .filtered(`guid == "${item.activityGuid}"`)?.[0]?.activity
     if (item) {
       const props = {
         guid: item.guid,
         message: item.message,
         updatedAt: item.updatedAt,
+        activity: activityName,
         activityGuid: item.activityGuid,
         index,
         changeType: item.changeType,

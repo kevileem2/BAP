@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
 import { Chip, Divider } from 'react-native-paper'
 import { Results } from 'realm'
@@ -26,6 +26,7 @@ interface Props {
   updatedAt?: Date | null
   changeType?: number | null
   parentGuid?: string | null
+  activity?: string | null
   activityGuid?: string | null
 }
 
@@ -36,6 +37,7 @@ const ListNote = ({
   changeType,
   guid,
   parentGuid,
+  activity,
   activityGuid,
 }: Props) => {
   const navigation = useNavigation()
@@ -43,19 +45,11 @@ const ListNote = ({
   const { showModal, hideModal } = useModal()
 
   const {
-    objects: { activity, thisNote },
+    objects: { thisNote },
     write,
   } = useRealm<{
-    activity: Results<Activity>
     thisNote: Results<Notes>
-  }>([
-    {
-      object: 'Activity',
-      name: 'activity',
-      query: `guid == "${activityGuid}"`,
-    },
-    { object: 'Notes', name: 'thisNote', query: `guid == "${guid}"` },
-  ])
+  }>([{ object: 'Notes', name: 'thisNote', query: `guid == "${guid}"` }])
 
   // handles the delete modal visibility
   const handleModalDeleteVisibilityChange = () => {
@@ -105,8 +99,8 @@ const ListNote = ({
         style={{
           flexDirection: 'row',
           borderColor: Colors.secondaryText,
-          borderBottomWidth: activityGuid ? 1 : 0,
-          paddingBottom: activityGuid ? Metrics.smallMargin : 0,
+          borderBottomWidth: activity ? 1 : 0,
+          paddingBottom: activity ? Metrics.smallMargin : 0,
         }}>
         <NoteInfoContainer>
           {Boolean(message?.length) && (
@@ -137,7 +131,7 @@ const ListNote = ({
           </IconContainer>
         </View>
       </View>
-      {Boolean(activityGuid) && (
+      {Boolean(activity) && (
         <Chip
           style={{
             width: 'auto',
@@ -145,7 +139,7 @@ const ListNote = ({
             alignSelf: 'flex-start',
           }}
           icon="filter">
-          {activity?.[0].activity}
+          {activity}
         </Chip>
       )}
     </NoteRow>

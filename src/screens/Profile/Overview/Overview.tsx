@@ -119,17 +119,21 @@ export default () => {
 
   return loading ? null : memories?.length || tasks?.length ? (
     <View>
-      <Header isFirst>
-        <HeaderText>
-          {formatMessage('uncompletedTasks', realm).toUpperCase()}
-        </HeaderText>
-      </Header>
+      {Boolean(tasks?.length) && (
+        <Header isFirst>
+          <HeaderText>
+            {formatMessage('uncompletedTasks', realm).toUpperCase()}
+          </HeaderText>
+        </Header>
+      )}
       {mapTasksData?.map(renderTasks)}
-      <Header>
-        <HeaderText>
-          {formatMessage('thingsToRemember', realm).toUpperCase()}
-        </HeaderText>
-      </Header>
+      {Boolean(memories?.length) && (
+        <Header isFirst={!tasks?.length}>
+          <HeaderText>
+            {formatMessage('thingsToRemember', realm).toUpperCase()}
+          </HeaderText>
+        </Header>
+      )}
       {mapMemories?.map(renderMemory)}
     </View>
   ) : (
