@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.awesometsproject"
+        applicationId "com.arteveldeHogeschool.manergo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
