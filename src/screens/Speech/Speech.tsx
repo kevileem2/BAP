@@ -296,7 +296,6 @@ export default () => {
 
   const handleValuePress = (valueString: string | null) => () => {
     handleValueChange(valueString)
-    handlePickerVisibilityChange()
   }
 
   const renderPickerItem = (
@@ -341,7 +340,6 @@ export default () => {
 
   const handleActivityChange = (valueString: string | null) => () => {
     handleActivityValueChange(valueString)
-    handleActivityPickerChange()
   }
 
   const renderActivityPicker = (
@@ -430,10 +428,10 @@ export default () => {
                 1
               )}`}</HeaderText>
             </Header>
-            <OutputContainer>
               {isEditing ? (
                 <StyledTextInput
                   value={results}
+                  textAlignVertical="top"
                   autoCapitalize="none"
                   selectionColor={Colors.primary}
                   onChangeText={handleOnChangeText}
@@ -445,14 +443,17 @@ export default () => {
                   }}
                 />
               ) : (
-                <ScrollView
-                  contentContainerStyle={{
-                    padding: Metrics.baseMargin,
+                <View
+                  style={{
+                    borderRadius: 25,
+                    backgroundColor: Colors.primaryTextLight,
+                    padding: Metrics.tinyMargin,
+                    height: 100,
+                    elevation: 2
                   }}>
                   <Text key={`result`}>{results || partialResults}</Text>
-                </ScrollView>
+                </View>
               )}
-            </OutputContainer>
             {Boolean(results.length) && end && (
               <View
                 style={{

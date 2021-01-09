@@ -80,7 +80,7 @@ export default () => {
         </Header>
         <StyledTextInput
           style={{ height: 100, paddingTop: Metrics.baseMargin }}
-          textAlignVertical="center"
+          textAlignVertical="top"
           value={description}
           autoCapitalize="sentences"
           selectionColor={Colors.primaryText}

@@ -234,6 +234,7 @@ export default ({ route }) => {
           style={{ height: 100, paddingTop: Metrics.baseMargin }}
           key={`input-${item.guid}`}
           value={questions[item.guid] || ''}
+          textAlignVertical="top"
           autoCapitalize="sentences"
           selectionColor={Colors.primaryText}
           onChangeText={handleQuestionChange(
@@ -287,8 +288,6 @@ export default ({ route }) => {
 
   const handleValuePress = (value: string | null) => () => {
     handleValueChange(value)
-
-    handleModalVisibilityChange()
   }
 
   const renderPickerItem = (

@@ -101,7 +101,7 @@ export const ErrorText = styled(Text)`
 
 
 export const StyledTextInput = styled(TextInput)`
-  height: 40px;
+  height: 100px;
   background-color: ${Colors.primaryTextLight};
   padding-left: ${Metrics.baseMargin}px;
   padding-right: ${Metrics.baseMargin}px;

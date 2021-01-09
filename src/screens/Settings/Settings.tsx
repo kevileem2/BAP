@@ -122,7 +122,6 @@ export default () => {
 
   const handleValuePress = (value: string | null) => () => {
     handleValueChange(value)
-    handlePickerVisibilityChange()
   }
 
   const renderPickerItem = (

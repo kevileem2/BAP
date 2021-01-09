@@ -30,7 +30,7 @@ const ScreenHeader: React.FC<Props> = ({
   }
 
   return (
-    <Appbar.Header style={{ elevation: 0 }}>
+    <Appbar.Header style={{ elevation: 0, marginLeft: Platform.OS === "android" ? Metrics.largeMargin : 0 }}>
       {navigationIconName && (
         <Appbar.Action
           icon={navigationIconName}

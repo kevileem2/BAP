@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Keyboard } from 'react-native'
+import { View, Text, Keyboard, Platform } from 'react-native'
 import { Button } from 'react-native-paper'
 import Realm from 'realm'
 import { Guid } from 'guid-typescript'
@@ -72,7 +72,7 @@ export default ({ hideModal, realm, write }: Props) => {
   return (
     <View
       style={{
-        top: keyboardOpened ? '-30%' : undefined,
+        top: keyboardOpened && Platform.OS === 'ios' ? '-30%' : undefined,
         backgroundColor: Colors.primaryTextLight,
         justifyContent: 'center',
         alignItems: 'center',
@@ -84,7 +84,7 @@ export default ({ hideModal, realm, write }: Props) => {
         {formatMessage('activity', realm)}
       </ModalTitle>
       <StyledTextInput
-        style={{ borderWidth: error ? 1 : 0, borderColor: Colors.errorDark }}
+        style={{ borderWidth: error ? 1 : 0, borderColor: error ? Colors.errorDark : Colors.primaryText }}
         textAlignVertical="center"
         value={activity}
         autoCapitalize="sentences"

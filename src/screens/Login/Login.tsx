@@ -6,10 +6,10 @@ import {
   Dimensions,
   StatusBar,
   TextInput,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from 'react-native'
 import { NavigationScreenProp } from 'react-navigation'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Realm, { Results } from 'realm'
 import { Guid } from 'guid-typescript'
 import { Buffer } from 'buffer'
@@ -22,8 +22,6 @@ import { Icon, InputContainer, Button } from './components'
 import AsyncStorage from '@react-native-community/async-storage'
 import { AuthContext } from '../../Navigator'
 import { RealmContext } from '../../App'
-import { message } from '../../shared'
-import { ScrollView } from 'react-native-gesture-handler'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -164,16 +162,18 @@ export default ({ navigation }: Props) => {
           zIndex: 1,
         }}
       />
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
+      <KeyboardAwareScrollView
+        style={{ flex: 1, backgroundColor: '#FFF' }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
         contentContainerStyle={{
-          flex: 1,
-          justifyContent: 'center',
+          height: "100%",
+          justifyContent: 'flex-end',
+          paddingTop: ratio * 318,
           paddingLeft: Metrics.doubleLargeMargin,
           paddingRight: Metrics.doubleLargeMargin,
           paddingBottom: Metrics.smallMargin,
-          backgroundColor: '#FFF',
-        }}>
+        }}
+        scrollEnabled={true}>
         <Text
           style={{
             fontSize: 32,
@@ -190,10 +190,6 @@ export default ({ navigation }: Props) => {
           }}>
           {formatMessage('PleaseSignIn', realm)}
         </Text>
-        <KeyboardAvoidingView
-          behavior="padding"
-          enabled
-          style={{ paddingBottom: Metrics.tinyMargin }}>
           <InputContainer>
             <View
               style={{
@@ -290,14 +286,11 @@ export default ({ navigation }: Props) => {
               </Button>
             </TouchableWithoutFeedback>
           </View>
-        </KeyboardAvoidingView>
         <View
           style={{
-            position: 'absolute',
-            bottom: Metrics.baseMargin,
+            marginTop: 'auto',
             flexDirection: 'row',
             alignSelf: 'center',
-            justifyContent: 'flex-end',
           }}>
           <Text>{formatMessage('DontHaveAnAccount', realm)} </Text>
           <TouchableWithoutFeedback onPress={handleSignUpPress}>
@@ -306,7 +299,7 @@ export default ({ navigation }: Props) => {
             </Text>
           </TouchableWithoutFeedback>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </>
   )
 }

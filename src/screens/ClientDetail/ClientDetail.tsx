@@ -148,7 +148,6 @@ export default ({ route }) => {
 
   const handleActivityChange = (valueString: string | null) => () => {
     handleActivityValueChange(valueString)
-    handlePickerVisibilityPress()
   }
 
   const renderActivityPicker = (

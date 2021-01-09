@@ -255,7 +255,6 @@ export default ({ route }) => {
 
   const handleValuePress = (valueString: string | null) => () => {
     handleValueChange(valueString)
-    handlePickerVisibilityChange()
   }
 
   const renderPickerItem = (
@@ -324,7 +323,6 @@ export default ({ route }) => {
 
   const handleActivityChange = (valueString: string | null) => () => {
     handleActivityValueChange(valueString)
-    handleActivityPickerChange()
   }
 
   const renderActivityPicker = (
@@ -401,7 +399,7 @@ export default ({ route }) => {
                 paddingTop: Metrics.baseMargin,
                 fontSize: 16,
               }}
-              textAlignVertical="center"
+              textAlignVertical="top"
               value={text}
               autoCapitalize="sentences"
               selectionColor={Colors.primaryText}

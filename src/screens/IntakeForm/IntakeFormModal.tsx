@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Keyboard } from 'react-native'
+import { View, Text, Keyboard, Platform } from 'react-native'
 import { Button } from 'react-native-paper'
 import Realm from 'realm'
 import { NavigationProp } from '@react-navigation/native'
@@ -86,7 +86,7 @@ export default ({
   return (
     <View
       style={{
-        top: keyboardOpened ? '-30%' : undefined,
+        top: keyboardOpened && Platform.OS === 'ios' ? '-30%' : undefined,
         backgroundColor: Colors.primaryTextLight,
         justifyContent: 'center',
         alignItems: 'center',
@@ -99,7 +99,7 @@ export default ({
       </ModalTitle>
       <StyledTextInput
         style={{ borderWidth: error ? 1 : 0, borderColor: Colors.errorDark }}
-        textAlignVertical="center"
+        textAlignVertical="top"
         value={title}
         autoCapitalize="sentences"
         selectionColor={Colors.primaryText}

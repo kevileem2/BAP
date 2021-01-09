@@ -29,7 +29,7 @@ width: 90%;
   border-radius: 25px;
   font-size: 14px;
   font-weight: 300;
-  elevation: 1;
+  elevation: 3;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
 `
 

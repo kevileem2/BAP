@@ -189,6 +189,7 @@ export default ({ navigation }: Props) => {
         style={{ flex: 1, backgroundColor: '#FFF' }}
         resetScrollToCoords={{ x: 0, y: 0 }}
         contentContainerStyle={{
+          height: Dimensions.get("window").height,
           justifyContent: 'center',
           paddingLeft: Metrics.doubleLargeMargin,
           paddingRight: Metrics.doubleLargeMargin,
@@ -358,21 +359,20 @@ export default ({ navigation }: Props) => {
             </Button>
           </TouchableWithoutFeedback>
         </View>
+        <View
+          style={{
+            marginTop: 'auto',
+            flexDirection: 'row',
+            alignSelf: 'center',
+          }}>
+          <Text>{formatMessage('AlreadyHaveAnAccount', realm)} </Text>
+          <TouchableWithoutFeedback onPress={handleGoBackPress}>
+            <Text style={{ color: Colors.primary }}>
+              {formatMessage('SignIn', realm)}
+            </Text>
+          </TouchableWithoutFeedback>
+        </View>
       </KeyboardAwareScrollView>
-      <View
-        style={{
-          position: 'absolute',
-          bottom: Metrics.baseMargin,
-          flexDirection: 'row',
-          alignSelf: 'center',
-        }}>
-        <Text>{formatMessage('AlreadyHaveAnAccount', realm)} </Text>
-        <TouchableWithoutFeedback onPress={handleGoBackPress}>
-          <Text style={{ color: Colors.primary }}>
-            {formatMessage('SignIn', realm)}
-          </Text>
-        </TouchableWithoutFeedback>
-      </View>
-    </>
+      </>
   )
 }
