@@ -8,8 +8,6 @@ export const StyledButton = styled(LinearGradient)`
   flex-direction: row;
   align-items: center;
   padding: ${Metrics.smallMargin}px;
-  margin-top: ${Metrics.largeMargin}px;
-  margin-right: ${Metrics.smallMargin}px;
   border-radius: 50px;
 `
 

@@ -23,6 +23,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { AuthContext } from '../../Navigator'
 import { RealmContext } from '../../App'
 import { message } from '../../shared'
+import { ScrollView } from 'react-native-gesture-handler'
 
 interface Props {
   navigation: NavigationScreenProp<any, any>
@@ -163,8 +164,9 @@ export default ({ navigation }: Props) => {
           zIndex: 1,
         }}
       />
-      <View
-        style={{
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{
           flex: 1,
           justifyContent: 'center',
           paddingLeft: Metrics.doubleLargeMargin,
@@ -172,26 +174,26 @@ export default ({ navigation }: Props) => {
           paddingBottom: Metrics.smallMargin,
           backgroundColor: '#FFF',
         }}>
+        <Text
+          style={{
+            fontSize: 32,
+            fontWeight: '700',
+            marginBottom: Metrics.smallMargin,
+          }}>
+          {formatMessage('Login', realm)}
+        </Text>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: '400',
+            color: Colors.secondaryText,
+          }}>
+          {formatMessage('PleaseSignIn', realm)}
+        </Text>
         <KeyboardAvoidingView
           behavior="padding"
           enabled
           style={{ paddingBottom: Metrics.tinyMargin }}>
-          <Text
-            style={{
-              fontSize: 32,
-              fontWeight: '700',
-              marginBottom: Metrics.smallMargin,
-            }}>
-            {formatMessage('Login', realm)}
-          </Text>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: '400',
-              color: Colors.secondaryText,
-            }}>
-            {formatMessage('PleaseSignIn', realm)}
-          </Text>
           <InputContainer>
             <View
               style={{
@@ -248,22 +250,6 @@ export default ({ navigation }: Props) => {
                   marginLeft: Metrics.smallMargin,
                 }}
               />
-              {/* <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignContent: 'flex-end',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: '500',
-                    color: Colors.primary,
-                    alignSelf: 'flex-end',
-                  }}>
-                  {formatMessage('Forgot').toUpperCase()}
-                </Text>
-              </View> */}
             </View>
           </InputContainer>
           {Boolean(error?.length) && (
@@ -275,36 +261,36 @@ export default ({ navigation }: Props) => {
               * {error}
             </Text>
           )}
-        </KeyboardAvoidingView>
-        <TouchableWithoutFeedback onPress={handleLoginPress}>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'flex-end',
               marginTop: Metrics.largeMargin,
             }}>
-            <Button
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              colors={[Colors.buttonColorLight, Colors.buttonColorDark]}>
-              <Text
-                style={{
-                  color: Colors.primaryTextLight,
-                  fontWeight: '500',
-                }}>
-                LOGIN
-              </Text>
-              <Icon
-                name="chevron-right"
-                size={28}
-                style={{
-                  marginLeft: Metrics.baseMargin,
-                  color: Colors.primaryTextLight,
-                }}
-              />
-            </Button>
+            <TouchableWithoutFeedback onPress={handleLoginPress}>
+              <Button
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                colors={[Colors.buttonColorLight, Colors.buttonColorDark]}>
+                <Text
+                  style={{
+                    color: Colors.primaryTextLight,
+                    fontWeight: '500',
+                  }}>
+                  LOGIN
+                </Text>
+                <Icon
+                  name="chevron-right"
+                  size={28}
+                  style={{
+                    marginLeft: Metrics.baseMargin,
+                    color: Colors.primaryTextLight,
+                  }}
+                />
+              </Button>
+            </TouchableWithoutFeedback>
           </View>
-        </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
         <View
           style={{
             position: 'absolute',
@@ -320,7 +306,7 @@ export default ({ navigation }: Props) => {
             </Text>
           </TouchableWithoutFeedback>
         </View>
-      </View>
+      </ScrollView>
     </>
   )
 }

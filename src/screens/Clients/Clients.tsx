@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useContext,
 } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import { Results } from 'realm'
 import { useNavigation } from '@react-navigation/native'
 import NetInfo from '@react-native-community/netinfo'
@@ -191,7 +191,7 @@ export default () => {
       showIntakeFormIcon
       showActivityIcon
       isSynchronizing={isSynchronizing}
-      showAddIcon={Boolean(clients?.length)}
+      showAddIcon
       handleSynchronizePress={handleSynchronizePress}
       handleAddPress={handleAddClientPress}
       handleIntakeFormPress={handleIntakeFormPress}
@@ -199,7 +199,7 @@ export default () => {
       onLeftFlingGesture={handleLeftFlingGesture}
       onRightFlingGesture={handleRightFlingGesture}
       activeTabIndex={1}>
-      <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         {!loading &&
           (Boolean(clients?.length) ? (
             <>
@@ -222,27 +222,11 @@ export default () => {
                 {formatMessage('noClientsYet', realm)}
               </NoClientsInfo>
               <NoClientsInfoSubTitle>
-                {formatMessage('addClients', realm)}
+                {formatMessage('noClientsYetSubTitle', realm)}
               </NoClientsInfoSubTitle>
-              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <TouchableOpacity onPress={handleAddClientPress}>
-                  <StyledButton
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
-                    colors={[Colors.succesLight, Colors.succesDark]}>
-                    <Icon
-                      name="plus"
-                      size={28}
-                      style={{
-                        color: Colors.primaryTextLight,
-                      }}
-                    />
-                  </StyledButton>
-                </TouchableOpacity>
-              </View>
             </>
           ))}
-      </View>
+      </KeyboardAvoidingView>
     </SignedInLayout>
   )
 }

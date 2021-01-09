@@ -150,7 +150,7 @@ const remapUpdatedClientIntakeFormQuestionItems = (
         ...result,
         {
           id: element.id,
-          parentRecordGuid: element.parentRecordguid,
+          parentRecordGuid: element.parentRecordGuid,
           parentIntakeFormGuid: element.parentIntakeFormGuid,
           question: element.question,
           answer: element.answer,
@@ -171,7 +171,7 @@ const remapNewIntakeFormQuestionItems = (
       ...result,
       {
         guid: element.guid,
-        parentRecordGuid: element.parentRecordguid,
+        parentRecordGuid: element.parentRecordGuid,
         question: element.question,
         sort: element.sort,
         changeType: element.changeType,
@@ -269,10 +269,17 @@ const remapNewTaskItems = (data: Results<Tasks>) => {
         title: element.title,
         description: element.description,
         completed: element.completed,
-        createdAt: element.createdAt,
-        updatedAt: element.updatedAt,
-        completedAt: element.completedAt,
-        dueTime: element.dueTime,
+        createdAt:
+          element.createdAt &&
+          format(element.createdAt, "yyyy-MM-dd'T'HH:mm:ss"),
+        updatedAt:
+          element.updatedAt &&
+          format(element.updatedAt, "yyyy-MM-dd'T'HH:mm:ss"),
+        completedAt:
+          element.completedAt &&
+          format(element.completedAt, "yyyy-MM-dd'T'HH:mm:ss"),
+        dueTime:
+          element.dueTime && format(element.dueTime, "yyyy-MM-dd'T'HH:mm:ss"),
         changeType: element.changeType,
       },
     ]
@@ -289,10 +296,17 @@ const remapUpdatedTasksItems = (data: Results<Tasks>) => {
         title: element.title,
         description: element.description,
         completed: element.completed,
-        createdAt: element.createdAt,
-        updatedAt: element.updatedAt,
-        completedAt: element.completedAt,
-        dueTime: element.dueTime,
+        createdAt:
+          element.createdAt &&
+          format(element.createdAt, "yyyy-MM-dd'T'HH:mm:ss"),
+        updatedAt:
+          element.updatedAt &&
+          format(element.updatedAt, "yyyy-MM-dd'T'HH:mm:ss"),
+        completedAt:
+          element.completedAt &&
+          format(element.completedAt, "yyyy-MM-dd'T'HH:mm:ss"),
+        dueTime:
+          element.dueTime && format(element.dueTime, "yyyy-MM-dd'T'HH:mm:ss"),
         changeType: element.changeType,
       },
     ]
@@ -428,112 +442,119 @@ export const clearRealmStorage = async (realm: Realm) => {
 }
 
 export const applyPackageToStorage = async (object) => {
-  await storage.writeTransaction((realmInstance) => {
-    object.activities?.forEach((element) => {
-      realmInstance.create(
-        'Activity',
-        {
-          guid: element.guid,
-          id: element.id,
-          activity: element.activity,
-        },
-        Realm.UpdateMode.All
-      )
+  try {
+    await storage.writeTransaction((realmInstance) => {
+      object.activities?.forEach((element) => {
+        realmInstance.create(
+          'Activity',
+          {
+            guid: element.guid,
+            id: element.id,
+            activity: element.activity,
+          },
+          Realm.UpdateMode.All
+        )
+      })
+      object.clientIntakeFormQuestions?.forEach((element) => {
+        realmInstance.create(
+          'ClientIntakeFormQuestions',
+          {
+            guid: element.guid,
+            id: element.id,
+            parentRecordGuid: element.parentRecordGuid,
+            parentIntakeFormGuid: element.parentIntakeFormGuid,
+            question: element.question,
+            answer: element.answer,
+            sort: element.sort,
+          },
+          Realm.UpdateMode.All
+        )
+      })
+      object.intakeFormQuestions?.forEach((element) => {
+        realmInstance.create(
+          'IntakeFormQuestions',
+          {
+            guid: element.guid,
+            id: element.id,
+            parentRecordGuid: element.parentRecordGuid,
+            question: element.question,
+            sort: element.sort,
+          },
+          Realm.UpdateMode.All
+        )
+      })
+      object.intakeForms?.forEach((element) => {
+        realmInstance.create(
+          'IntakeForms',
+          {
+            guid: element.guid,
+            id: element.id,
+            title: element.title,
+          },
+          Realm.UpdateMode.All
+        )
+      })
+      object.memories?.forEach((element) => {
+        realmInstance.create(
+          'Memories',
+          {
+            guid: element.guid,
+            id: element.id,
+            title: element.title,
+            description: element.description,
+          },
+          Realm.UpdateMode.All
+        )
+      })
+      object.tasks?.forEach((element) => {
+        realmInstance.create(
+          'Tasks',
+          {
+            guid: element.guid,
+            id: element.id,
+            title: element.title,
+            description: element.description,
+            completed: element.completed ? true : false,
+            createdAt: element.created_at ? new Date(element.created_at) : null,
+            updatedAt: element.updated_at ? new Date(element.updated_at) : null,
+            completedAt: element.completed_at
+              ? new Date(element.completed_at)
+              : null,
+            dueTime: element.dueTime ? new Date(element.dueTime) : null,
+          },
+          Realm.UpdateMode.All
+        )
+      })
+      object.clients?.forEach((element) => {
+        realmInstance.create(
+          'Clients',
+          {
+            guid: element.guid,
+            id: element.id,
+            name: element.firstName,
+            lastName: element.lastName,
+          },
+          Realm.UpdateMode.All
+        )
+      })
+      object.notes?.forEach((element) => {
+        realmInstance.create(
+          'Notes',
+          {
+            guid: element.guid,
+            id: element.id,
+            message: element.message,
+            parentGuid: element.parentGuid,
+            activityGuid: element.activityGuid,
+            createdAt: element.created_at && new Date(element.created_at),
+            updatedAt: element.updated_at && new Date(element.updated_at),
+          },
+          Realm.UpdateMode.All
+        )
+      })
     })
-    object.clientIntakeFormQuestions?.forEach((element) => {
-      realmInstance.create(
-        'ClientIntakeFormQuestions',
-        {
-          guid: element.guid,
-          id: element.id,
-          parentRecordGuid: element.parentRecordGuid,
-          parentIntakeFormGuid: element.parentIntakeFormGuid,
-          question: element.question,
-          answer: element.answer,
-          sort: element.sort,
-        },
-        Realm.UpdateMode.All
-      )
-    })
-    object.intakeFormQuestions?.forEach((element) => {
-      realmInstance.create(
-        'IntakeFormQuestions',
-        {
-          guid: element.guid,
-          id: element.id,
-          parentRecordGuid: element.parentRecordGuid,
-          question: element.question,
-          sort: element.sort,
-        },
-        Realm.UpdateMode.All
-      )
-    })
-    object.intakeForms?.forEach((element) => {
-      realmInstance.create(
-        'IntakeForms',
-        {
-          guid: element.guid,
-          id: element.id,
-          title: element.title,
-        },
-        Realm.UpdateMode.All
-      )
-    })
-    object.memories?.forEach((element) => {
-      realmInstance.create(
-        'Memories',
-        {
-          guid: element.guid,
-          id: element.id,
-          title: element.title,
-          description: element.description,
-        },
-        Realm.UpdateMode.All
-      )
-    })
-    object.tasks?.forEach((element) => {
-      realmInstance.create(
-        'Tasks',
-        {
-          guid: element.guid,
-          id: element.id,
-          title: element.title,
-          description: element.description,
-          completed: element.completed,
-          createdAt: element.created_at && new Date(element.created_at),
-          updatedAt: element.updated_at && new Date(element.updated_at),
-          completedAt: element.completed_at && new Date(element.completed_at),
-          duetime: element.dueTime && new Date(element.dueTime),
-        },
-        Realm.UpdateMode.All
-      )
-    })
-    object.clients?.forEach((element) => {
-      realmInstance.create(
-        'Clients',
-        {
-          guid: element.guid,
-          id: element.id,
-          name: element.firstName,
-          lastName: element.lastName,
-        },
-        Realm.UpdateMode.All
-      )
-    })
-    object.notes?.forEach((element) => {
-      realmInstance.create(
-        'Notes',
-        {
-          guid: element.guid,
-          id: element.id,
-          message: element.message,
-          parentGuid: element.parentGuid,
-          activityGuid: element.activityGuid,
-          createdAt: element.created_at && new Date(element.created_at),
-          updatedAt: element.updated_at && new Date(element.updated_at),
-        },
-        Realm.UpdateMode.All
-      )
-    })
-  })
+  } catch (e) {
+    console.log(object)
+    console.log(e)
+  }
 }

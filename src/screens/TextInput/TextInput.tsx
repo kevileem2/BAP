@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native'
 import { Results } from 'realm'
 import { format } from 'date-fns'
@@ -30,6 +31,7 @@ import {
 } from './components'
 import { Picker } from '../../shared'
 import { RealmContext } from '../../App'
+import { ScrollView } from 'react-native-gesture-handler'
 
 interface Error {
   client?: string
@@ -364,79 +366,88 @@ export default ({ route }) => {
         }
         headerIcon="arrow-left"
         hideFooter>
-        <View style={{ flex: 1, margin: Metrics.baseMargin }}>
-          <TouchableOpacity onPress={handlePickerVisibilityChange}>
-            <Dropdown>
-              <DropdownTitle>
-                {formatMessage('client', realm)}: {value}
-              </DropdownTitle>
-              {!parentGuid && <Icon name="chevron-down" size={24} />}
-            </Dropdown>
-          </TouchableOpacity>
-          {Boolean(error?.client) && <ErrorText>* {error.client}</ErrorText>}
-          <TouchableOpacity onPress={handleActivityPickerChange}>
-            <Dropdown>
-              <DropdownTitle>
-                {formatMessage('activity', realm)}: {selectedActivity?.activity}
-              </DropdownTitle>
-              <Icon name="chevron-down" size={24} />
-            </Dropdown>
-          </TouchableOpacity>
-          <Header>
-            <HeaderText>{`${formatMessage('note', realm)
-              .charAt(0)
-              .toUpperCase()}${formatMessage('note', realm).slice(
-              1
-            )}`}</HeaderText>
-          </Header>
-          <StyledTextInput
-            style={{
-              height: 100,
-              paddingTop: Metrics.baseMargin,
-              fontSize: 16,
-            }}
-            textAlignVertical="center"
-            value={text}
-            autoCapitalize="sentences"
-            selectionColor={Colors.primaryText}
-            onChangeText={handleOnChangeText}
-            returnKeyType="next"
-            multiline={true}
-          />
-          {Boolean(error?.message) && <ErrorText>* {error.message}</ErrorText>}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-            }}>
-            <TouchableOpacity onPress={handleSave}>
-              <StyledButton
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0, y: 1 }}
-                colors={[Colors.buttonColorLight, Colors.buttonColorDark]}>
-                <Icon
-                  name="plus"
-                  size={18}
-                  style={{
-                    color: Colors.primaryTextLight,
-                  }}
-                />
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: '400',
-                    marginRight: Metrics.smallMargin,
-                    color: Colors.primaryTextLight,
-                  }}>
-                  {guid
-                    ? formatMessage('updateNote', realm).toUpperCase()
-                    : formatMessage('addNote', realm).toUpperCase()}
-                </Text>
-              </StyledButton>
+        <KeyboardAvoidingView style={{ flex: 1 }}>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{ padding: Metrics.baseMargin }}>
+            <TouchableOpacity onPress={handlePickerVisibilityChange}>
+              <Dropdown>
+                <DropdownTitle>
+                  {formatMessage('client', realm)}: {value}
+                </DropdownTitle>
+                {!parentGuid && <Icon name="chevron-down" size={24} />}
+              </Dropdown>
             </TouchableOpacity>
-          </View>
-        </View>
+            {Boolean(error?.client) && <ErrorText>* {error.client}</ErrorText>}
+            <TouchableOpacity onPress={handleActivityPickerChange}>
+              <Dropdown>
+                <DropdownTitle>
+                  {formatMessage('activity', realm)}:{' '}
+                  {selectedActivity?.activity}
+                </DropdownTitle>
+                <Icon name="chevron-down" size={24} />
+              </Dropdown>
+            </TouchableOpacity>
+            <Header>
+              <HeaderText>{`${formatMessage('note', realm)
+                .charAt(0)
+                .toUpperCase()}${formatMessage('note', realm).slice(
+                1
+              )}`}</HeaderText>
+            </Header>
+            <StyledTextInput
+              style={{
+                height: 100,
+                paddingTop: Metrics.baseMargin,
+                fontSize: 16,
+              }}
+              textAlignVertical="center"
+              value={text}
+              autoCapitalize="sentences"
+              selectionColor={Colors.primaryText}
+              onChangeText={handleOnChangeText}
+              returnKeyType="next"
+              multiline={true}
+            />
+            {Boolean(error?.message) && (
+              <ErrorText>* {error.message}</ErrorText>
+            )}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+                marginTop: Metrics.largeMargin,
+                marginRight: Metrics.smallMargin,
+              }}>
+              <TouchableOpacity onPress={handleSave}>
+                <StyledButton
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0, y: 1 }}
+                  colors={[Colors.buttonColorLight, Colors.buttonColorDark]}>
+                  <Icon
+                    name="plus"
+                    size={18}
+                    style={{
+                      color: Colors.primaryTextLight,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '400',
+                      marginRight: Metrics.smallMargin,
+                      color: Colors.primaryTextLight,
+                    }}>
+                    {guid
+                      ? formatMessage('updateNote', realm).toUpperCase()
+                      : formatMessage('addNote', realm).toUpperCase()}
+                  </Text>
+                </StyledButton>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SignedInLayout>
       <Picker
         showSearch

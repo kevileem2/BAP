@@ -24,6 +24,7 @@
   "clients": "Clients",
   "client": "Client",
   "noClientsYet": "Vous n'avez pas encore de clients",
+  "noClientsYetSubTitle": "Ajouter des clients en appuyant sur le bouton ci-dessus",
   "addClients": "Ajouter des clients maintenant!",
   "addClient": "Ajouter un client",
   "addNote": "Ajouter une note",

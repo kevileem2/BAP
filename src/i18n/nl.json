@@ -24,6 +24,7 @@
   "clients": "Cliënten",
   "client": "Cliënt",
   "noClientsYet": "U heeft nog geen cliënten",
+  "noClientsYetSubTitle": "Voeg cliënten toe via de knop bovenaan",
   "addClients": "Voeg er nu toe!",
   "addClient": "Voeg cliënt toe",
   "addNote": "Voeg notitie toe",

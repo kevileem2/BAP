@@ -146,7 +146,7 @@ export class IntakeFormQuestions {
 
   public guid: string
   public id: number | null
-  public parentRecordguid: string
+  public parentRecordGuid: string
   public question: string | null
   public sort: number | null
   public changeType: number | null
@@ -169,7 +169,7 @@ export class ClientIntakeFormQuestions {
 
   public guid: string
   public id: number | null
-  public parentRecordguid: string
+  public parentRecordGuid: string
   public parentIntakeFormGuid: string
   public question: string | null
   public answer: string | null

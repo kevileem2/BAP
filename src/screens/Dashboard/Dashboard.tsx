@@ -6,7 +6,7 @@ import SignedInLayout from '../../shared/SignedInStack'
 import { StyledButton, Icon, Header, HeaderText } from './components'
 import { Colors, Metrics } from '../../themes'
 import NetInfo from '@react-native-community/netinfo'
-import { Memories, Notes, Tasks } from '../../utils/storage'
+import { Memories, Notes, Tasks, UserSession } from '../../utils/storage'
 import { formatMessage } from '../../shared/formatMessage'
 import ListCard from './ListCard'
 import { default as ListCardTask } from '../Profile/Tasks/ListCard'
@@ -25,8 +25,8 @@ export default () => {
   const navigation = useNavigation()
 
   const realm = useContext(RealmContext)
-
   const [isSynchronizing, setIsSynchronize] = useState<boolean>(false)
+  const [languageCode, setLanguageCode] = useState<string | null>(null)
   const [noteList, setNoteList] = useState<Results<Notes> | null>(null)
   const [tasksList, setTasksList] = useState<Results<Tasks> | null>(null)
   const [memoriesList, setMemoriesList] = useState<Results<Memories> | null>(
@@ -54,6 +54,8 @@ export default () => {
     const memories = realm
       ?.objects<Memories>('Memories')
       .filtered('changeType != 0')
+    const realmLanguageCode = realm?.objects<UserSession>('UserSession')?.[0]
+      ?.language
 
     if (notes?.length) {
       setNoteList(notes)
@@ -65,6 +67,9 @@ export default () => {
 
     if (memories?.length) {
       setMemoriesList(memories)
+    }
+    if (realmLanguageCode && languageCode !== realmLanguageCode) {
+      setLanguageCode(realmLanguageCode)
     }
   }
 
@@ -182,7 +187,7 @@ export default () => {
         description: item.description,
         changeType: item.changeType,
       })),
-    [memoriesList, realm]
+    [memoriesList]
   )
 
   const mapTasks = useMemo(
@@ -197,12 +202,12 @@ export default () => {
         dueTime: item.dueTime,
         changeType: item.changeType,
       })),
-    [tasksList, realm]
+    [tasksList]
   )
 
   const mapNotes = useMemo(
     () => noteList && noteList.slice(0, 5).map(renderNoteList),
-    [noteList, realm]
+    [noteList]
   )
 
   return (

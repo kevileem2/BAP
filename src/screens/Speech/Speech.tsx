@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native'
 import { format } from 'date-fns'
 import { Guid } from 'guid-typescript'
@@ -400,141 +401,146 @@ export default () => {
         showInformation
         handleInformationPress={handleModalVisibilityChange}
         hideFooter>
-        <View style={{ flex: 1, margin: Metrics.baseMargin }}>
-          <TouchableOpacity onPress={handlePickerVisibilityChange}>
-            <Dropdown>
-              <DropdownTitle>
-                {formatMessage('client', realm)}: {value}
-              </DropdownTitle>
-              <Icon name="chevron-down" size={24} />
-            </Dropdown>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleActivityPickerChange}>
-            <Dropdown>
-              <DropdownTitle>
-                {formatMessage('activity', realm)}: {selectedActivity?.activity}
-              </DropdownTitle>
-              <Icon name="chevron-down" size={24} />
-            </Dropdown>
-          </TouchableOpacity>
-          {Boolean(errors) && <ErrorText>* {errors}</ErrorText>}
-          <Header>
-            <HeaderText>{`${formatMessage('note', realm)
-              .charAt(0)
-              .toUpperCase()}${formatMessage('note', realm).slice(
-              1
-            )}`}</HeaderText>
-          </Header>
-          <OutputContainer>
-            {isEditing ? (
-              <StyledTextInput
-                value={results}
-                autoCapitalize="none"
-                selectionColor={Colors.primary}
-                onChangeText={handleOnChangeText}
-                returnKeyType="go"
-                multiline
-                style={{
-                  width: '100%',
-                  marginLeft: Metrics.smallMargin,
-                }}
-              />
-            ) : (
-              <ScrollView
-                contentContainerStyle={{
-                  padding: Metrics.baseMargin,
-                }}>
-                <Text key={`result`}>{results || partialResults}</Text>
-              </ScrollView>
-            )}
-          </OutputContainer>
-          {Boolean(results.length) && end && (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: isEditing ? 'center' : 'space-between',
-                flexWrap: 'wrap',
-              }}>
-              <TouchableOpacity onPress={handleEdit}>
-                <StyledButton
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 0, y: 1 }}
-                  colors={getEditButtonColors()}>
-                  <Icon
-                    name={isEditing ? 'close' : 'pencil'}
-                    size={18}
-                    style={{
-                      color: Colors.primaryTextLight,
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: '400',
-                      marginRight: Metrics.smallMargin,
-                      color: Colors.primaryTextLight,
-                    }}>
-                    {isEditing
-                      ? formatMessage('stopEditing', realm)
-                      : formatMessage('edit', realm)}
-                  </Text>
-                </StyledButton>
-              </TouchableOpacity>
-              {!isEditing && (
-                <>
-                  <TouchableOpacity onPress={handleDelete}>
-                    <StyledButton
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 0, y: 1 }}
-                      colors={[Colors.errorLight, Colors.errorDark]}>
-                      <Icon
-                        name="delete"
-                        size={18}
-                        style={{
-                          color: Colors.primaryTextLight,
-                        }}
-                      />
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: '400',
-                          marginRight: Metrics.smallMargin,
-                          color: Colors.primaryTextLight,
-                        }}>
-                        {formatMessage('delete', realm)}
-                      </Text>
-                    </StyledButton>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={handleSave}>
-                    <StyledButton
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 0, y: 1 }}
-                      colors={[
-                        Colors.buttonColorLight,
-                        Colors.buttonColorDark,
-                      ]}>
-                      <Icon
-                        name="content-save"
-                        size={18}
-                        style={{
-                          color: Colors.primaryTextLight,
-                        }}
-                      />
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: '400',
-                          marginRight: Metrics.smallMargin,
-                          color: Colors.primaryTextLight,
-                        }}>
-                        {formatMessage('save', realm)}
-                      </Text>
-                    </StyledButton>
-                  </TouchableOpacity>
-                </>
+        <KeyboardAvoidingView style={{ flex: 1 }}>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{ margin: Metrics.baseMargin }}>
+            <TouchableOpacity onPress={handlePickerVisibilityChange}>
+              <Dropdown>
+                <DropdownTitle>
+                  {formatMessage('client', realm)}: {value}
+                </DropdownTitle>
+                <Icon name="chevron-down" size={24} />
+              </Dropdown>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleActivityPickerChange}>
+              <Dropdown>
+                <DropdownTitle>
+                  {formatMessage('activity', realm)}:{' '}
+                  {selectedActivity?.activity}
+                </DropdownTitle>
+                <Icon name="chevron-down" size={24} />
+              </Dropdown>
+            </TouchableOpacity>
+            {Boolean(errors) && <ErrorText>* {errors}</ErrorText>}
+            <Header>
+              <HeaderText>{`${formatMessage('note', realm)
+                .charAt(0)
+                .toUpperCase()}${formatMessage('note', realm).slice(
+                1
+              )}`}</HeaderText>
+            </Header>
+            <OutputContainer>
+              {isEditing ? (
+                <StyledTextInput
+                  value={results}
+                  autoCapitalize="none"
+                  selectionColor={Colors.primary}
+                  onChangeText={handleOnChangeText}
+                  returnKeyType="go"
+                  multiline
+                  style={{
+                    width: '100%',
+                    marginLeft: Metrics.smallMargin,
+                  }}
+                />
+              ) : (
+                <ScrollView
+                  contentContainerStyle={{
+                    padding: Metrics.baseMargin,
+                  }}>
+                  <Text key={`result`}>{results || partialResults}</Text>
+                </ScrollView>
               )}
-            </View>
-          )}
+            </OutputContainer>
+            {Boolean(results.length) && end && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: isEditing ? 'center' : 'space-between',
+                  flexWrap: 'wrap',
+                }}>
+                <TouchableOpacity onPress={handleEdit}>
+                  <StyledButton
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                    colors={getEditButtonColors()}>
+                    <Icon
+                      name={isEditing ? 'close' : 'pencil'}
+                      size={18}
+                      style={{
+                        color: Colors.primaryTextLight,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: '400',
+                        marginRight: Metrics.smallMargin,
+                        color: Colors.primaryTextLight,
+                      }}>
+                      {isEditing
+                        ? formatMessage('stopEditing', realm)
+                        : formatMessage('edit', realm)}
+                    </Text>
+                  </StyledButton>
+                </TouchableOpacity>
+                {!isEditing && (
+                  <>
+                    <TouchableOpacity onPress={handleDelete}>
+                      <StyledButton
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                        colors={[Colors.errorLight, Colors.errorDark]}>
+                        <Icon
+                          name="delete"
+                          size={18}
+                          style={{
+                            color: Colors.primaryTextLight,
+                          }}
+                        />
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: '400',
+                            marginRight: Metrics.smallMargin,
+                            color: Colors.primaryTextLight,
+                          }}>
+                          {formatMessage('delete', realm)}
+                        </Text>
+                      </StyledButton>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleSave}>
+                      <StyledButton
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                        colors={[
+                          Colors.buttonColorLight,
+                          Colors.buttonColorDark,
+                        ]}>
+                        <Icon
+                          name="content-save"
+                          size={18}
+                          style={{
+                            color: Colors.primaryTextLight,
+                          }}
+                        />
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: '400',
+                            marginRight: Metrics.smallMargin,
+                            color: Colors.primaryTextLight,
+                          }}>
+                          {formatMessage('save', realm)}
+                        </Text>
+                      </StyledButton>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+            )}
+          </ScrollView>
           {!isEditing && (
             <View style={{ flex: 1, justifyContent: 'flex-end' }}>
               {!started ? (
@@ -586,7 +592,7 @@ export default () => {
               )}
             </View>
           )}
-        </View>
+        </KeyboardAvoidingView>
       </SignedInLayout>
       <Picker
         showSearch

@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native'
 import { Results } from 'realm'
 import { RealmContext } from '../../App'
@@ -330,7 +331,7 @@ export default ({ route }) => {
         headerIcon="arrow-left"
         headerIconAction={handleHeaderIconAction}
         hideFooter>
-        <View
+        <KeyboardAvoidingView
           style={{
             flex: 1,
             justifyContent: 'flex-start',
@@ -447,7 +448,7 @@ export default ({ route }) => {
               </TouchableOpacity>
             </View>
           </ScrollView>
-        </View>
+        </KeyboardAvoidingView>
       </SignedInLayout>
       <Picker
         visible={modalVisibility}

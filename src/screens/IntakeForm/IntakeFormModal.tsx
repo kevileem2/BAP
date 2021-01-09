@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { View, Text } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, Keyboard } from 'react-native'
 import { Button } from 'react-native-paper'
 import Realm from 'realm'
 import { NavigationProp } from '@react-navigation/native'
@@ -27,6 +27,31 @@ export default ({
 }: Props) => {
   const [title, setTitle] = useState<string>('')
   const [error, setError] = useState<boolean>(false)
+  const [keyboardOpened, changeKeyboardOpenState] = useState<boolean>(false)
+
+  useEffect(() => {
+    const handleKeyboardOpen = () => {
+      changeKeyboardOpenState(true)
+    }
+
+    const handleKeyboardClose = () => {
+      changeKeyboardOpenState(false)
+    }
+
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      handleKeyboardOpen
+    )
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      handleKeyboardClose
+    )
+
+    return () => {
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [])
 
   const handleTitle = (value: string) => {
     if (error && value) {
@@ -61,6 +86,7 @@ export default ({
   return (
     <View
       style={{
+        top: keyboardOpened ? '-30%' : undefined,
         backgroundColor: Colors.primaryTextLight,
         justifyContent: 'center',
         alignItems: 'center',

@@ -6,9 +6,9 @@ import {
   Dimensions,
   StatusBar,
   TextInput,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AsyncStorage from '@react-native-community/async-storage'
 import NetInfo from '@react-native-community/netinfo'
 import { formatMessage } from '../../shared/formatMessage'
@@ -185,162 +185,157 @@ export default ({ navigation }: Props) => {
           zIndex: 1,
         }}
       />
-      <TouchableWithoutFeedback onPress={handleGoBackPress}>
-        <View
-          style={{
-            position: 'absolute',
-            left: Metrics.doubleLargeMargin,
-            top: Metrics.doubleLargeMargin,
-            zIndex: 999,
-          }}>
-          <Icon
-            style={{ color: Colors.secondaryText }}
-            name="arrow-left"
-            size={32}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-      <View
-        style={{
-          flex: 1,
+      <KeyboardAwareScrollView
+        style={{ flex: 1, backgroundColor: '#FFF' }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={{
           justifyContent: 'center',
           paddingLeft: Metrics.doubleLargeMargin,
           paddingRight: Metrics.doubleLargeMargin,
           paddingBottom: Metrics.smallMargin,
-          backgroundColor: '#FFF',
-        }}>
-        <KeyboardAvoidingView
-          behavior="padding"
-          enabled
-          style={{ paddingBottom: Metrics.tinyMargin }}>
-          <Text
+        }}
+        scrollEnabled={true}>
+        <TouchableWithoutFeedback onPress={handleGoBackPress}>
+          <View
             style={{
-              fontSize: 32,
-              fontWeight: '700',
-              marginBottom: Metrics.smallMargin,
+              marginTop: Metrics.doubleLargeMargin,
+              marginBottom: Metrics.doubleLargeMargin,
+              zIndex: 999,
             }}>
-            {formatMessage('CreateAccount', realm)}
-          </Text>
-          <InputContainer>
-            <View
-              style={{
-                flexDirection: 'row',
-              }}>
-              <View style={{ justifyContent: 'center' }}>
-                <Icon name="account-outline" size={24} />
-              </View>
-              <TextInput
-                placeholder={formatMessage('PutUserNameHere', realm)}
-                placeholderTextColor={Colors.secondaryText}
-                value={name}
-                autoCapitalize="words"
-                selectionColor={Colors.primary}
-                onChangeText={handleNameChange}
-                returnKeyType="next"
-                textContentType="name"
-                style={{
-                  width: '85%',
-                  marginLeft: Metrics.smallMargin,
-                  fontSize: name ? 18 : 14,
-                  fontWeight: name ? '500' : '300',
-                }}
-              />
-            </View>
-          </InputContainer>
-          <InputContainer>
-            <View
-              style={{
-                flexDirection: 'row',
-              }}>
-              <View style={{ justifyContent: 'center' }}>
-                <Icon name="email-outline" size={24} />
-              </View>
-              <TextInput
-                placeholder={formatMessage('PutEmailHere', realm)}
-                placeholderTextColor={Colors.secondaryText}
-                value={email}
-                autoCapitalize="none"
-                selectionColor={Colors.primary}
-                onChangeText={handleEmailChange}
-                keyboardType="email-address"
-                returnKeyType="next"
-                textContentType="emailAddress"
-                style={{
-                  width: '85%',
-                  marginLeft: Metrics.smallMargin,
-                  fontSize: email ? 18 : 14,
-                  fontWeight: email ? '500' : '300',
-                }}
-              />
-            </View>
-          </InputContainer>
-          <InputContainer>
-            <View
-              style={{
-                flexDirection: 'row',
-              }}>
-              <View style={{ justifyContent: 'center' }}>
-                <Icon name="lock-outline" size={24} />
-              </View>
-              <TextInput
-                placeholder={formatMessage('PutPasswordHere', realm)}
-                placeholderTextColor={Colors.secondaryText}
-                value={password}
-                autoCapitalize="none"
-                selectionColor={Colors.primary}
-                onChangeText={handlePasswordChange}
-                returnKeyType="go"
-                textContentType="password"
-                secureTextEntry={true}
-                style={{
-                  width: '85%',
-                  marginLeft: Metrics.smallMargin,
-                }}
-              />
-            </View>
-          </InputContainer>
-          <InputContainer>
-            <View
-              style={{
-                flexDirection: 'row',
-              }}>
-              <View style={{ justifyContent: 'center' }}>
-                <Icon name="lock-open-outline" size={24} />
-              </View>
-              <TextInput
-                placeholder={formatMessage('ConfirmPasswordHere', realm)}
-                placeholderTextColor={Colors.secondaryText}
-                value={confirmPassword}
-                autoCapitalize="none"
-                selectionColor={Colors.primary}
-                onChangeText={handleConfirmPasswordChange}
-                returnKeyType="go"
-                textContentType="password"
-                secureTextEntry={true}
-                style={{
-                  width: '85%',
-                  marginLeft: Metrics.smallMargin,
-                }}
-              />
-            </View>
-          </InputContainer>
-          {Boolean(error?.length) && (
-            <Text
-              style={{
-                color: Colors.errorDark,
-                marginTop: Metrics.baseMargin,
-              }}>
-              * {error}
-            </Text>
-          )}
-        </KeyboardAvoidingView>
-        <TouchableWithoutFeedback onPress={handleSignUpPress}>
+            <Icon
+              style={{ color: Colors.secondaryText }}
+              name="arrow-left"
+              size={32}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+        <Text
+          style={{
+            fontSize: 32,
+            fontWeight: '700',
+            marginBottom: Metrics.smallMargin,
+          }}>
+          {formatMessage('CreateAccount', realm)}
+        </Text>
+        <InputContainer>
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'flex-end',
-              marginTop: Metrics.largeMargin,
             }}>
+            <View style={{ justifyContent: 'center' }}>
+              <Icon name="account-outline" size={24} />
+            </View>
+            <TextInput
+              placeholder={formatMessage('PutUserNameHere', realm)}
+              placeholderTextColor={Colors.secondaryText}
+              value={name}
+              autoCapitalize="words"
+              selectionColor={Colors.primary}
+              onChangeText={handleNameChange}
+              returnKeyType="next"
+              textContentType="name"
+              style={{
+                width: '85%',
+                marginLeft: Metrics.smallMargin,
+                fontSize: name ? 18 : 14,
+                fontWeight: name ? '500' : '300',
+              }}
+            />
+          </View>
+        </InputContainer>
+        <InputContainer>
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <View style={{ justifyContent: 'center' }}>
+              <Icon name="email-outline" size={24} />
+            </View>
+            <TextInput
+              placeholder={formatMessage('PutEmailHere', realm)}
+              placeholderTextColor={Colors.secondaryText}
+              value={email}
+              autoCapitalize="none"
+              selectionColor={Colors.primary}
+              onChangeText={handleEmailChange}
+              keyboardType="email-address"
+              returnKeyType="next"
+              textContentType="emailAddress"
+              style={{
+                width: '85%',
+                marginLeft: Metrics.smallMargin,
+                fontSize: email ? 18 : 14,
+                fontWeight: email ? '500' : '300',
+              }}
+            />
+          </View>
+        </InputContainer>
+        <InputContainer>
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <View style={{ justifyContent: 'center' }}>
+              <Icon name="lock-outline" size={24} />
+            </View>
+            <TextInput
+              placeholder={formatMessage('PutPasswordHere', realm)}
+              placeholderTextColor={Colors.secondaryText}
+              value={password}
+              autoCapitalize="none"
+              selectionColor={Colors.primary}
+              onChangeText={handlePasswordChange}
+              returnKeyType="go"
+              textContentType="password"
+              secureTextEntry={true}
+              style={{
+                width: '85%',
+                marginLeft: Metrics.smallMargin,
+              }}
+            />
+          </View>
+        </InputContainer>
+        <InputContainer>
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <View style={{ justifyContent: 'center' }}>
+              <Icon name="lock-open-outline" size={24} />
+            </View>
+            <TextInput
+              placeholder={formatMessage('ConfirmPasswordHere', realm)}
+              placeholderTextColor={Colors.secondaryText}
+              value={confirmPassword}
+              autoCapitalize="none"
+              selectionColor={Colors.primary}
+              onChangeText={handleConfirmPasswordChange}
+              returnKeyType="go"
+              textContentType="password"
+              secureTextEntry={true}
+              style={{
+                width: '85%',
+                marginLeft: Metrics.smallMargin,
+              }}
+            />
+          </View>
+        </InputContainer>
+        {Boolean(error?.length) && (
+          <Text
+            style={{
+              color: Colors.errorDark,
+              marginTop: Metrics.baseMargin,
+            }}>
+            * {error}
+          </Text>
+        )}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            marginTop: Metrics.largeMargin,
+          }}>
+          <TouchableWithoutFeedback onPress={handleSignUpPress}>
             <Button
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
@@ -361,23 +356,22 @@ export default ({ navigation }: Props) => {
                 }}
               />
             </Button>
-          </View>
-        </TouchableWithoutFeedback>
-        <View
-          style={{
-            position: 'absolute',
-            bottom: Metrics.baseMargin,
-            flexDirection: 'row',
-            alignSelf: 'center',
-            justifyContent: 'flex-end',
-          }}>
-          <Text>{formatMessage('AlreadyHaveAnAccount', realm)} </Text>
-          <TouchableWithoutFeedback onPress={handleGoBackPress}>
-            <Text style={{ color: Colors.primary }}>
-              {formatMessage('SignIn', realm)}
-            </Text>
           </TouchableWithoutFeedback>
         </View>
+      </KeyboardAwareScrollView>
+      <View
+        style={{
+          position: 'absolute',
+          bottom: Metrics.baseMargin,
+          flexDirection: 'row',
+          alignSelf: 'center',
+        }}>
+        <Text>{formatMessage('AlreadyHaveAnAccount', realm)} </Text>
+        <TouchableWithoutFeedback onPress={handleGoBackPress}>
+          <Text style={{ color: Colors.primary }}>
+            {formatMessage('SignIn', realm)}
+          </Text>
+        </TouchableWithoutFeedback>
       </View>
     </>
   )
