@@ -500,10 +500,10 @@ export const applyPackageToStorage = async (object) => {
           title: element.title,
           description: element.description,
           completed: element.completed,
-          createdAt: element.createdAt,
-          updatedAt: element.updatedAt,
-          completedAt: element.completedAt,
-          duetime: element.dueTime,
+          createdAt: element.created_at && new Date(element.created_at),
+          updatedAt: element.updated_at && new Date(element.updated_at),
+          completedAt: element.completed_at && new Date(element.completed_at),
+          duetime: element.dueTime && new Date(element.dueTime),
         },
         Realm.UpdateMode.All
       )
