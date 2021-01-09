@@ -128,7 +128,7 @@ const remapNewClientIntakeFormQuestionItems = (
         ...result,
         {
           guid: element.guid,
-          parentRecordGuid: element.parentRecordguid,
+          parentRecordGuid: element.parentRecordGuid,
           parentIntakeFormGuid: element.parentIntakeFormGuid,
           question: element.question,
           answer: element.answer,
