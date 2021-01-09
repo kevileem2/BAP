@@ -1,14 +1,23 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { View, Text, ScrollView, TouchableWithoutFeedback } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import NetInfo from '@react-native-community/netinfo'
+import AsyncStorage from '@react-native-community/async-storage'
 import SignedInLayout from '../../shared/SignedInStack'
-import { formatMessage } from '../../shared'
+import { formatMessage, message } from '../../shared'
 import { RealmContext } from '../../App'
 import { Metrics } from '../../themes'
 import { Header, Icon, Section } from './components'
 import { Overview } from './Overview'
 import { Tasks } from './Tasks'
 import { Memory } from './Memory'
+import {
+  applyPackageToStorage,
+  clearRealmStorage,
+  getUpdatePackage,
+} from '../../utils/dataUtils'
+
+const offlineStateTypes = ['none', 'unknown', 'NONE', 'UNKNOWN']
 
 export default () => {
   const navigation = useNavigation()
@@ -17,9 +26,46 @@ export default () => {
 
   const realm = useContext(RealmContext)
 
-  const handleSynchronizePress = () => {
-    setIsSynchronize(true)
-    setTimeout(() => setIsSynchronize(false), 1000)
+  const handleSynchronizePress = async () => {
+    const netConnectionState = await NetInfo.fetch()
+    if (offlineStateTypes.some((value) => value === netConnectionState.type)) {
+      throw formatMessage('noInternet', realm)
+    }
+    try {
+      setIsSynchronize(true)
+      const accessToken = await AsyncStorage.getItem('access_token')
+      const userId = await AsyncStorage.getItem('userId')
+      const updatePackage = await getUpdatePackage()
+      await fetch(`https://kevin.is.giestig.be/api/package/update-package`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-API-KEY': 'Cvqsam8axl8LTqzr0aT3L',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(updatePackage),
+      })
+      realm && clearRealmStorage(realm)
+      const response = await fetch(
+        `https://kevin.is.giestig.be/api/package/get-package?id=${userId}`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-API-KEY': 'Cvqsam8axl8LTqzr0aT3L',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      const responseJson = await response.json()
+      applyPackageToStorage(responseJson)
+    } catch (e) {
+      console.log(e)
+      await message({ message: e, realm })
+    }
+    setIsSynchronize(false)
   }
 
   const handleLeftFlingGesture = () => {
